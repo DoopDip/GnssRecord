@@ -4,5 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorMenuBackground">#d7d7d7</color>
-    <color name="colorMenuName">#FFFFFF</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorListBackground">#f1efef</color>
 </resources>
