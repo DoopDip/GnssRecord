@@ -1,10 +1,14 @@
 package th.ac.kmutnb.cs.gnssraw;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
+import android.content.Intent;
 import android.graphics.Color;
 import android.location.GnssMeasurement;
 import android.location.GnssStatus;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,14 +42,39 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListHolder> {
     }
 
     @Override
-    public void onBindViewHolder(ListHolder holder, int position) {
-        GnssMeasurement measurement = measurementList.get(position);
+    public void onBindViewHolder(final ListHolder holder, int position) {
+        final GnssMeasurement measurement = measurementList.get(position);
+        final int logoSatellite = logoSatelliteImageResource(measurement.getConstellationType());
+        final String nameSatellite = satelliteName(measurement.getConstellationType());
 
-        holder.imageViewLogo.setImageResource(logoSateillteImageResource(measurement.getConstellationType()));
+        holder.imageViewLogo.setImageResource(logoSatellite);
         holder.textViewSvId.setText(String.valueOf(measurement.getSvid()));
-        holder.textViewSatelliteName.setText(satelliteName(measurement.getConstellationType()));
+        holder.textViewSatelliteName.setText(nameSatellite);
         holder.roundCornerProgressBar.setProgressColor(progressColor((float) measurement.getCn0DbHz()));
         holder.roundCornerProgressBar.setProgress((float) measurement.getCn0DbHz());
+
+        holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Pair[] pairs = new Pair[3];
+                pairs[0] = new Pair<View, String>(holder.imageViewLogo, "list_logoTransition");
+                pairs[1] = new Pair<View, String>(holder.textViewSvId, "list_SvidTransition");
+                pairs[2] = new Pair<View, String>(holder.textViewSatelliteName, "list_SatelliteNameTransition");
+
+                ActivityOptions activityOptions = ActivityOptions.makeSceneTransitionAnimation(
+                        (Activity) v.getContext(),
+                        pairs
+                );
+
+                Intent intent = new Intent(v.getContext(), DetailActivity.class);
+                intent.putExtra("measurement", measurement);
+                intent.putExtra("logoSatellite", logoSatellite);
+                intent.putExtra("nameSatellite", nameSatellite);
+                v.getContext().startActivity(intent, activityOptions.toBundle());
+                Log.i(TAG, "Click -> DetailActivity by Svid = "+measurement.getSvid());
+            }
+        });
     }
 
     @Override
@@ -96,7 +125,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListHolder> {
             return "UNKNOW";
     }
 
-    private int logoSateillteImageResource(int constellationType) {
+    private int logoSatelliteImageResource(int constellationType) {
         int logoImageResource = R.drawable.logo_unknow;
         if (constellationType == GnssStatus.CONSTELLATION_GPS)
             logoImageResource = R.drawable.logo_gps;

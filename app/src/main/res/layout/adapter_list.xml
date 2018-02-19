@@ -15,6 +15,7 @@
 
         <ImageView
             android:id="@+id/adapter_list_logo"
+            android:transitionName="list_logoTransition"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_margin="10dp"
@@ -36,6 +37,7 @@
 
                 <TextView
                     android:id="@+id/adapter_list_svId"
+                    android:transitionName="list_SvidTransition"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -46,6 +48,7 @@
 
                 <TextView
                     android:id="@+id/adapter_list_satelliteName"
+                    android:transitionName="list_SatelliteNameTransition"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
