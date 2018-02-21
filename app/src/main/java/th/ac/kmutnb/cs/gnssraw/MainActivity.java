@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     private TextView textViewMenuList;
+    private TextView textViewMenuRecord;
 
     private LinearLayout linearLayoutLogo;
     private LinearLayout linearLayoutLogoRecord;
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         textViewMenuList = findViewById(R.id.main_menuList);
+        textViewMenuRecord = findViewById(R.id.main_menuRecord);
 
         linearLayoutLogo = findViewById(R.id.main_logo);
         linearLayoutLogoRecord = findViewById(R.id.main_logoRecord);
@@ -65,6 +67,19 @@ public class MainActivity extends AppCompatActivity {
                 ActivityOptions activityOptions = ActivityOptions.makeSceneTransitionAnimation(
                         MainActivity.this,
                         new Pair<View, String>(textViewMenuList, "main_listTransition")
+                );
+                startActivity(intent, activityOptions.toBundle());
+            }
+        });
+
+        textViewMenuRecord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "Click -> MenuRecord");
+                Intent intent = new Intent(MainActivity.this, RecordActivity.class);
+                ActivityOptions activityOptions = ActivityOptions.makeSceneTransitionAnimation(
+                        MainActivity.this,
+                        new Pair<View, String>(textViewMenuRecord, "main_recordTransition")
                 );
                 startActivity(intent, activityOptions.toBundle());
             }
