@@ -15,6 +15,9 @@ import android.view.View;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -23,6 +26,9 @@ import java.util.List;
 public class RecordActivity extends AppCompatActivity {
 
     private static final String TAG = "RecordActivity";
+
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
 
     private TextView textViewStartStop;
     private TextView textViewLog;
@@ -51,6 +57,10 @@ public class RecordActivity extends AppCompatActivity {
                     scrollViewLog.fullScroll(ScrollView.FOCUS_DOWN);
                 }
             });
+            databaseReference.child("RealTime/Satellite").setValue(null);
+            for (GnssMeasurement measurement: measurementList)
+                databaseReference.child("RealTime/Satellite").push().setValue(new GnssRaw(measurement));
+
             Log.i(TAG, "GnssMeasurementsEvent callback -> Satellite total : " + measurementList.size());
         }
 
@@ -64,6 +74,9 @@ public class RecordActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference();
 
         measurementList = new ArrayList<>();
         handler = new Handler();
@@ -84,18 +97,26 @@ public class RecordActivity extends AppCompatActivity {
                     if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                             != PackageManager.PERMISSION_GRANTED) return;
                     gnssStatus = locationManager.registerGnssMeasurementsCallback(measurementsEvent);
+                    Log.i(TAG, "Register callback -> measurementsEvent");
+
                     textViewStartStop.setText("Stop");
                     textViewStartStop.setBackgroundResource(R.drawable.record_bg_btn_stop);
                     textViewTotalSatellite.setVisibility(View.VISIBLE);
+
                     btnStatus = true;
-                    Log.i(TAG, "Register callback -> measurementsEvent");
+
+                    databaseReference.child("RealTime/Status").setValue(true);
                 } else {
                     locationManager.unregisterGnssMeasurementsCallback(measurementsEvent);
+                    Log.i(TAG, "!! UnRegister callback -> measurementsEvent");
+
                     textViewStartStop.setText("Start");
                     textViewStartStop.setBackgroundResource(R.drawable.record_bg_btn_start);
                     textViewTotalSatellite.setVisibility(View.INVISIBLE);
+
                     btnStatus = false;
-                    Log.i(TAG, "!! UnRegister callback -> measurementsEvent");
+
+                    databaseReference.child("RealTime/Status").setValue(false);
                 }
             }
         });

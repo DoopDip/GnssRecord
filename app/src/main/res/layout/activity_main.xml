@@ -1,158 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:background="@color/colorBlack"
     tools:context="th.ac.kmutnb.cs.gnssraw.MainActivity">
 
-    <LinearLayout
+    <ImageView
         android:id="@+id/main_logo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:layout_marginBottom="50dp"
-        android:gravity="center"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="GNSS"
-                android:textSize="60dp"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="15dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:text="Satellite"
-                    android:textSize="20dp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="-6dp"
-                    android:text="Raw data"
-                    android:textSize="20dp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/main_logoRecord"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="-15dp"
-            android:layout_marginRight="20dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="Recording"
-                android:textSize="20dp"
-                android:textStyle="bold" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:src="@drawable/ic_fiber_manual_record_black_24dp" />
-        </LinearLayout>
-
-    </LinearLayout>
+        android:layout_width="280dp"
+        android:layout_height="120dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        android:src="@drawable/logo"/>
 
     <LinearLayout
         android:id="@+id/main_menu"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginRight="50dp"
-        android:layout_marginLeft="50dp"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/main_menuPosition"
-                android:transitionName="main_positionTransition"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="1dp"
-                android:layout_weight="1"
-                android:background="@color/colorMenuBackground"
-                android:gravity="center"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"
-                android:text="Position"
-                android:textColor="@color/colorWhite"
-                android:textSize="18dp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/main_menuList"
-                android:transitionName="main_listTransition"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@color/colorMenuBackground"
-                android:gravity="center"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"
-                android:text="List"
-                android:textColor="@color/colorWhite"
-                android:textSize="18dp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/main_menuRecord"
-            android:transitionName="main_recordTransition"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
-            android:background="@color/colorMenuBackground"
-            android:gravity="center"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:text="Record"
-            android:textColor="@color/colorWhite"
-            android:textSize="18dp"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <ImageView
-        android:id="@+id/main_imgSatellite"
+        android:layout_below="@+id/main_logo"
         android:layout_width="wrap_content"
-        android:layout_height="160dp"
-        android:layout_marginTop="50dp"
-        android:src="@drawable/main_satellite" />
-
-    <TextView
-        android:id="@+id/main_credit"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="bottom|right"
-        android:padding="10dp"
-        android:text="CS - KMUTNB" />
-
-</LinearLayout>
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerHorizontal="true">
+        <RelativeLayout
+            android:id="@+id/main_position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp">
+            <ImageView
+                android:layout_width="240dp"
+                android:layout_height="50dp"
+                android:src="@drawable/btn_black"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:fontFamily="@font/thaisansneue_semibold"
+                android:textSize="25sp"
+                android:textColor="@color/colorWhite"
+                android:text="@string/position"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/main_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp">
+            <ImageView
+                android:layout_width="240dp"
+                android:layout_height="50dp"
+                android:src="@drawable/btn_black"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:fontFamily="@font/thaisansneue_semibold"
+                android:textSize="25sp"
+                android:textColor="@color/colorWhite"
+                android:text="@string/list"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/main_record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="240dp"
+                android:layout_height="50dp"
+                android:src="@drawable/btn_black"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:fontFamily="@font/thaisansneue_semibold"
+                android:textSize="25sp"
+                android:textColor="@color/colorWhite"
+                android:text="@string/record"/>
+        </RelativeLayout>
+    </LinearLayout>
+    
+    <ImageView
+        android:layout_below="@+id/main_menu"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/earth_night"/>
+</RelativeLayout>
