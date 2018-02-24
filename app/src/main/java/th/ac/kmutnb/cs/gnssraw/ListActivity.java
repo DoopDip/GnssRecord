@@ -63,6 +63,7 @@ public class ListActivity extends AppCompatActivity {
         listAdapter = new ListAdapter(measurementList);
 
         textViewTotalSatellite = (TextView) findViewById(R.id.list_totalSatellite);
+        textViewTotalSatellite.setText("0");
 
         recyclerView = (RecyclerView) findViewById(R.id.list_recyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
