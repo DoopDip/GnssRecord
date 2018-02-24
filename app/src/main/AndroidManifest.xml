@@ -30,6 +30,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".RecordActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".RecordLoginActivity"
             android:screenOrientation="portrait"/>
     </application>
 

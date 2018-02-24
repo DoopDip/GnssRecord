@@ -4,4 +4,9 @@
     <string name="list">List</string>
     <string name="record">Record</string>
     <string name="satellite">Satellite</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="password">Password</string>
+    <string name="e_mail">E-Mail</string>
+    <string name="please_login">Please login</string>
 </resources>

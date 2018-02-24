@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "Click -> MenuRecord");
-                Intent intent = new Intent(MainActivity.this, RecordActivity.class);
+                Intent intent = new Intent(MainActivity.this, RecordLoginActivity.class);
                 startActivity(intent);
             }
         });
