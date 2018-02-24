@@ -9,4 +9,8 @@
     <string name="password">Password</string>
     <string name="e_mail">E-Mail</string>
     <string name="please_login">Please login</string>
+    <string name="please_fill">Please fill in your information</string>
+    <string name="re_password">Re-Password</string>
+    <string name="name">Name</string>
+    <string name="earth_night">Earth night</string>
 </resources>
