@@ -53,7 +53,7 @@
         android:paddingTop="5dp"
         android:paddingRight="10dp"
         android:paddingLeft="10dp"
-        android:background="@drawable/list_bg_total"
+        android:background="@color/colorGray"
         android:textColor="@color/colorWhite"
         android:alpha="0.4"/>
 

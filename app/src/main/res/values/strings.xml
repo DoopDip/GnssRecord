@@ -13,4 +13,9 @@
     <string name="re_password">Re-Password</string>
     <string name="name">Name</string>
     <string name="earth_night">Earth night</string>
+    <string name="start">Start</string>
+    <string name="welcome">Welcome</string>
+    <string name="stop">Stop</string>
+    <string name="auto_scrollbar">Auto scrollbar</string>
+    <string name="un_auto_scrollbar">UnAuto scrollbar</string>
 </resources>

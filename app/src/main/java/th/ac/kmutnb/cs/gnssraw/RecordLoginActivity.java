@@ -11,6 +11,7 @@ public class RecordLoginActivity extends AppCompatActivity {
 
     private static final String TAG = "RecordLoginActivity";
 
+    private TextView textViewBtnLogin;
     private TextView textViewBtnRegister;
 
     @Override
@@ -18,7 +19,17 @@ public class RecordLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record_login);
 
+        textViewBtnLogin = (TextView) findViewById(R.id.recordLogin_btnLogin);
         textViewBtnRegister = (TextView) findViewById(R.id.recordLogin_btnRegister);
+
+        textViewBtnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "Click -> Login");
+                Intent intent = new Intent(RecordLoginActivity.this, RecordStartActivity.class);
+                startActivity(intent);
+            }
+        });
 
         textViewBtnRegister.setOnClickListener(new View.OnClickListener() {
             @Override

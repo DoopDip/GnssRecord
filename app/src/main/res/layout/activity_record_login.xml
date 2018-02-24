@@ -138,6 +138,7 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/recordLogin_btnLogin"
             android:layout_width="270dp"
             android:layout_height="55dp"
             android:layout_gravity="center"
