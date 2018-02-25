@@ -28,4 +28,6 @@
     <string name="password_match">Passwords do not match</string>
     <string name="email_invalid">Email is invalid</string>
     <string name="password_6">Password should be at least 6 characters</string>
+    <string name="please_internet">Please connect to the internet</string>
+    <string name="ok">OK</string>
 </resources>

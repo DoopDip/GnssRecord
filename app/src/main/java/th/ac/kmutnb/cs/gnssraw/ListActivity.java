@@ -20,6 +20,7 @@ import java.util.List;
 public class ListActivity extends AppCompatActivity {
 
     private static final String TAG = "ListActivity";
+    private static final int PERMISSIONS_ACCESS_FINE_LOCATION = 99;
 
     private RecyclerView recyclerView;
     private ListAdapter listAdapter;
@@ -76,8 +77,12 @@ public class ListActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         //Check Permission
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) return;
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSIONS_ACCESS_FINE_LOCATION);
+        }
         locationManager.registerGnssMeasurementsCallback(measurementsEvent);
         Log.i(TAG, "Register callback -> measurementsEvent");
     }

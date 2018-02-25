@@ -1,14 +1,19 @@
 package th.ac.kmutnb.cs.gnssraw;
 
+import android.*;
+import android.Manifest;
 import android.animation.ObjectAnimator;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -17,6 +22,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
+    private static final int PERMISSIONS_ACCESS_FINE_LOCATION = 99;
 
     private RelativeLayout relativeLayoutPosition;
     private RelativeLayout relativeLayoutList;
@@ -42,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
         animatorRecord.setStartDelay(600);
         animatorRecord.setDuration(1200).start();
 
+        checkPermissionLocation();
+
         relativeLayoutList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,15 +63,38 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "Click -> MenuRecord");
-                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                if (firebaseUser != null) {
-                    Intent intent = new Intent(MainActivity.this, RecordStartActivity.class);
-                    startActivity(intent);
+                if (isConnectedToInternet(getApplicationContext())) {
+                    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                    if (firebaseUser != null) {
+                        Intent intent = new Intent(MainActivity.this, RecordStartActivity.class);
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(MainActivity.this, RecordLoginActivity.class);
+                        startActivity(intent);
+                    }
                 } else {
-                    Intent intent = new Intent(MainActivity.this, RecordLoginActivity.class);
-                    startActivity(intent);
+                    Snackbar.make(relativeLayoutRecord, R.string.please_internet, Snackbar.LENGTH_INDEFINITE).
+                            setAction(R.string.ok, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {}
+                            }).show();
                 }
             }
         });
+    }
+
+    private boolean isConnectedToInternet(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
+    private void checkPermissionLocation() {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSIONS_ACCESS_FINE_LOCATION);
+        }
     }
 }
