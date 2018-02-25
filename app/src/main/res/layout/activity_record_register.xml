@@ -205,6 +205,7 @@
 
 
     <TextView
+        android:id="@+id/recordRegister_btnRegister"
         android:layout_width="270dp"
         android:layout_height="55dp"
         android:layout_below="@+id/recordRegister_boxRegister"

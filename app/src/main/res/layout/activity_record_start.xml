@@ -108,4 +108,17 @@
             android:textSize="20sp" />
     </ScrollView>
 
+    <TextView
+        android:id="@+id/recordLogin_btnLogOut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:fontFamily="@font/thaisansneue_light"
+        android:text="@string/logout"
+        android:textAllCaps="true"
+        android:textColor="@color/colorGray"
+        android:textSize="25sp" />
+
 </RelativeLayout>

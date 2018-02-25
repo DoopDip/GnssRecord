@@ -11,6 +11,9 @@ import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
@@ -52,8 +55,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "Click -> MenuRecord");
-                Intent intent = new Intent(MainActivity.this, RecordLoginActivity.class);
-                startActivity(intent);
+                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                if (firebaseUser != null) {
+                    Intent intent = new Intent(MainActivity.this, RecordStartActivity.class);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(MainActivity.this, RecordLoginActivity.class);
+                    startActivity(intent);
+                }
             }
         });
     }

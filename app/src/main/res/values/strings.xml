@@ -18,4 +18,14 @@
     <string name="stop">Stop</string>
     <string name="auto_scrollbar">Auto scrollbar</string>
     <string name="un_auto_scrollbar">UnAuto scrollbar</string>
+    <string name="logout">Logout</string>
+    <string name="please_email">Please enter your email</string>
+    <string name="please_password">Please enter your password</string>
+    <string name="please_re_password">Please enter your re-password</string>
+    <string name="login_failed">Login failed</string>
+    <string name="register_failed">Register failed</string>
+    <string name="please_name">Please enter your name</string>
+    <string name="password_match">Passwords do not match</string>
+    <string name="email_invalid">Email is invalid</string>
+    <string name="password_6">Password should be at least 6 characters</string>
 </resources>
