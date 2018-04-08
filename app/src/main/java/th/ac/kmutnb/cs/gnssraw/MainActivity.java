@@ -1,6 +1,5 @@
 package th.ac.kmutnb.cs.gnssraw;
 
-import android.*;
 import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.content.Context;

@@ -4,20 +4,34 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.GnssMeasurement;
+import android.location.GnssMeasurementsEvent;
+import android.location.LocationManager;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 public class RecordStartActivity extends AppCompatActivity {
 
     private static final String TAG = "RecordStartActivity";
+    private static final int PERMISSIONS_ACCESS_FINE_LOCATION = 99;
 
     private TextView textViewWelcome;
     private TextView textViewName;
@@ -25,6 +39,7 @@ public class RecordStartActivity extends AppCompatActivity {
     private TextView textViewBtnScroll;
     private TextView textViewBtnLogOut;
     private ScrollView scrollViewLog;
+    private TextView textViewLog;
 
     private boolean statusRecord;
     private boolean statusScroll;
@@ -32,11 +47,48 @@ public class RecordStartActivity extends AppCompatActivity {
     private float tempYBtnStart;
 
     private FirebaseUser firebaseUser;
+    private DatabaseReference databaseReference;
+    private String log;
+    private Handler handler;
+    private List<GnssMeasurement> measurementList;
+    private LocationManager locationManager;
+    private GnssMeasurementsEvent.Callback measurementsEvent =
+            new GnssMeasurementsEvent.Callback() {
+                @Override
+                public void onGnssMeasurementsReceived(GnssMeasurementsEvent eventArgs) {
+                    super.onGnssMeasurementsReceived(eventArgs);
+                    measurementList.clear();
+                    measurementList.addAll(eventArgs.getMeasurements());
+                    log += "Satellite total : " + +measurementList.size();
+                    log += "\n";
+                    DatabaseReference referenceLog = FirebaseDatabase.getInstance()
+                            .getReference("users/" + firebaseUser.getUid() + "/log").push();
+                    databaseReference.child("log/" + referenceLog.getKey() + "/dateTime")
+                            .setValue(Calendar.getInstance().getTime());
+                    for (GnssMeasurement measurement : measurementList)
+                        databaseReference.child("log/" + referenceLog.getKey()).push().setValue(new GnssData(measurement));
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            textViewLog.setText(log);
+                            if (!statusScroll) scrollViewLog.fullScroll(ScrollView.FOCUS_DOWN);
+                        }
+                    });
+                    Log.i(TAG, "GnssMeasurementsEvent callback -> Satellite total : " + measurementList.size());
+                }
+            };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record_start);
+
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        databaseReference = FirebaseDatabase.getInstance().getReference("users/" + firebaseUser.getUid());
+        log = "";
+        measurementList = new ArrayList<>();
+        handler = new Handler();
+        locationManager = (LocationManager) this.getSystemService(this.LOCATION_SERVICE);
 
         statusRecord = false;
         statusScroll = false;
@@ -47,12 +99,9 @@ public class RecordStartActivity extends AppCompatActivity {
         textViewBtnScroll = (TextView) findViewById(R.id.recordStart_btnScroll);
         textViewBtnLogOut = (TextView) findViewById(R.id.recordLogin_btnLogOut);
         scrollViewLog = (ScrollView) findViewById(R.id.recordStart_logScroll);
+        textViewLog = (TextView) findViewById(R.id.recordStart_log);
 
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (firebaseUser != null) {
-            textViewName.setText(firebaseUser.getDisplayName());
-        }
-
+        if (firebaseUser != null) textViewName.setText(firebaseUser.getDisplayName());
         tempYBtnStart = textViewStart.getY();
 
         textViewStart.setOnClickListener(new View.OnClickListener() {
@@ -79,7 +128,20 @@ public class RecordStartActivity extends AppCompatActivity {
                     animatorBtnScroll.setDuration(800);
                     animatorBtnScroll.setStartDelay(700);
                     animatorBtnScroll.start();
+                    //Check Permission
+                    if (ActivityCompat.checkSelfPermission(RecordStartActivity.this,
+                            android.Manifest.permission.ACCESS_FINE_LOCATION)
+                            != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(RecordStartActivity.this,
+                                new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                                PERMISSIONS_ACCESS_FINE_LOCATION);
+                    }
+                    locationManager.registerGnssMeasurementsCallback(measurementsEvent);
+                    Log.i(TAG, "Register callback -> measurementsEvent");
 
+                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+                    databaseReference.child("status").setValue(true);
                     statusRecord = true;
                 } else {
                     Log.i(TAG, "Click -> textViewStart = Stop");
@@ -106,6 +168,12 @@ public class RecordStartActivity extends AppCompatActivity {
                     ObjectAnimator.ofFloat(textViewBtnLogOut, View.ALPHA, 1f)
                             .setDuration(1000).start();
 
+                    locationManager.unregisterGnssMeasurementsCallback(measurementsEvent);
+                    Log.i(TAG, "!! UnRegister callback -> measurementsEvent");
+
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+                    databaseReference.child("status").setValue(false);
                     statusRecord = false;
                 }
             }
@@ -138,6 +206,13 @@ public class RecordStartActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        locationManager.unregisterGnssMeasurementsCallback(measurementsEvent);
+        Log.i(TAG, "!! UnRegister callback -> measurementsEvent");
+        databaseReference.child("status").setValue(false);
     }
 }
