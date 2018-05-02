@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -23,7 +22,7 @@ import org.apache.commons.validator.routines.EmailValidator;
 
 public class RecordRegisterActivity extends AppCompatActivity {
 
-    private static final String TAG = "RecordRegisterActivity";
+    private static final String TAG = RecordRegisterActivity.class.getSimpleName();
 
     private EditText editTextEmail;
     private EditText editTextPassword;
@@ -38,11 +37,11 @@ public class RecordRegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record_register);
 
-        editTextEmail = (EditText) findViewById(R.id.recordRegister_inputMail);
-        editTextPassword = (EditText) findViewById(R.id.recordRegister_inputPassword);
-        editTextRePassword = (EditText) findViewById(R.id.recordRegister_inputRePassword);
-        editTextName = (EditText) findViewById(R.id.recordRegister_inputName);
-        textViewBtnRegister = (TextView) findViewById(R.id.recordRegister_btnRegister);
+        editTextEmail = findViewById(R.id.recordRegister_inputMail);
+        editTextPassword = findViewById(R.id.recordRegister_inputPassword);
+        editTextRePassword = findViewById(R.id.recordRegister_inputRePassword);
+        editTextName = findViewById(R.id.recordRegister_inputName);
+        textViewBtnRegister = findViewById(R.id.recordRegister_btnRegister);
 
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -58,8 +57,7 @@ public class RecordRegisterActivity extends AppCompatActivity {
                                     if (task.isSuccessful()) {
                                         addDisplayName(editTextName.getText().toString());
                                         Log.i(TAG, "createUserWithEmail:success");
-                                        Intent intent = new Intent(RecordRegisterActivity.this, RecordStartActivity.class);
-                                        startActivity(intent);
+                                        startActivity(new Intent(RecordRegisterActivity.this, RecordStartActivity.class));
                                         finish();
                                     } else {
                                         Log.i(TAG, "createUserWithEmail:failure", task.getException());
@@ -122,6 +120,7 @@ public class RecordRegisterActivity extends AppCompatActivity {
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                 .setDisplayName(name)
                 .build();
+        assert user != null;
         user.updateProfile(profileUpdates)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override

@@ -6,7 +6,7 @@ import android.location.GnssMeasurement;
  * Created by narit on 23/2/2018 AD.
  */
 
-public class GnssData {
+public class Gnss {
 
     private int svID;
     private int constellationType;
@@ -14,23 +14,19 @@ public class GnssData {
     private int accumulatedDeltaRangeState;
     private double accumulatedDeltaRangeUncertaintyMeters;
     private long carrierCycles;
-//    private float carrierFrequencyHz;
-//    private double carrierPhase;
-//    private double carrierPhaseUncertainty;
+    //private float carrierFrequencyHz;
+    //private double carrierPhase;
+    //private double carrierPhaseUncertainty;
     private double cn0DbHz;
     private int multipathIndicator;
     private double pseudorangeRateMetersPerSecond;
     private double pseudorangeRateUncertaintyMetersPerSecond;
     private long receivedSvTimeNanos;
     private long receivedSvTimeUncertaintyNanos;
-//    private double snrInDb;
+    //private double snrInDb;
     private double timeOffsetNanos;
 
-    public GnssData() {
-
-    }
-
-    public GnssData(GnssMeasurement measurement) {
+    public Gnss(GnssMeasurement measurement) {
         this.svID = measurement.getSvid();
         this.constellationType = measurement.getConstellationType();
         this.accumulatedDeltaRangeMeters = measurement.getAccumulatedDeltaRangeMeters();

@@ -26,7 +26,7 @@ import java.util.List;
 
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListHolder> {
 
-    private static final String TAG = "ListAdapter";
+    private static final String TAG = ListAdapter.class.getSimpleName();
 
     private List<GnssMeasurement> measurementList;
 
@@ -72,7 +72,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListHolder> {
                 intent.putExtra("logoSatellite", logoSatellite);
                 intent.putExtra("nameSatellite", nameSatellite);
                 v.getContext().startActivity(intent, activityOptions.toBundle());
-                Log.i(TAG, "Click -> DetailActivity by Svid = "+measurement.getSvid());
+                Log.i(TAG, "Click -> DetailActivity by Svid = " + measurement.getSvid());
             }
         });
     }
@@ -93,11 +93,11 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListHolder> {
         public ListHolder(View itemView) {
             super(itemView);
 
-            relativeLayout = (RelativeLayout) itemView.findViewById(R.id.adapter_list);
-            imageViewLogo = (ImageView) itemView.findViewById(R.id.adapter_list_logo);
-            textViewSvId = (TextView) itemView.findViewById(R.id.adapter_list_svId);
-            textViewSatelliteName = (TextView) itemView.findViewById(R.id.adapter_list_satelliteName);
-            roundCornerProgressBar = (RoundCornerProgressBar) itemView.findViewById(R.id.adapter_list_progress);
+            relativeLayout = itemView.findViewById(R.id.adapter_list);
+            imageViewLogo = itemView.findViewById(R.id.adapter_list_logo);
+            textViewSvId = itemView.findViewById(R.id.adapter_list_svId);
+            textViewSatelliteName = itemView.findViewById(R.id.adapter_list_satelliteName);
+            roundCornerProgressBar = itemView.findViewById(R.id.adapter_list_progress);
             roundCornerProgressBar.setProgressBackgroundColor(Color.parseColor("#FFDFDFDF"));
             roundCornerProgressBar.setMax(50);
         }

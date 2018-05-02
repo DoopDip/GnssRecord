@@ -6,7 +6,11 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Objects;
+
 public class DetailActivity extends AppCompatActivity {
+
+    private static final String TAG = DetailActivity.class.getSimpleName();
 
     private GnssMeasurement measurement;
 
@@ -37,32 +41,31 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        measurement = getIntent().getExtras().getParcelable("measurement");
+        measurement = Objects.requireNonNull(getIntent().getExtras()).getParcelable("measurement");
         int logoSatellite = getIntent().getExtras().getInt("logoSatellite");
         String nameSatellite = getIntent().getExtras().getString("nameSatellite");
 
-        imageViewHeadLogo = (ImageView) findViewById(R.id.detail_headLogo);
-        textViewHeadSvid = (TextView) findViewById(R.id.detail_headSvid);
-        textViewHeadSatelliteName = (TextView) findViewById(R.id.detail_headSatelliteName);
-        
-        textViewSvID = (TextView) findViewById(R.id.detail_svID);
-        textViewConstellationType = (TextView) findViewById(R.id.detail_constellationType);
-        textViewAccumulatedDeltaRangeMeters = (TextView) findViewById(R.id.detail_accumulatedDeltaRangeMeters);
-        textViewAccumulatedDeltaRangeState = (TextView) findViewById(R.id.detail_accumulatedDeltaRangeState);
-        textViewAccumulatedDeltaRangeUncertaintyMeters = (TextView) findViewById(R.id.detail_accumulatedDeltaRangeUncertaintyMeters);
-        textViewCarrierCycles = (TextView) findViewById(R.id.detail_carrierCycles);
-        textViewCarrierFrequencyHz = (TextView) findViewById(R.id.detail_carrierFrequencyHz);
-        textViewCarrierPhase = (TextView) findViewById(R.id.detail_carrierPhase);
-        textViewCarrierPhaseUncertainty = (TextView) findViewById(R.id.detail_carrierPhaseUncertainty);
-        textViewCn0DbHz = (TextView) findViewById(R.id.detail_cn0DbHz);
-        textViewMultipathIndicator = (TextView) findViewById(R.id.detail_multipathIndicator);
-        textViewPseudorangeRateMetersPerSecond = (TextView) findViewById(R.id.detail_pseudorangeRateMetersPerSecond);
-        textViewPseudorangeRateUncertaintyMetersPerSecond = (TextView) findViewById(R.id.detail_pseudorangeRateUncertaintyMetersPerSecond);
-        textViewReceivedSvTimeNanos = (TextView) findViewById(R.id.detail_receivedSvTimeNanos);
-        textViewReceivedSvTimeUncertaintyNanos = (TextView) findViewById(R.id.detail_receivedSvTimeUncertaintyNanos);
-        textViewSnrInDb = (TextView) findViewById(R.id.detail_snrInDb);
-        textViewTimeOffsetNanos = (TextView) findViewById(R.id.detail_timeOffsetNanos);
+        imageViewHeadLogo = findViewById(R.id.detail_headLogo);
+        textViewHeadSvid = findViewById(R.id.detail_headSvid);
+        textViewHeadSatelliteName = findViewById(R.id.detail_headSatelliteName);
 
+        textViewSvID = findViewById(R.id.detail_svID);
+        textViewConstellationType = findViewById(R.id.detail_constellationType);
+        textViewAccumulatedDeltaRangeMeters = findViewById(R.id.detail_accumulatedDeltaRangeMeters);
+        textViewAccumulatedDeltaRangeState = findViewById(R.id.detail_accumulatedDeltaRangeState);
+        textViewAccumulatedDeltaRangeUncertaintyMeters = findViewById(R.id.detail_accumulatedDeltaRangeUncertaintyMeters);
+        textViewCarrierCycles = findViewById(R.id.detail_carrierCycles);
+        textViewCarrierFrequencyHz = findViewById(R.id.detail_carrierFrequencyHz);
+        textViewCarrierPhase = findViewById(R.id.detail_carrierPhase);
+        textViewCarrierPhaseUncertainty = findViewById(R.id.detail_carrierPhaseUncertainty);
+        textViewCn0DbHz = findViewById(R.id.detail_cn0DbHz);
+        textViewMultipathIndicator = findViewById(R.id.detail_multipathIndicator);
+        textViewPseudorangeRateMetersPerSecond = findViewById(R.id.detail_pseudorangeRateMetersPerSecond);
+        textViewPseudorangeRateUncertaintyMetersPerSecond = findViewById(R.id.detail_pseudorangeRateUncertaintyMetersPerSecond);
+        textViewReceivedSvTimeNanos = findViewById(R.id.detail_receivedSvTimeNanos);
+        textViewReceivedSvTimeUncertaintyNanos = findViewById(R.id.detail_receivedSvTimeUncertaintyNanos);
+        textViewSnrInDb = findViewById(R.id.detail_snrInDb);
+        textViewTimeOffsetNanos = findViewById(R.id.detail_timeOffsetNanos);
 
         imageViewHeadLogo.setImageResource(logoSatellite);
         textViewHeadSvid.setText(String.valueOf(measurement.getSvid()));

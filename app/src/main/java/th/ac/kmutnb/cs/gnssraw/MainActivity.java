@@ -20,7 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = MainActivity.class.getSimpleName();
     private static final int PERMISSIONS_ACCESS_FINE_LOCATION = 99;
 
     private RelativeLayout relativeLayoutPosition;
@@ -53,8 +53,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "Click -> MenuList");
-                Intent intent = new Intent(MainActivity.this, ListActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(MainActivity.this, ListActivity.class));
             }
         });
 
@@ -64,18 +63,17 @@ public class MainActivity extends AppCompatActivity {
                 Log.i(TAG, "Click -> MenuRecord");
                 if (isConnectedToInternet(getApplicationContext())) {
                     FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                    if (firebaseUser != null) {
-                        Intent intent = new Intent(MainActivity.this, RecordStartActivity.class);
-                        startActivity(intent);
-                    } else {
-                        Intent intent = new Intent(MainActivity.this, RecordLoginActivity.class);
-                        startActivity(intent);
-                    }
+                    if (firebaseUser != null)
+                        startActivity(new Intent(MainActivity.this, RecordStartActivity.class));
+                    else
+                        startActivity(new Intent(MainActivity.this, RecordLoginActivity.class));
                 } else {
-                    Snackbar.make(relativeLayoutRecord, R.string.please_internet, Snackbar.LENGTH_INDEFINITE).
-                            setAction(R.string.ok, new View.OnClickListener() {
+                    Snackbar.make(relativeLayoutRecord, R.string.please_internet, Snackbar.LENGTH_INDEFINITE)
+                            .setAction(R.string.ok, new View.OnClickListener() {
                                 @Override
-                                public void onClick(View v) {}
+                                public void onClick(View v) {
+                                    Log.i(TAG, "Click -> " + R.string.please_internet);
+                                }
                             }).show();
                 }
             }
@@ -84,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean isConnectedToInternet(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        assert cm != null;
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }

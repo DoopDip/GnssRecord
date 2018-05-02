@@ -30,7 +30,7 @@ import java.util.List;
 
 public class RecordStartActivity extends AppCompatActivity {
 
-    private static final String TAG = "RecordStartActivity";
+    private static final String TAG = RecordStartActivity.class.getSimpleName();
     private static final int PERMISSIONS_ACCESS_FINE_LOCATION = 99;
 
     private TextView textViewWelcome;
@@ -66,7 +66,7 @@ public class RecordStartActivity extends AppCompatActivity {
                     databaseReference.child("log/" + referenceLog.getKey() + "/dateTime")
                             .setValue(Calendar.getInstance().getTime());
                     for (GnssMeasurement measurement : measurementList)
-                        databaseReference.child("log/" + referenceLog.getKey()).push().setValue(new GnssData(measurement));
+                        databaseReference.child("log/" + referenceLog.getKey()).push().setValue(new Gnss(measurement));
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -88,18 +88,18 @@ public class RecordStartActivity extends AppCompatActivity {
         log = "";
         measurementList = new ArrayList<>();
         handler = new Handler();
-        locationManager = (LocationManager) this.getSystemService(this.LOCATION_SERVICE);
+        locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
 
         statusRecord = false;
         statusScroll = false;
 
-        textViewWelcome = (TextView) findViewById(R.id.recordStart_welcome);
-        textViewName = (TextView) findViewById(R.id.recordStart_name);
-        textViewStart = (TextView) findViewById(R.id.recordStart_start);
-        textViewBtnScroll = (TextView) findViewById(R.id.recordStart_btnScroll);
-        textViewBtnLogOut = (TextView) findViewById(R.id.recordLogin_btnLogOut);
-        scrollViewLog = (ScrollView) findViewById(R.id.recordStart_logScroll);
-        textViewLog = (TextView) findViewById(R.id.recordStart_log);
+        textViewWelcome = findViewById(R.id.recordStart_welcome);
+        textViewName = findViewById(R.id.recordStart_name);
+        textViewStart = findViewById(R.id.recordStart_start);
+        textViewBtnScroll = findViewById(R.id.recordStart_btnScroll);
+        textViewBtnLogOut = findViewById(R.id.recordLogin_btnLogOut);
+        scrollViewLog = findViewById(R.id.recordStart_logScroll);
+        textViewLog = findViewById(R.id.recordStart_log);
 
         if (firebaseUser != null) textViewName.setText(firebaseUser.getDisplayName());
         tempYBtnStart = textViewStart.getY();
@@ -201,8 +201,7 @@ public class RecordStartActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.i(TAG, "Click -> LogOut");
                 FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(RecordStartActivity.this, MainActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(RecordStartActivity.this, MainActivity.class));
                 finish();
             }
         });

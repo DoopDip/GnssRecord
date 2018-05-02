@@ -19,7 +19,7 @@ import java.util.List;
 
 public class ListActivity extends AppCompatActivity {
 
-    private static final String TAG = "ListActivity";
+    private static final String TAG = ListActivity.class.getSimpleName();
     private static final int PERMISSIONS_ACCESS_FINE_LOCATION = 99;
 
     private RecyclerView recyclerView;
@@ -63,14 +63,14 @@ public class ListActivity extends AppCompatActivity {
 
         listAdapter = new ListAdapter(measurementList);
 
-        textViewTotalSatellite = (TextView) findViewById(R.id.list_totalSatellite);
+        textViewTotalSatellite = findViewById(R.id.list_totalSatellite);
         textViewTotalSatellite.setText("0");
 
-        recyclerView = (RecyclerView) findViewById(R.id.list_recyclerView);
+        recyclerView = findViewById(R.id.list_recyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setAdapter(listAdapter);
 
-        locationManager = (LocationManager) this.getSystemService(this.LOCATION_SERVICE);
+        locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
     }
 
     @Override
