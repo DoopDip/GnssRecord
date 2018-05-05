@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import th.ac.kmutnb.cs.gnssraw.model.Gnss;
+import th.ac.kmutnb.cs.gnssraw.model.Record;
 
 public class RecordActivity extends AppCompatActivity {
 
@@ -68,7 +68,7 @@ public class RecordActivity extends AppCompatActivity {
                     databaseReference.child("log/" + referenceLog.getKey() + "/dateTime")
                             .setValue(Calendar.getInstance().getTime());
                     for (GnssMeasurement measurement : measurementList)
-                        databaseReference.child("log/" + referenceLog.getKey()).push().setValue(new Gnss(measurement));
+                        databaseReference.child("log/" + referenceLog.getKey()).push().setValue(new Record(measurement));
                     handler.post(new Runnable() {
                         @Override
                         public void run() {

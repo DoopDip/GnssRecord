@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.location.GnssMeasurement;
 import android.location.GnssStatus;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.Pair;
@@ -13,11 +14,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import th.ac.kmutnb.cs.gnssraw.DetailActivity;
@@ -53,13 +56,9 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListHolder> {
         holder.imageViewLogo.setImageResource(logoSatellite);
         holder.textViewSvId.setText(String.valueOf(measurement.getSvid()));
         holder.textViewSatelliteName.setText(nameSatellite);
-        holder.roundCornerProgressBar.setProgressColor(progressColor((float) measurement.getCn0DbHz()));
-        holder.roundCornerProgressBar.setProgress((float) measurement.getCn0DbHz());
-
-        holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
+        holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Pair[] pairs = new Pair[3];
                 pairs[0] = new Pair<View, String>(holder.imageViewLogo, "list_logoTransition");
                 pairs[1] = new Pair<View, String>(holder.textViewSvId, "list_SvidTransition");
@@ -87,28 +86,23 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListHolder> {
 
     static class ListHolder extends RecyclerView.ViewHolder {
 
-        public RelativeLayout relativeLayout;
+        public LinearLayout linearLayout;
         public ImageView imageViewLogo;
         public TextView textViewSvId;
         public TextView textViewSatelliteName;
-        public RoundCornerProgressBar roundCornerProgressBar;
 
         public ListHolder(View itemView) {
             super(itemView);
-
-            relativeLayout = itemView.findViewById(R.id.adapter_list);
+            linearLayout = itemView.findViewById(R.id.adapter_list);
             imageViewLogo = itemView.findViewById(R.id.adapter_list_logo);
             textViewSvId = itemView.findViewById(R.id.adapter_list_svId);
             textViewSatelliteName = itemView.findViewById(R.id.adapter_list_satelliteName);
-            roundCornerProgressBar = itemView.findViewById(R.id.adapter_list_progress);
-            roundCornerProgressBar.setProgressBackgroundColor(Color.parseColor("#FFDFDFDF"));
-            roundCornerProgressBar.setMax(50);
         }
     }
 
-    public void updateMeasurementList(List<GnssMeasurement> measurementList) {
-        this.measurementList = measurementList;
-        notifyDataSetChanged();
+    public void updateGnssMeasurementList(List<GnssMeasurement> measurementListOld, List<GnssMeasurement> measurementListNew) {
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new SatelliteDiffCallback(measurementListOld, measurementListNew));
+        diffResult.dispatchUpdatesTo(this);
     }
 
     private String satelliteName(int svId) {
@@ -143,14 +137,5 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListHolder> {
         else if (constellationType == GnssStatus.CONSTELLATION_GALILEO)
             logoImageResource = R.drawable.logo_galileo;
         return logoImageResource;
-    }
-
-    private int progressColor(float progress) {
-        if (progress > 32)
-            return Color.parseColor("#99cc00");
-        else if (progress > 16)
-            return Color.parseColor("#ffbb33");
-        else
-            return Color.parseColor("#ff4444");
     }
 }

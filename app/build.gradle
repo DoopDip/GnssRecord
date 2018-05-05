@@ -34,6 +34,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:15.0.1'
     implementation 'com.google.firebase:firebase-auth:15.1.0'
     implementation 'com.google.firebase:firebase-messaging:15.0.2'
+
+    implementation 'com.github.rubensousa:gravitysnaphelper:1.5'
 }
 
 apply plugin: 'com.google.gms.google-services'

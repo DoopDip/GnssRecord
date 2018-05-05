@@ -10,35 +10,37 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
         android:layout_marginBottom="20dp"
+        android:layout_marginTop="30dp"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="0dp"
-            android:paddingEnd="10dp"
-            android:textColor="@color/colorWhite"
             android:fontFamily="@font/thaisansneue_light"
-            android:textSize="60sp"
-            android:text="@string/satellite"/>
+            android:paddingEnd="10dp"
+            android:paddingStart="0dp"
+            android:text="@string/satellite"
+            android:textColor="@color/colorWhite"
+            android:textSize="60sp" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/thaisansneue_extrabold"
+            android:text="@string/list"
             android:textColor="@color/colorWhite"
-            android:textSize="60sp"
-            android:text="@string/list"/>
+            android:textSize="60sp" />
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list_recyclerView"
-        android:layout_below="@+id/list_title"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="3dp"/>
+        android:layout_below="@+id/list_title"
+        android:layout_marginEnd="15dp"
+        android:layout_marginStart="20dp"
+        android:overScrollMode="never" />
 
     <TextView
         android:id="@+id/list_totalSatellite"
@@ -47,13 +49,15 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="15dp"
-        android:layout_marginEnd="15dp"
-        android:paddingBottom="5dp"
-        android:paddingTop="5dp"
-        android:paddingRight="10dp"
-        android:paddingLeft="10dp"
-        android:background="@color/colorGray"
-        android:textColor="@color/colorWhite"
-        android:alpha="0.4"/>
+        android:alpha="0.6"
+        android:background="@drawable/bg_list_satellite_total"
+        android:fontFamily="@font/thaisansneue_extrabold"
+        android:paddingBottom="10dp"
+        android:paddingEnd="15dp"
+        android:paddingStart="20dp"
+        android:paddingTop="10dp"
+        android:text="@string/satellite"
+        android:textColor="@color/colorGray"
+        android:textSize="20sp" />
 
 </RelativeLayout>

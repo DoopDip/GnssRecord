@@ -6,7 +6,7 @@ import android.location.GnssMeasurement;
  * Created by narit on 23/2/2018 AD.
  */
 
-public class Gnss {
+public class Record {
 
     private int svID;
     private int constellationType;
@@ -26,7 +26,7 @@ public class Gnss {
     //private double snrInDb;
     private double timeOffsetNanos;
 
-    public Gnss(GnssMeasurement measurement) {
+    public Record(GnssMeasurement measurement) {
         this.svID = measurement.getSvid();
         this.constellationType = measurement.getConstellationType();
         this.accumulatedDeltaRangeMeters = measurement.getAccumulatedDeltaRangeMeters();

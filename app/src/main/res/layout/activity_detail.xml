@@ -33,6 +33,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="-"
+                android:textColor="@color/colorWhite"
                 android:textSize="70dp"
                 android:textStyle="bold"
                 android:transitionName="list_SvidTransition" />
@@ -44,6 +45,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="UNKNOW"
+                android:textColor="@color/colorWhite"
                 android:textSize="30dp"
                 android:textStyle="bold"
                 android:transitionName="list_SatelliteNameTransition" />
