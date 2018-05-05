@@ -17,6 +17,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import th.ac.kmutnb.cs.gnssraw.adapter.ListAdapter;
+
 public class ListActivity extends AppCompatActivity {
 
     private static final String TAG = ListActivity.class.getSimpleName();

@@ -64,9 +64,9 @@ public class MainActivity extends AppCompatActivity {
                 if (isConnectedToInternet(getApplicationContext())) {
                     FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                     if (firebaseUser != null)
-                        startActivity(new Intent(MainActivity.this, RecordStartActivity.class));
+                        startActivity(new Intent(MainActivity.this, RecordActivity.class));
                     else
-                        startActivity(new Intent(MainActivity.this, RecordLoginActivity.class));
+                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 } else {
                     Snackbar.make(relativeLayoutRecord, R.string.please_internet, Snackbar.LENGTH_INDEFINITE)
                             .setAction(R.string.ok, new View.OnClickListener() {

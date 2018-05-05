@@ -3,11 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBlack"
-    tools:context="th.ac.kmutnb.cs.gnssraw.RecordRegisterActivity">
+    tools:context="th.ac.kmutnb.cs.gnssraw.RegisterActivity">
 
     <LinearLayout
-        android:id="@+id/recordRegister_title"
+        android:id="@+id/register_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -35,10 +34,10 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/recordRegister_boxRegister"
+        android:id="@+id/register_boxRegister"
         android:layout_width="300dp"
         android:layout_height="270dp"
-        android:layout_below="@+id/recordRegister_title"
+        android:layout_below="@+id/register_title"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="30dp"
         android:background="@drawable/bg_black_clear"
@@ -64,7 +63,7 @@
             android:background="@drawable/bg_input_gray">
 
             <ImageView
-                android:id="@+id/recordRegister_iconMail"
+                android:id="@+id/register_iconMail"
                 android:layout_width="25dp"
                 android:layout_height="17dp"
                 android:layout_centerVertical="true"
@@ -73,13 +72,13 @@
                 android:src="@drawable/icon_mail" />
 
             <EditText
-                android:id="@+id/recordRegister_inputMail"
+                android:id="@+id/register_inputMail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="15dp"
                 android:layout_marginStart="10dp"
-                android:layout_toEndOf="@+id/recordRegister_iconMail"
+                android:layout_toEndOf="@+id/register_iconMail"
                 android:background="@null"
                 android:fontFamily="@font/thaisansneue_light"
                 android:gravity="center_vertical"
@@ -100,7 +99,7 @@
             android:background="@drawable/bg_input_gray">
 
             <ImageView
-                android:id="@+id/recordRegister_iconPass"
+                android:id="@+id/register_iconPass"
                 android:layout_width="17dp"
                 android:layout_height="25dp"
                 android:layout_centerVertical="true"
@@ -109,13 +108,13 @@
                 android:src="@drawable/icon_pass" />
 
             <EditText
-                android:id="@+id/recordRegister_inputPassword"
+                android:id="@+id/register_inputPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="15dp"
                 android:layout_marginStart="13dp"
-                android:layout_toEndOf="@+id/recordRegister_iconPass"
+                android:layout_toEndOf="@+id/register_iconPass"
                 android:background="@null"
                 android:fontFamily="@font/thaisansneue_light"
                 android:gravity="center_vertical"
@@ -136,7 +135,7 @@
             android:background="@drawable/bg_input_gray">
 
             <ImageView
-                android:id="@+id/recordRegister_iconRePass"
+                android:id="@+id/register_iconRePass"
                 android:layout_width="17dp"
                 android:layout_height="25dp"
                 android:layout_centerVertical="true"
@@ -145,13 +144,13 @@
                 android:src="@drawable/icon_pass" />
 
             <EditText
-                android:id="@+id/recordRegister_inputRePassword"
+                android:id="@+id/register_inputRePassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="15dp"
                 android:layout_marginStart="13dp"
-                android:layout_toEndOf="@+id/recordRegister_iconRePass"
+                android:layout_toEndOf="@+id/register_iconRePass"
                 android:background="@null"
                 android:fontFamily="@font/thaisansneue_light"
                 android:gravity="center_vertical"
@@ -172,7 +171,7 @@
             android:background="@drawable/bg_input_gray">
 
             <ImageView
-                android:id="@+id/recordRegister_iconName"
+                android:id="@+id/register_iconName"
                 android:layout_width="18dp"
                 android:layout_height="25dp"
                 android:layout_centerVertical="true"
@@ -181,13 +180,13 @@
                 android:src="@drawable/icon_name" />
 
             <EditText
-                android:id="@+id/recordRegister_inputName"
+                android:id="@+id/register_inputName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="15dp"
                 android:layout_marginStart="12dp"
-                android:layout_toEndOf="@+id/recordRegister_iconName"
+                android:layout_toEndOf="@+id/register_iconName"
                 android:background="@null"
                 android:fontFamily="@font/thaisansneue_light"
                 android:gravity="center_vertical"
@@ -205,10 +204,10 @@
 
 
     <TextView
-        android:id="@+id/recordRegister_btnRegister"
+        android:id="@+id/register_btnRegister"
         android:layout_width="270dp"
         android:layout_height="55dp"
-        android:layout_below="@+id/recordRegister_boxRegister"
+        android:layout_below="@+id/register_boxRegister"
         android:layout_centerHorizontal="true"
         android:background="@drawable/bg_btn_white"
         android:fontFamily="@font/thaisansneue_semibold"

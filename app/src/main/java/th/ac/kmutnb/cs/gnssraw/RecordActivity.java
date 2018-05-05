@@ -28,9 +28,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class RecordStartActivity extends AppCompatActivity {
+import th.ac.kmutnb.cs.gnssraw.model.Gnss;
 
-    private static final String TAG = RecordStartActivity.class.getSimpleName();
+public class RecordActivity extends AppCompatActivity {
+
+    private static final String TAG = RecordActivity.class.getSimpleName();
     private static final int PERMISSIONS_ACCESS_FINE_LOCATION = 99;
 
     private TextView textViewWelcome;
@@ -81,7 +83,7 @@ public class RecordStartActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_record_start);
+        setContentView(R.layout.activity_record);
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         databaseReference = FirebaseDatabase.getInstance().getReference("users/" + firebaseUser.getUid());
@@ -93,13 +95,13 @@ public class RecordStartActivity extends AppCompatActivity {
         statusRecord = false;
         statusScroll = false;
 
-        textViewWelcome = findViewById(R.id.recordStart_welcome);
-        textViewName = findViewById(R.id.recordStart_name);
-        textViewStart = findViewById(R.id.recordStart_start);
-        textViewBtnScroll = findViewById(R.id.recordStart_btnScroll);
+        textViewWelcome = findViewById(R.id.record_welcome);
+        textViewName = findViewById(R.id.record_name);
+        textViewStart = findViewById(R.id.record_start);
+        textViewBtnScroll = findViewById(R.id.record_btnScroll);
         textViewBtnLogOut = findViewById(R.id.recordLogin_btnLogOut);
-        scrollViewLog = findViewById(R.id.recordStart_logScroll);
-        textViewLog = findViewById(R.id.recordStart_log);
+        scrollViewLog = findViewById(R.id.record_logScroll);
+        textViewLog = findViewById(R.id.record_log);
 
         if (firebaseUser != null) textViewName.setText(firebaseUser.getDisplayName());
         tempYBtnStart = textViewStart.getY();
@@ -129,10 +131,10 @@ public class RecordStartActivity extends AppCompatActivity {
                     animatorBtnScroll.setStartDelay(700);
                     animatorBtnScroll.start();
                     //Check Permission
-                    if (ActivityCompat.checkSelfPermission(RecordStartActivity.this,
+                    if (ActivityCompat.checkSelfPermission(RecordActivity.this,
                             android.Manifest.permission.ACCESS_FINE_LOCATION)
                             != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(RecordStartActivity.this,
+                        ActivityCompat.requestPermissions(RecordActivity.this,
                                 new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                                 PERMISSIONS_ACCESS_FINE_LOCATION);
                     }
@@ -201,7 +203,7 @@ public class RecordStartActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.i(TAG, "Click -> LogOut");
                 FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(RecordStartActivity.this, MainActivity.class));
+                startActivity(new Intent(RecordActivity.this, MainActivity.class));
                 finish();
             }
         });

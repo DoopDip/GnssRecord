@@ -1,4 +1,4 @@
-package th.ac.kmutnb.cs.gnssraw;
+package th.ac.kmutnb.cs.gnssraw.adapter;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
@@ -19,6 +19,9 @@ import android.widget.TextView;
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 
 import java.util.List;
+
+import th.ac.kmutnb.cs.gnssraw.DetailActivity;
+import th.ac.kmutnb.cs.gnssraw.R;
 
 /**
  * Created by narit on 18/2/2018 AD.

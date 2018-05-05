@@ -29,13 +29,13 @@
             android:name=".DetailActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".RecordLoginActivity"
+            android:name=".LoginActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".RecordRegisterActivity"
+            android:name=".RegisterActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".RecordStartActivity"
+            android:name=".RecordActivity"
             android:screenOrientation="portrait"/>
     </application>
 

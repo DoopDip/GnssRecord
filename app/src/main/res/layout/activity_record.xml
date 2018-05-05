@@ -3,11 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBlack"
-    tools:context="th.ac.kmutnb.cs.gnssraw.RecordStartActivity">
+    tools:context="th.ac.kmutnb.cs.gnssraw.RecordActivity">
 
     <LinearLayout
-        android:id="@+id/recordStart_title"
+        android:id="@+id/record_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -35,10 +34,10 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/recordStart_welcome"
+        android:id="@+id/record_welcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/recordStart_title"
+        android:layout_below="@+id/record_title"
         android:layout_centerHorizontal="true"
         android:fontFamily="@font/thaisansneue_extrabold"
         android:text="@string/welcome"
@@ -47,10 +46,10 @@
         android:textSize="20sp" />
 
     <TextView
-        android:id="@+id/recordStart_name"
+        android:id="@+id/record_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/recordStart_welcome"
+        android:layout_below="@+id/record_welcome"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="50dp"
         android:fontFamily="@font/thaisansneue_light"
@@ -59,10 +58,10 @@
         android:textSize="36sp" />
 
     <TextView
-        android:id="@+id/recordStart_start"
+        android:id="@+id/record_start"
         android:layout_width="284dp"
         android:layout_height="110dp"
-        android:layout_below="@id/recordStart_name"
+        android:layout_below="@id/record_name"
         android:layout_centerHorizontal="true"
         android:background="@drawable/bg_btn_green"
         android:fontFamily="@font/thaisansneue_extrabold"
@@ -73,10 +72,10 @@
         android:textSize="40sp" />
 
     <TextView
-        android:id="@+id/recordStart_btnScroll"
+        android:id="@+id/record_btnScroll"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/recordStart_logScroll"
+        android:layout_above="@+id/record_logScroll"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="12dp"
         android:alpha="0"
@@ -87,7 +86,7 @@
         android:visibility="invisible" />
 
     <ScrollView
-        android:id="@+id/recordStart_logScroll"
+        android:id="@+id/record_logScroll"
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:layout_alignParentBottom="true"
@@ -100,7 +99,7 @@
         android:visibility="invisible">
 
         <TextView
-            android:id="@+id/recordStart_log"
+            android:id="@+id/record_log"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/thaisansneue_light"

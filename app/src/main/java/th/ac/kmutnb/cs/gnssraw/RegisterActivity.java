@@ -20,9 +20,9 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 
 import org.apache.commons.validator.routines.EmailValidator;
 
-public class RecordRegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity {
 
-    private static final String TAG = RecordRegisterActivity.class.getSimpleName();
+    private static final String TAG = RegisterActivity.class.getSimpleName();
 
     private EditText editTextEmail;
     private EditText editTextPassword;
@@ -35,13 +35,13 @@ public class RecordRegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_record_register);
+        setContentView(R.layout.activity_register);
 
-        editTextEmail = findViewById(R.id.recordRegister_inputMail);
-        editTextPassword = findViewById(R.id.recordRegister_inputPassword);
-        editTextRePassword = findViewById(R.id.recordRegister_inputRePassword);
-        editTextName = findViewById(R.id.recordRegister_inputName);
-        textViewBtnRegister = findViewById(R.id.recordRegister_btnRegister);
+        editTextEmail = findViewById(R.id.register_inputMail);
+        editTextPassword = findViewById(R.id.register_inputPassword);
+        editTextRePassword = findViewById(R.id.register_inputRePassword);
+        editTextName = findViewById(R.id.register_inputName);
+        textViewBtnRegister = findViewById(R.id.register_btnRegister);
 
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -51,13 +51,13 @@ public class RecordRegisterActivity extends AppCompatActivity {
                 if (validateForm()) {
                     firebaseAuth.createUserWithEmailAndPassword(editTextEmail.getText().toString(),
                             editTextPassword.getText().toString())
-                            .addOnCompleteListener(RecordRegisterActivity.this, new OnCompleteListener<AuthResult>() {
+                            .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
                                         addDisplayName(editTextName.getText().toString());
                                         Log.i(TAG, "createUserWithEmail:success");
-                                        startActivity(new Intent(RecordRegisterActivity.this, RecordStartActivity.class));
+                                        startActivity(new Intent(RegisterActivity.this, RecordActivity.class));
                                         finish();
                                     } else {
                                         Log.i(TAG, "createUserWithEmail:failure", task.getException());

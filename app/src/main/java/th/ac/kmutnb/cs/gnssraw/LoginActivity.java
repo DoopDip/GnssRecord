@@ -18,9 +18,9 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import org.apache.commons.validator.routines.EmailValidator;
 
-public class RecordLoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
-    private static final String TAG = RecordLoginActivity.class.getSimpleName();
+    private static final String TAG = LoginActivity.class.getSimpleName();
 
     private TextView textViewBtnLogin;
     private TextView textViewBtnRegister;
@@ -32,12 +32,12 @@ public class RecordLoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_record_login);
+        setContentView(R.layout.activity_login);
 
-        textViewBtnLogin = findViewById(R.id.recordLogin_btnLogin);
-        textViewBtnRegister = findViewById(R.id.recordLogin_btnRegister);
-        editTextEmail = findViewById(R.id.recordLogin_inputMail);
-        editTextPassword = findViewById(R.id.recordLogin_inputPassword);
+        textViewBtnLogin = findViewById(R.id.login_btnLogin);
+        textViewBtnRegister = findViewById(R.id.login_btnRegister);
+        editTextEmail = findViewById(R.id.login_inputMail);
+        editTextPassword = findViewById(R.id.login_inputPassword);
 
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -48,12 +48,12 @@ public class RecordLoginActivity extends AppCompatActivity {
                 if (validateForm()) {
                     firebaseAuth.signInWithEmailAndPassword(editTextEmail.getText().toString(),
                             editTextPassword.getText().toString())
-                            .addOnCompleteListener(RecordLoginActivity.this, new OnCompleteListener<AuthResult>() {
+                            .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
                                         Log.d(TAG, "signInWithEmail:success");
-                                        startActivity(new Intent(RecordLoginActivity.this, RecordStartActivity.class));
+                                        startActivity(new Intent(LoginActivity.this, RecordActivity.class));
                                         finish();
                                     } else {
                                         Log.w(TAG, "signInWithEmail:failure", task.getException());
@@ -69,7 +69,7 @@ public class RecordLoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "Click -> Register");
-                startActivity(new Intent(RecordLoginActivity.this, RecordRegisterActivity.class));
+                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
                 finish();
             }
         });
