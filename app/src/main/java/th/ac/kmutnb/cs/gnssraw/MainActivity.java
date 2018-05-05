@@ -36,17 +36,7 @@ public class MainActivity extends AppCompatActivity {
         relativeLayoutList = findViewById(R.id.main_list);
         relativeLayoutRecord = findViewById(R.id.main_record);
 
-        //Animation
-        ObjectAnimator animatorPosition = ObjectAnimator.ofFloat(relativeLayoutPosition, View.ALPHA, 1f);
-        ObjectAnimator animatorList = ObjectAnimator.ofFloat(relativeLayoutList, View.ALPHA, 1f);
-        ObjectAnimator animatorRecord = ObjectAnimator.ofFloat(relativeLayoutRecord, View.ALPHA, 1f);
-        animatorPosition.setStartDelay(200);
-        animatorPosition.setDuration(1200).start();
-        animatorList.setStartDelay(400);
-        animatorList.setDuration(1200).start();
-        animatorRecord.setStartDelay(600);
-        animatorRecord.setDuration(1200).start();
-
+        startAnimation();
         checkPermissionLocation();
 
         relativeLayoutList.setOnClickListener(new View.OnClickListener() {
@@ -94,5 +84,27 @@ public class MainActivity extends AppCompatActivity {
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSIONS_ACCESS_FINE_LOCATION);
         }
+    }
+
+    private void startAnimation() {
+        Log.i(TAG,"Play Animation");
+        relativeLayoutPosition.setAlpha(0f);
+        relativeLayoutList.setAlpha(0f);
+        relativeLayoutRecord.setAlpha(0f);
+        ObjectAnimator animatorPosition = ObjectAnimator.ofFloat(relativeLayoutPosition, View.ALPHA, 1f);
+        ObjectAnimator animatorList = ObjectAnimator.ofFloat(relativeLayoutList, View.ALPHA, 1f);
+        ObjectAnimator animatorRecord = ObjectAnimator.ofFloat(relativeLayoutRecord, View.ALPHA, 1f);
+        animatorPosition.setStartDelay(200);
+        animatorPosition.setDuration(1200).start();
+        animatorList.setStartDelay(400);
+        animatorList.setDuration(1200).start();
+        animatorRecord.setStartDelay(600);
+        animatorRecord.setDuration(1200).start();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startAnimation();
     }
 }
