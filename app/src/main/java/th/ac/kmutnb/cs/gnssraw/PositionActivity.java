@@ -15,8 +15,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -96,6 +94,7 @@ public class PositionActivity extends AppCompatActivity implements LocationListe
         imageView.setImageResource(logoAndTotalSatellite(type));
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(radarWidth / 12, radarHeight / 12);
         imageView.setLayoutParams(params);
+        imageView.setRotation(currentDegree);
         imageView.setX(x);
         imageView.setY(y);
         relativeLayoutRadar.addView(imageView);
@@ -152,6 +151,7 @@ public class PositionActivity extends AppCompatActivity implements LocationListe
         }
         locationManager.registerGnssStatusCallback(gnssStatus);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        Log.i(TAG, "registerGnssStatusCallback -> gnssStatus");
     }
 
     @Override
@@ -160,6 +160,8 @@ public class PositionActivity extends AppCompatActivity implements LocationListe
         sensorManager.unregisterListener(this);
         locationManager.removeUpdates(this);
         locationManager.unregisterGnssStatusCallback(gnssStatus);
+        Log.i(TAG, "unregisterListener -> sensorManager");
+        Log.i(TAG, "unregisterGnssStatusCallback -> gnssStatus");
     }
 
     @Override
@@ -167,19 +169,16 @@ public class PositionActivity extends AppCompatActivity implements LocationListe
         super.onResume();
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
                 SensorManager.SENSOR_DELAY_GAME);
+        Log.i(TAG, "registerListener -> sensorManager");
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        float degree = Math.round(event.values[0] + 90);
-        RotateAnimation ra = new RotateAnimation(
-                currentDegree, -degree,
-                Animation.RELATIVE_TO_SELF, 0.5f,
-                Animation.RELATIVE_TO_SELF, 0.5f);
-        ra.setDuration(210);
-        ra.setFillAfter(true);
-        relativeLayoutRadar.startAnimation(ra);
-        currentDegree = -degree;
+        currentDegree = Math.round(event.values[0] + 90);
+        relativeLayoutRadar.setRotation(-currentDegree);
+        for (int i = 0; i < relativeLayoutRadar.getChildCount(); i++) {
+            relativeLayoutRadar.getChildAt(i).setRotation(currentDegree);
+        }
     }
 
     @Override
