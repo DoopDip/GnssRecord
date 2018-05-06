@@ -33,4 +33,6 @@
     <string name="sv_id">SvId</string>
     <string name="zero">0</string>
     <string name="all">All:</string>
+    <string name="unknown">Unknown</string>
+    <string name="hyphen">-</string>
 </resources>

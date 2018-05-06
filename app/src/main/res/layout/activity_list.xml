@@ -33,14 +33,23 @@
             android:textSize="60sp" />
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/list_recyclerView"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/list_title"
-        android:layout_marginEnd="15dp"
-        android:layout_marginStart="20dp"
-        android:overScrollMode="never" />
+        android:fadingEdgeLength="20dp"
+        android:overScrollMode="never"
+        android:requiresFadingEdge="vertical">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/list_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:paddingEnd="15dp"
+            android:paddingStart="20dp"
+            android:paddingTop="10dp" />
+    </ScrollView>
 
     <TextView
         android:id="@+id/list_totalSatellite"
@@ -48,7 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="15dp"
+        android:layout_marginBottom="30dp"
         android:alpha="0.6"
         android:background="@drawable/bg_list_satellite_total"
         android:fontFamily="@font/thaisansneue_extrabold"
