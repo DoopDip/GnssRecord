@@ -3,7 +3,7 @@ package th.ac.kmutnb.cs.gnssraw.adapter;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
-import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.location.GnssMeasurement;
 import android.location.GnssStatus;
 import android.support.v7.util.DiffUtil;
@@ -15,12 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import th.ac.kmutnb.cs.gnssraw.DetailActivity;
@@ -31,6 +27,10 @@ import th.ac.kmutnb.cs.gnssraw.R;
  */
 
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListHolder> {
+
+    public static final int STATUS_SATELLITE_GREEN = 30;
+    public static final int STATUS_SATELLITE_YELLOW = 14;
+    //public static final int STATUS_SATELLITE_RED = 2;
 
     private static final String TAG = ListAdapter.class.getSimpleName();
 
@@ -56,6 +56,8 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListHolder> {
         holder.imageViewLogo.setImageResource(logoSatellite);
         holder.textViewSvId.setText(String.valueOf(measurement.getSvid()));
         holder.textViewSatelliteName.setText(nameSatellite);
+        measurement.hasSnrInDb();
+        holder.linearLayout.setBackgroundResource(borderColor(measurement.getCn0DbHz()));
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,8 +67,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListHolder> {
                 pairs[2] = new Pair<View, String>(holder.textViewSatelliteName, "list_SatelliteNameTransition");
 
                 ActivityOptions activityOptions = ActivityOptions.makeSceneTransitionAnimation(
-                        (Activity) v.getContext(),
-                        pairs
+                        (Activity) v.getContext(), pairs
                 );
 
                 Intent intent = new Intent(v.getContext(), DetailActivity.class);
@@ -137,5 +138,14 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListHolder> {
         else if (constellationType == GnssStatus.CONSTELLATION_GALILEO)
             logoImageResource = R.drawable.logo_galileo;
         return logoImageResource;
+    }
+
+    private int borderColor(double signal) {
+        if (signal > STATUS_SATELLITE_GREEN)
+            return R.drawable.bg_list_satellite_green;
+        else if (signal > STATUS_SATELLITE_YELLOW)
+            return R.drawable.bg_list_satellite_yellow;
+        else
+            return R.drawable.bg_list_satellite_red;
     }
 }
