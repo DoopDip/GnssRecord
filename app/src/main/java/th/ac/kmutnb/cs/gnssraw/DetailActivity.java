@@ -1,5 +1,6 @@
 package th.ac.kmutnb.cs.gnssraw;
 
+import android.content.pm.ActivityInfo;
 import android.location.GnssMeasurement;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -40,6 +41,7 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         measurement = Objects.requireNonNull(getIntent().getExtras()).getParcelable("measurement");
         int logoSatellite = getIntent().getExtras().getInt("logoSatellite");

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         relativeLayoutPosition = findViewById(R.id.main_position);
         relativeLayoutList = findViewById(R.id.main_list);
@@ -38,6 +40,14 @@ public class MainActivity extends AppCompatActivity {
 
         startAnimation();
         checkPermissionLocation();
+
+        relativeLayoutPosition.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "Click -> MenuPosition");
+                startActivity(new Intent(MainActivity.this, PositionActivity.class));
+            }
+        });
 
         relativeLayoutList.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startAnimation() {
-        Log.i(TAG,"Play Animation");
+        Log.i(TAG, "Play Animation");
         relativeLayoutPosition.setAlpha(0f);
         relativeLayoutList.setAlpha(0f);
         relativeLayoutRecord.setAlpha(0f);

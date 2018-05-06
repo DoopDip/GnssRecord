@@ -1,6 +1,7 @@
 package th.ac.kmutnb.cs.gnssraw;
 
 import android.Manifest;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.location.GnssMeasurement;
 import android.location.GnssMeasurementsEvent;
@@ -67,7 +68,7 @@ public class ListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        Log.i(TAG, "onCreate");
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         measurementListNew = new ArrayList<>();
         measurementListOld = new ArrayList<>();

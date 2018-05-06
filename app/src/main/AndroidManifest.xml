@@ -22,21 +22,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ListActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".DetailActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".LoginActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".RegisterActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".RecordActivity"
-            android:screenOrientation="portrait"/>
+        <activity android:name=".ListActivity" />
+        <activity android:name=".DetailActivity" />
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".RecordActivity" />
+        <activity android:name=".PositionActivity" />
     </application>
 
 </manifest>

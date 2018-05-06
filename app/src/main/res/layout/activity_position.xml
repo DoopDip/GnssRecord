@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PositionActivity">
+
+    <LinearLayout
+        android:id="@+id/position_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/thaisansneue_light"
+            android:paddingEnd="10dp"
+            android:paddingStart="0dp"
+            android:text="@string/satellite"
+            android:textColor="@color/colorWhite"
+            android:textSize="60sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/thaisansneue_extrabold"
+            android:text="@string/position"
+            android:textColor="@color/colorWhite"
+            android:textSize="60sp" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/position_radar"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/radar"
+        android:layout_below="@id/position_title">
+    </RelativeLayout>
+
+</RelativeLayout>
