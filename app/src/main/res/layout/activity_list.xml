@@ -56,7 +56,7 @@
         android:paddingEnd="15dp"
         android:paddingStart="20dp"
         android:paddingTop="10dp"
-        android:text="@string/satellite"
+        android:text="@string/zero"
         android:textColor="@color/colorGray"
         android:textSize="20sp" />
 

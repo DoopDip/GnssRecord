@@ -20,6 +20,7 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class PositionActivity extends AppCompatActivity implements LocationListener, SensorEventListener {
 
@@ -33,10 +34,35 @@ public class PositionActivity extends AppCompatActivity implements LocationListe
     private SensorManager sensorManager;
     private float currentDegree = 0f;
 
+    private TextView textViewTotalGps;
+    private TextView textViewTotalSbas;
+    private TextView textViewTotalGlonass;
+    private TextView textViewTotalQzss;
+    private TextView textViewTotalBeidou;
+    private TextView textViewTotalGalileo;
+
+    private TextView textViewTotalSatellite;
+
+    private int totalGps = 0;
+    private int totalSbas = 0;
+    private int totalGlonass = 0;
+    private int totalQzss = 0;
+    private int totalBeidou = 0;
+    private int totalGalileo = 0;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_position);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        textViewTotalGps = findViewById(R.id.position_totalGps);
+        textViewTotalSbas = findViewById(R.id.position_totalSbas);
+        textViewTotalGlonass = findViewById(R.id.position_totalGlonass);
+        textViewTotalQzss = findViewById(R.id.position_totalQzss);
+        textViewTotalBeidou = findViewById(R.id.position_totalBeidou);
+        textViewTotalGalileo = findViewById(R.id.position_totalGalileo);
+
+        textViewTotalSatellite = findViewById(R.id.position_totalSatellite);
 
         relativeLayoutRadar = findViewById(R.id.position_radar);
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -45,29 +71,30 @@ public class PositionActivity extends AppCompatActivity implements LocationListe
             @Override
             public void onSatelliteStatusChanged(GnssStatus status) {
                 super.onSatelliteStatusChanged(status);
+                totalSatelliteSetZero();
                 relativeLayoutRadar.removeAllViews();
-                for (int i = 0; i < status.getSatelliteCount(); i++) {
-                    Log.i(TAG, i + " = " + status.getAzimuthDegrees(i) + ", " + status.getElevationDegrees(i));
+                for (int i = 0; i < status.getSatelliteCount(); i++)
                     radarPosition(status.getAzimuthDegrees(i), status.getElevationDegrees(i), status.getConstellationType(i));
-                }
+                totalSatelliteTextView();
+                textViewTotalSatellite.setText(String.valueOf(status.getSatelliteCount()));
             }
         };
-
-
     }
 
     private void radarPosition(float azimuth, float elevation, int type) {
+        int radarWidth = relativeLayoutRadar.getLayoutParams().width;
+        int radarHeight = relativeLayoutRadar.getLayoutParams().height;
         float margin = 20;
-        float cX = relativeLayoutRadar.getLayoutParams().width / 2 - margin;
-        float cY = relativeLayoutRadar.getLayoutParams().height / 2 - margin;
+        float cX = radarWidth / 2 - margin;
+        float cY = radarHeight / 2 - margin;
         float average = ((cX / 90) + (cY / 90)) / 2;
 
         float x = cX + Math.round(Math.cos(Math.toRadians(azimuth)) * (elevation * average));
         float y = cY + Math.round(Math.sin(Math.toRadians(azimuth)) * (elevation * average));
 
         ImageView imageView = new ImageView(this);
-        imageView.setImageResource(logoSatelliteImageResource(type));
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(relativeLayoutRadar.getLayoutParams().width / 12, relativeLayoutRadar.getLayoutParams().height / 12);
+        imageView.setImageResource(logoAndTotalSatellite(type));
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(radarWidth / 12, radarHeight / 12);
         imageView.setLayoutParams(params);
         imageView.setX(x);
         imageView.setY(y);
@@ -75,21 +102,46 @@ public class PositionActivity extends AppCompatActivity implements LocationListe
 
     }
 
-    private int logoSatelliteImageResource(int constellationType) {
+    private int logoAndTotalSatellite(int constellationType) {
         int logoImageResource = R.drawable.logo_unknow;
-        if (constellationType == GnssStatus.CONSTELLATION_GPS)
+        if (constellationType == GnssStatus.CONSTELLATION_GPS) {
             logoImageResource = R.drawable.logo_gps;
-        else if (constellationType == GnssStatus.CONSTELLATION_SBAS)
+            totalGps++;
+        } else if (constellationType == GnssStatus.CONSTELLATION_SBAS) {
             logoImageResource = R.drawable.logo_sbas;
-        else if (constellationType == GnssStatus.CONSTELLATION_GLONASS)
+            totalSbas++;
+        } else if (constellationType == GnssStatus.CONSTELLATION_GLONASS) {
             logoImageResource = R.drawable.logo_glonass;
-        else if (constellationType == GnssStatus.CONSTELLATION_QZSS)
+            totalGlonass++;
+        } else if (constellationType == GnssStatus.CONSTELLATION_QZSS) {
             logoImageResource = R.drawable.logo_qzss;
-        else if (constellationType == GnssStatus.CONSTELLATION_BEIDOU)
+            totalQzss++;
+        } else if (constellationType == GnssStatus.CONSTELLATION_BEIDOU) {
             logoImageResource = R.drawable.logo_beidou;
-        else if (constellationType == GnssStatus.CONSTELLATION_GALILEO)
+            totalBeidou++;
+        } else if (constellationType == GnssStatus.CONSTELLATION_GALILEO) {
             logoImageResource = R.drawable.logo_galileo;
+            totalGalileo++;
+        }
         return logoImageResource;
+    }
+
+    private void totalSatelliteSetZero() {
+        totalGps = 0;
+        totalSbas = 0;
+        totalGlonass = 0;
+        totalQzss = 0;
+        totalBeidou = 0;
+        totalGalileo = 0;
+    }
+
+    private void totalSatelliteTextView() {
+        textViewTotalGps.setText(String.valueOf(totalGps));
+        textViewTotalSbas.setText(String.valueOf(totalSbas));
+        textViewTotalGlonass.setText(String.valueOf(totalGlonass));
+        textViewTotalQzss.setText(String.valueOf(totalQzss));
+        textViewTotalBeidou.setText(String.valueOf(totalBeidou));
+        textViewTotalGalileo.setText(String.valueOf(totalGalileo));
     }
 
     @Override

@@ -31,4 +31,6 @@
     <string name="please_internet">Please connect to the internet</string>
     <string name="ok">OK</string>
     <string name="sv_id">SvId</string>
+    <string name="zero">0</string>
+    <string name="all">All:</string>
 </resources>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -34,13 +33,178 @@
             android:textSize="60sp" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/position_totalSatellite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/position_title"
+        android:layout_marginTop="-15dp"
+        android:alpha="0.6"
+        android:background="@drawable/bg_list_satellite_total"
+        android:fontFamily="@font/thaisansneue_extrabold"
+        android:paddingBottom="10dp"
+        android:paddingEnd="15dp"
+        android:paddingStart="20dp"
+        android:paddingTop="10dp"
+        android:text="@string/zero"
+        android:textColor="@color/colorGray"
+        android:textSize="20sp" />
+
     <RelativeLayout
         android:id="@+id/position_radar"
         android:layout_width="300dp"
         android:layout_height="300dp"
+        android:layout_below="@id/position_title"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/radar"
-        android:layout_below="@id/position_title">
-    </RelativeLayout>
+        android:background="@drawable/radar" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/position_radar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:alpha=".8"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:contentDescription="@string/satellite"
+                android:src="@drawable/logo_gps" />
+
+            <TextView
+                android:id="@+id/position_totalGps"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/thaisansneue_light"
+                android:text="@string/zero"
+                android:textColor="@color/colorWhite"
+                android:textSize="32sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:contentDescription="@string/satellite"
+                android:src="@drawable/logo_sbas" />
+
+            <TextView
+                android:id="@+id/position_totalSbas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/thaisansneue_light"
+                android:text="@string/zero"
+                android:textColor="@color/colorWhite"
+                android:textSize="32sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:contentDescription="@string/satellite"
+                android:src="@drawable/logo_glonass" />
+
+            <TextView
+                android:id="@+id/position_totalGlonass"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/thaisansneue_light"
+                android:text="@string/zero"
+                android:textColor="@color/colorWhite"
+                android:textSize="32sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:contentDescription="@string/satellite"
+                android:src="@drawable/logo_qzss" />
+
+            <TextView
+                android:id="@+id/position_totalQzss"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/thaisansneue_light"
+                android:text="@string/zero"
+                android:textColor="@color/colorWhite"
+                android:textSize="32sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:contentDescription="@string/satellite"
+                android:src="@drawable/logo_beidou" />
+
+            <TextView
+                android:id="@+id/position_totalBeidou"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/thaisansneue_light"
+                android:text="@string/zero"
+                android:textColor="@color/colorWhite"
+                android:textSize="32sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:contentDescription="@string/satellite"
+                android:src="@drawable/logo_galileo" />
+
+            <TextView
+                android:id="@+id/position_totalGalileo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/thaisansneue_light"
+                android:text="@string/zero"
+                android:textColor="@color/colorWhite"
+                android:textSize="32sp" />
+        </LinearLayout>
+
+    </LinearLayout>
 
 </RelativeLayout>
