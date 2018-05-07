@@ -1,4 +1,4 @@
-package th.ac.kmutnb.cs.gnssraw;
+package th.ac.kmutnb.cs.gnssrecord;
 
 import android.Manifest;
 import android.animation.ObjectAnimator;
@@ -22,7 +22,6 @@ import com.google.firebase.auth.FirebaseUser;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final int PERMISSIONS_ACCESS_FINE_LOCATION = 99;
 
     private RelativeLayout relativeLayoutPosition;
     private RelativeLayout relativeLayoutList;
@@ -39,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         relativeLayoutRecord = findViewById(R.id.main_record);
 
         startAnimation();
-        checkPermissionLocation();
+        checkPermission();
 
         relativeLayoutPosition.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,12 +86,17 @@ public class MainActivity extends AppCompatActivity {
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
-    private void checkPermissionLocation() {
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
+    private void checkPermission() {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                ) {
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    PERMISSIONS_ACCESS_FINE_LOCATION);
+                    new String[]{
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE
+                    }, 101);
         }
     }
 

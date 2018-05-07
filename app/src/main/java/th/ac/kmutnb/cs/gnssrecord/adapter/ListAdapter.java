@@ -1,4 +1,4 @@
-package th.ac.kmutnb.cs.gnssraw.adapter;
+package th.ac.kmutnb.cs.gnssrecord.adapter;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
@@ -19,8 +19,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import th.ac.kmutnb.cs.gnssraw.DetailActivity;
-import th.ac.kmutnb.cs.gnssraw.R;
+import th.ac.kmutnb.cs.gnssrecord.DetailActivity;
+import th.ac.kmutnb.cs.gnssrecord.R;
 
 /**
  * Created by narit on 18/2/2018 AD.

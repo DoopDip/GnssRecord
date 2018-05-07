@@ -1,4 +1,4 @@
-package th.ac.kmutnb.cs.gnssraw;
+package th.ac.kmutnb.cs.gnssrecord;
 
 import android.content.pm.ActivityInfo;
 import android.location.GnssMeasurement;

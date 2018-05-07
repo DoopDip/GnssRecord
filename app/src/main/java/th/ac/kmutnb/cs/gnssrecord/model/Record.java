@@ -1,4 +1,4 @@
-package th.ac.kmutnb.cs.gnssraw.model;
+package th.ac.kmutnb.cs.gnssrecord.model;
 
 import android.location.GnssMeasurement;
 

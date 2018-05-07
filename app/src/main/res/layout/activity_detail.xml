@@ -6,7 +6,7 @@
     android:fadingEdgeLength="30dp"
     android:overScrollMode="never"
     android:requiresFadingEdge="vertical"
-    tools:context="th.ac.kmutnb.cs.gnssraw.DetailActivity">
+    tools:context="th.ac.kmutnb.cs.gnssrecord.DetailActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"

@@ -1,4 +1,4 @@
-package th.ac.kmutnb.cs.gnssraw.adapter;
+package th.ac.kmutnb.cs.gnssrecord.adapter;
 
 import android.location.GnssMeasurement;
 import android.support.v7.util.DiffUtil;

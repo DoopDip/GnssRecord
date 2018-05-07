@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GnssRaw</string>
+    <string name="app_name">GnssRecord</string>
     <string name="position">Position</string>
     <string name="list">List</string>
     <string name="record">Record</string>

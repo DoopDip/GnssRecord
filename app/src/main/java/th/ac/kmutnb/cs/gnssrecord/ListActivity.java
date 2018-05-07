@@ -1,4 +1,4 @@
-package th.ac.kmutnb.cs.gnssraw;
+package th.ac.kmutnb.cs.gnssrecord;
 
 import android.Manifest;
 import android.content.pm.ActivityInfo;
@@ -23,8 +23,8 @@ import com.github.rubensousa.gravitysnaphelper.GravitySnapHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-import th.ac.kmutnb.cs.gnssraw.adapter.ListAdapter;
-import th.ac.kmutnb.cs.gnssraw.adapter.SatelliteDiffCallback;
+import th.ac.kmutnb.cs.gnssrecord.adapter.ListAdapter;
+import th.ac.kmutnb.cs.gnssrecord.adapter.SatelliteDiffCallback;
 
 public class ListActivity extends AppCompatActivity {
 

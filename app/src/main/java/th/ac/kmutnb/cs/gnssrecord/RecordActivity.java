@@ -1,4 +1,4 @@
-package th.ac.kmutnb.cs.gnssraw;
+package th.ac.kmutnb.cs.gnssrecord;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import th.ac.kmutnb.cs.gnssraw.model.Record;
+import th.ac.kmutnb.cs.gnssrecord.model.Record;
 
 public class RecordActivity extends AppCompatActivity {
 
