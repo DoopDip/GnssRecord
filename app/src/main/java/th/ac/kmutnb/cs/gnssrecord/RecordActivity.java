@@ -22,19 +22,16 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
 
-import th.ac.kmutnb.cs.gnssrecord.model.Record;
+import th.ac.kmutnb.cs.gnssrecord.model.RinexData;
+import th.ac.kmutnb.cs.gnssrecord.model.RinexHeader;
+import th.ac.kmutnb.cs.gnssrecord.rinex.Rinex;
 
 public class RecordActivity extends AppCompatActivity {
 
     private static final String TAG = RecordActivity.class.getSimpleName();
-    private static final int PERMISSIONS_ACCESS_FINE_LOCATION = 99;
 
     private TextView textViewWelcome;
     private TextView textViewName;
@@ -44,40 +41,26 @@ public class RecordActivity extends AppCompatActivity {
     private ScrollView scrollViewLog;
     private TextView textViewLog;
 
+    private Rinex rinex;
+
     private boolean statusRecord;
     private boolean statusScroll;
 
     private float tempYBtnStart;
 
     private FirebaseUser firebaseUser;
-    private DatabaseReference databaseReference;
+
     private String log;
     private Handler handler;
-    private List<GnssMeasurement> measurementList;
     private LocationManager locationManager;
     private GnssMeasurementsEvent.Callback measurementsEvent =
             new GnssMeasurementsEvent.Callback() {
                 @Override
                 public void onGnssMeasurementsReceived(GnssMeasurementsEvent eventArgs) {
                     super.onGnssMeasurementsReceived(eventArgs);
-                    measurementList.clear();
-                    measurementList.addAll(eventArgs.getMeasurements());
-                    log += "Satellite total : " + +measurementList.size();
-                    log += "\n";
-                    DatabaseReference referenceLog = FirebaseDatabase.getInstance()
-                            .getReference("users/" + firebaseUser.getUid() + "/log").push();
-                    databaseReference.child("log/" + referenceLog.getKey() + "/dateTime")
-                            .setValue(Calendar.getInstance().getTime());
-                    for (GnssMeasurement measurement : measurementList)
-                        databaseReference.child("log/" + referenceLog.getKey()).push().setValue(new Record(measurement));
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            textViewLog.setText(log);
-                            if (!statusScroll) scrollViewLog.fullScroll(ScrollView.FOCUS_DOWN);
-                        }
-                    });
-                    Log.i(TAG, "GnssMeasurementsEvent callback -> Satellite total : " + measurementList.size());
+                    ArrayList<GnssMeasurement> measurementList = new ArrayList<>(eventArgs.getMeasurements());
+                    writeRecordRinex(measurementList);
+                    log(measurementList);
                 }
             };
 
@@ -88,9 +71,7 @@ public class RecordActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        databaseReference = FirebaseDatabase.getInstance().getReference("users/" + firebaseUser.getUid());
-        log = "";
-        measurementList = new ArrayList<>();
+
         handler = new Handler();
         locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
 
@@ -113,71 +94,17 @@ public class RecordActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (!statusRecord) {
                     Log.i(TAG, "Click -> textViewStart = Start");
-                    textViewWelcome.setVisibility(View.INVISIBLE);
-                    textViewName.setVisibility(View.INVISIBLE);
-                    textViewStart.setBackgroundResource(R.drawable.bg_btn_red);
-                    textViewStart.setText(R.string.stop);
-                    scrollViewLog.setVisibility(View.VISIBLE);
-                    textViewBtnScroll.setVisibility(View.VISIBLE);
-                    textViewBtnLogOut.setVisibility(View.INVISIBLE);
-                    textViewBtnLogOut.setAlpha(0f);
-                    //Animation
-                    ObjectAnimator.ofFloat(textViewStart, View.TRANSLATION_Y, tempYBtnStart - 430)
-                            .setDuration(500).start();
-                    ObjectAnimator animatorLog = ObjectAnimator.ofFloat(scrollViewLog, View.ALPHA, 1f);
-                    animatorLog.setDuration(1000);
-                    animatorLog.setStartDelay(200);
-                    animatorLog.start();
-                    ObjectAnimator animatorBtnScroll = ObjectAnimator.ofFloat(textViewBtnScroll, View.ALPHA, 1f);
-                    animatorBtnScroll.setDuration(800);
-                    animatorBtnScroll.setStartDelay(700);
-                    animatorBtnScroll.start();
-                    //Check Permission
-                    if (ActivityCompat.checkSelfPermission(RecordActivity.this,
-                            android.Manifest.permission.ACCESS_FINE_LOCATION)
-                            != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(RecordActivity.this,
-                                new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                                PERMISSIONS_ACCESS_FINE_LOCATION);
-                    }
-                    locationManager.registerGnssMeasurementsCallback(measurementsEvent);
-                    Log.i(TAG, "Register callback -> measurementsEvent");
-
+                    animationClickStart();
+                    registerGnssMeasurements();
                     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-                    databaseReference.child("status").setValue(true);
+                    startRecordRinex();
                     statusRecord = true;
                 } else {
                     Log.i(TAG, "Click -> textViewStart = Stop");
-                    textViewWelcome.setVisibility(View.VISIBLE);
-                    textViewName.setVisibility(View.VISIBLE);
-                    textViewStart.setBackgroundResource(R.drawable.bg_btn_green);
-                    textViewStart.setText(R.string.start);
-                    textViewBtnScroll.setVisibility(View.INVISIBLE);
-                    textViewBtnScroll.setAlpha(0f);
-                    textViewBtnLogOut.setVisibility(View.VISIBLE);
-                    //Animation
-                    ObjectAnimator.ofFloat(textViewStart, View.TRANSLATION_Y, tempYBtnStart)
-                            .setDuration(500).start();
-                    ObjectAnimator animatorLog = ObjectAnimator.ofFloat(scrollViewLog, View.ALPHA, 0f);
-                    animatorLog.setDuration(200);
-                    animatorLog.start();
-                    animatorLog.addListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            super.onAnimationEnd(animation);
-                            scrollViewLog.setVisibility(View.INVISIBLE);
-                        }
-                    });
-                    ObjectAnimator.ofFloat(textViewBtnLogOut, View.ALPHA, 1f)
-                            .setDuration(1000).start();
-
-                    locationManager.unregisterGnssMeasurementsCallback(measurementsEvent);
-                    Log.i(TAG, "!! UnRegister callback -> measurementsEvent");
-
+                    stopRecordRinex();
+                    animationClickStop();
+                    unregisterGnssMeasurements();
                     getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-                    databaseReference.child("status").setValue(false);
                     statusRecord = false;
                 }
             }
@@ -216,6 +143,122 @@ public class RecordActivity extends AppCompatActivity {
         super.onPause();
         locationManager.unregisterGnssMeasurementsCallback(measurementsEvent);
         Log.i(TAG, "!! UnRegister callback -> measurementsEvent");
-        databaseReference.child("status").setValue(false);
     }
+
+    private void registerGnssMeasurements() {
+        //Check Permission
+        if (ActivityCompat.checkSelfPermission(RecordActivity.this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(RecordActivity.this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    101);
+        }
+        locationManager.registerGnssMeasurementsCallback(measurementsEvent);
+        Log.i(TAG, "Register callback -> measurementsEvent");
+    }
+
+    private void unregisterGnssMeasurements() {
+        locationManager.unregisterGnssMeasurementsCallback(measurementsEvent);
+        Log.i(TAG, "!! UnRegister callback -> measurementsEvent");
+    }
+
+    private void animationClickStop() {
+        textViewWelcome.setVisibility(View.VISIBLE);
+        textViewName.setVisibility(View.VISIBLE);
+        textViewStart.setBackgroundResource(R.drawable.bg_btn_green);
+        textViewStart.setText(R.string.start);
+        textViewBtnScroll.setVisibility(View.INVISIBLE);
+        textViewBtnScroll.setAlpha(0f);
+        textViewBtnLogOut.setVisibility(View.VISIBLE);
+        //Animation
+        ObjectAnimator.ofFloat(textViewStart, View.TRANSLATION_Y, tempYBtnStart)
+                .setDuration(500).start();
+        ObjectAnimator animatorLog = ObjectAnimator.ofFloat(scrollViewLog, View.ALPHA, 0f);
+        animatorLog.setDuration(200);
+        animatorLog.start();
+        animatorLog.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                scrollViewLog.setVisibility(View.INVISIBLE);
+            }
+        });
+        ObjectAnimator.ofFloat(textViewBtnLogOut, View.ALPHA, 1f)
+                .setDuration(1000).start();
+    }
+
+    private void animationClickStart() {
+        textViewWelcome.setVisibility(View.INVISIBLE);
+        textViewName.setVisibility(View.INVISIBLE);
+        textViewStart.setBackgroundResource(R.drawable.bg_btn_red);
+        textViewStart.setText(R.string.stop);
+        scrollViewLog.setVisibility(View.VISIBLE);
+        textViewBtnScroll.setVisibility(View.VISIBLE);
+        textViewBtnLogOut.setVisibility(View.INVISIBLE);
+        textViewBtnLogOut.setAlpha(0f);
+        //Animation
+        ObjectAnimator.ofFloat(textViewStart, View.TRANSLATION_Y, tempYBtnStart - 430)
+                .setDuration(500).start();
+        ObjectAnimator animatorLog = ObjectAnimator.ofFloat(scrollViewLog, View.ALPHA, 1f);
+        animatorLog.setDuration(1000);
+        animatorLog.setStartDelay(200);
+        animatorLog.start();
+        ObjectAnimator animatorBtnScroll = ObjectAnimator.ofFloat(textViewBtnScroll, View.ALPHA, 1f);
+        animatorBtnScroll.setDuration(800);
+        animatorBtnScroll.setStartDelay(700);
+        animatorBtnScroll.start();
+    }
+
+    private void startRecordRinex() {
+        rinex = new Rinex(getApplicationContext());
+        rinex.writeHeader(new RinexHeader(
+                "GnssRecord",
+                "Geodetic",
+                "RINEX Logger user",
+                "GnssRecord",
+                "GSLDU17C29002159",
+                "HUAWEI",
+                "FRD-AL10",
+                "GSLDU17C29002159",
+                "FRD-AL10",
+                0.0000,
+                0.0000,
+                0.0000,
+                -1129349.1474,
+                6091633.9329,
+                1510495.6984
+        ));
+    }
+
+    private void stopRecordRinex() {
+        rinex.closeFile();
+    }
+
+    private void writeRecordRinex(ArrayList<GnssMeasurement> measurementList) {
+        ArrayList<RinexData> rinexData = new ArrayList<>();
+        for (GnssMeasurement measurement : measurementList)
+            rinexData.add(new RinexData(measurement.getSvid() + "",
+                    measurement.getAccumulatedDeltaRangeMeters(),
+                    772467.6560,
+                    -3009.854,
+                    measurement.getCn0DbHz()));
+        rinex.writeData(rinexData);
+    }
+
+    private void log(ArrayList<GnssMeasurement> measurementList) {
+        if (log == null) log = "";
+        log += "Satellite total : " + +measurementList.size();
+        log += "\n";
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                textViewLog.setText(log);
+                if (!statusScroll) scrollViewLog.fullScroll(ScrollView.FOCUS_DOWN);
+            }
+        });
+        Log.i(TAG, "GnssMeasurementsEvent callback -> Satellite total : " + measurementList.size());
+    }
+
 }

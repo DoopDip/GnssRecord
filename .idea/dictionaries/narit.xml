@@ -2,6 +2,7 @@
   <dictionary name="narit">
     <words>
       <w>gnss</w>
+      <w>rinex</w>
     </words>
   </dictionary>
 </component>
