@@ -35,7 +35,7 @@
                 android:layout_width="240dp"
                 android:layout_height="50dp"
                 android:contentDescription="@string/position"
-                android:src="@drawable/btn_black" />
+                android:src="@drawable/bg_btn_menu" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -58,7 +58,7 @@
                 android:layout_width="240dp"
                 android:layout_height="50dp"
                 android:contentDescription="@string/list"
-                android:src="@drawable/btn_black" />
+                android:src="@drawable/bg_btn_menu" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -80,7 +80,7 @@
                 android:layout_width="240dp"
                 android:layout_height="50dp"
                 android:contentDescription="@string/record"
-                android:src="@drawable/btn_black" />
+                android:src="@drawable/bg_btn_menu" />
 
             <TextView
                 android:layout_width="wrap_content"
