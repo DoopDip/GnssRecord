@@ -35,4 +35,10 @@
     <string name="all">All:</string>
     <string name="unknown">Unknown</string>
     <string name="hyphen">-</string>
+    <string name="file">File</string>
+    <string name="rinex">Rinex</string>
+    <string name="setting">Setting</string>
+    <string name="open">Open</string>
+    <string name="share">Share</string>
+    <string name="delete">Delete</string>
 </resources>

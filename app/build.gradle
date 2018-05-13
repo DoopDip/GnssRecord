@@ -36,6 +36,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:15.0.2'
 
     implementation 'com.github.rubensousa:gravitysnaphelper:1.5'
+
+    implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

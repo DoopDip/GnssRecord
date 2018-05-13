@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="th.ac.kmutnb.cs.gnssrecord.FileActivity">
+
+    <LinearLayout
+        android:id="@+id/file_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="35dp"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/thaisansneue_light"
+            android:paddingEnd="10dp"
+            android:paddingStart="0dp"
+            android:text="@string/rinex"
+            android:textColor="@color/colorWhite"
+            android:textSize="60sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/thaisansneue_extrabold"
+            android:text="@string/file"
+            android:textColor="@color/colorWhite"
+            android:textSize="60sp" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/file_title"
+        android:fadingEdgeLength="20dp"
+        android:overScrollMode="never"
+        android:requiresFadingEdge="vertical">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/file_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:reverseLayout="true"
+            app:stackFromEnd="true" />
+    </ScrollView>
+
+</RelativeLayout>

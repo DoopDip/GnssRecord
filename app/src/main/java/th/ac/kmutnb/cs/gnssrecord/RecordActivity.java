@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -40,6 +41,8 @@ public class RecordActivity extends AppCompatActivity {
     private TextView textViewBtnLogOut;
     private ScrollView scrollViewLog;
     private TextView textViewLog;
+    private TextView textViewBtnFile;
+    private LinearLayout linearLayoutGroupMenu;
 
     private Rinex rinex;
 
@@ -82,9 +85,11 @@ public class RecordActivity extends AppCompatActivity {
         textViewName = findViewById(R.id.record_name);
         textViewStart = findViewById(R.id.record_start);
         textViewBtnScroll = findViewById(R.id.record_btnScroll);
-        textViewBtnLogOut = findViewById(R.id.recordLogin_btnLogOut);
+        textViewBtnLogOut = findViewById(R.id.record_btnLogOut);
         scrollViewLog = findViewById(R.id.record_logScroll);
         textViewLog = findViewById(R.id.record_log);
+        textViewBtnFile = findViewById(R.id.record_btnFile);
+        linearLayoutGroupMenu = findViewById(R.id.record_groupMenu);
 
         if (firebaseUser != null) textViewName.setText(firebaseUser.getDisplayName());
         tempYBtnStart = textViewStart.getY();
@@ -136,6 +141,14 @@ public class RecordActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        textViewBtnFile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "Click -> File");
+                startActivity(new Intent(RecordActivity.this, FileActivity.class));
+            }
+        });
     }
 
     @Override
@@ -171,6 +184,7 @@ public class RecordActivity extends AppCompatActivity {
         textViewBtnScroll.setVisibility(View.INVISIBLE);
         textViewBtnScroll.setAlpha(0f);
         textViewBtnLogOut.setVisibility(View.VISIBLE);
+        linearLayoutGroupMenu.setVisibility(View.VISIBLE);
         //Animation
         ObjectAnimator.ofFloat(textViewStart, View.TRANSLATION_Y, tempYBtnStart)
                 .setDuration(500).start();
@@ -186,6 +200,8 @@ public class RecordActivity extends AppCompatActivity {
         });
         ObjectAnimator.ofFloat(textViewBtnLogOut, View.ALPHA, 1f)
                 .setDuration(1000).start();
+        ObjectAnimator.ofFloat(linearLayoutGroupMenu, View.ALPHA, 1f)
+                .setDuration(1000).start();
     }
 
     private void animationClickStart() {
@@ -197,6 +213,8 @@ public class RecordActivity extends AppCompatActivity {
         textViewBtnScroll.setVisibility(View.VISIBLE);
         textViewBtnLogOut.setVisibility(View.INVISIBLE);
         textViewBtnLogOut.setAlpha(0f);
+        linearLayoutGroupMenu.setVisibility(View.INVISIBLE);
+        linearLayoutGroupMenu.setAlpha(0f);
         //Animation
         ObjectAnimator.ofFloat(textViewStart, View.TRANSLATION_Y, tempYBtnStart - 430)
                 .setDuration(500).start();

@@ -107,8 +107,40 @@
             android:textSize="20sp" />
     </ScrollView>
 
+    <LinearLayout
+        android:id="@+id/record_groupMenu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/record_btnLogOut"
+        android:layout_below="@id/record_start"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="20dp"
+        android:background="#101010"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/record_btnFile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="30dp"
+            android:fontFamily="@font/thaisansneue_semibold"
+            android:text="@string/file"
+            android:textColor="@color/colorWhite"
+            android:textSize="35sp" />
+
+        <TextView
+            android:id="@+id/record_btnSetting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/thaisansneue_semibold"
+            android:text="@string/setting"
+            android:textColor="@color/colorWhite"
+            android:textSize="35sp" />
+    </LinearLayout>
+
     <TextView
-        android:id="@+id/recordLogin_btnLogOut"
+        android:id="@+id/record_btnLogOut"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

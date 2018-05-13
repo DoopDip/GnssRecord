@@ -6,7 +6,6 @@ import android.support.v7.util.DiffUtil;
 import java.util.List;
 
 public class SatelliteDiffCallback extends DiffUtil.Callback {
-    private static final String TAG = SatelliteDiffCallback.class.getSimpleName();
 
     private List<GnssMeasurement> measurementListOld;
     private List<GnssMeasurement> measurementListNew;
