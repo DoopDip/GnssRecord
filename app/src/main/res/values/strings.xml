@@ -41,4 +41,21 @@
     <string name="open">Open</string>
     <string name="share">Share</string>
     <string name="delete">Delete</string>
+    <string name="header">Header</string>
+    <string name="edit">Edit</string>
+    <string name="mark_name">Mark name</string>
+    <string name="mark_type">Mark type</string>
+    <string name="observer_name">Observer name</string>
+    <string name="observer_agency_name">Observer agency name</string>
+    <string name="receiver_number">Receiver number</string>
+    <string name="receiver_type">Receiver type</string>
+    <string name="receiver_version">Receiver version</string>
+    <string name="antenna_number">Antenna number</string>
+    <string name="antenna_type">Antenna type</string>
+    <string name="antenna_eccentricity_east">Antenna eccentricity east</string>
+    <string name="antenna_eccentricity_north">Antenna eccentricity north</string>
+    <string name="antenna_height">Antenna height</string>
+    <string name="restore_defaults">Restore Defaults</string>
+    <string name="cancel">Cancel</string>
+    <string name="please_confirm">Please confirm</string>
 </resources>

@@ -30,7 +30,8 @@
         <activity android:name=".RegisterActivity" />
         <activity android:name=".RecordActivity" />
         <activity android:name=".PositionActivity" />
-        <activity android:name=".FileActivity"></activity>
+        <activity android:name=".FileActivity" />
+        <activity android:name=".SettingActivity"></activity>
     </application>
 
 </manifest>

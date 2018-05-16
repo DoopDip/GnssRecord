@@ -8,4 +8,5 @@
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorListBackground">#f1efef</color>
     <color name="colorGray">#8e8d8d</color>
+    <color name="colorDanger">#970c0c</color>
 </resources>

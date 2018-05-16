@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.location.GnssMeasurement;
@@ -42,9 +43,12 @@ public class RecordActivity extends AppCompatActivity {
     private ScrollView scrollViewLog;
     private TextView textViewLog;
     private TextView textViewBtnFile;
+    private TextView textViewBtnSetting;
     private LinearLayout linearLayoutGroupMenu;
 
     private Rinex rinex;
+
+    private SharedPreferences sharedPreferences;
 
     private boolean statusRecord;
     private boolean statusScroll;
@@ -75,6 +79,8 @@ public class RecordActivity extends AppCompatActivity {
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
+        sharedPreferences = getSharedPreferences(SettingActivity.FILE_SETTING, 0);
+
         handler = new Handler();
         locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
 
@@ -89,6 +95,7 @@ public class RecordActivity extends AppCompatActivity {
         scrollViewLog = findViewById(R.id.record_logScroll);
         textViewLog = findViewById(R.id.record_log);
         textViewBtnFile = findViewById(R.id.record_btnFile);
+        textViewBtnSetting = findViewById(R.id.record_btnSetting);
         linearLayoutGroupMenu = findViewById(R.id.record_groupMenu);
 
         if (firebaseUser != null) textViewName.setText(firebaseUser.getDisplayName());
@@ -147,6 +154,14 @@ public class RecordActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.i(TAG, "Click -> File");
                 startActivity(new Intent(RecordActivity.this, FileActivity.class));
+            }
+        });
+
+        textViewBtnSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "Click -> Setting");
+                startActivity(new Intent(RecordActivity.this, SettingActivity.class));
             }
         });
     }
@@ -231,18 +246,18 @@ public class RecordActivity extends AppCompatActivity {
     private void startRecordRinex() {
         rinex = new Rinex(getApplicationContext());
         rinex.writeHeader(new RinexHeader(
-                "GnssRecord",
-                "Geodetic",
-                "RINEX Logger user",
-                "GnssRecord",
-                "GSLDU17C29002159",
-                "HUAWEI",
-                "FRD-AL10",
-                "GSLDU17C29002159",
-                "FRD-AL10",
-                0.0000,
-                0.0000,
-                0.0000,
+                sharedPreferences.getString(SettingActivity.KEY_MARK_NAME, SettingActivity.DEF_MARK_NAME),
+                sharedPreferences.getString(SettingActivity.KEY_MARK_TYPE, SettingActivity.DEF_MARK_TYPE),
+                sharedPreferences.getString(SettingActivity.KEY_OBSERVER_NAME, SettingActivity.DEF_OBSERVER_NAME),
+                sharedPreferences.getString(SettingActivity.KEY_OBSERVER_AGENCY_NAME, SettingActivity.DEF_OBSERVER_AGENCY_NAME),
+                sharedPreferences.getString(SettingActivity.KEY_RECEIVER_NUMBER, SettingActivity.DEF_RECEIVER_NUMBER),
+                sharedPreferences.getString(SettingActivity.KEY_RECEIVER_TYPE, SettingActivity.DEF_RECEIVER_TYPE),
+                sharedPreferences.getString(SettingActivity.KEY_RECEIVER_VERSION, SettingActivity.DEF_RECEIVER_VERSION),
+                sharedPreferences.getString(SettingActivity.KEY_ANTENNA_NUMBER, SettingActivity.DEF_ANTENNA_NUMBER),
+                sharedPreferences.getString(SettingActivity.KEY_ANTENNA_TYPE, SettingActivity.DEF_ANTENNA_TYPE),
+                Double.parseDouble(sharedPreferences.getString(SettingActivity.KEY_ANTENNA_ECCENTRICITY_EAST, SettingActivity.DEF_ANTENNA_ECCENTRICITY_EAST)),
+                Double.parseDouble(sharedPreferences.getString(SettingActivity.KEY_ANTENNA_ECCENTRICITY_NORTH, SettingActivity.DEF_ANTENNA_ECCENTRICITY_NORTH)),
+                Double.parseDouble(sharedPreferences.getString(SettingActivity.KEY_ANTENNA_HEIGHT, SettingActivity.DEF_ANTENNA_HEIGHT)),
                 -1129349.1474,
                 6091633.9329,
                 1510495.6984
