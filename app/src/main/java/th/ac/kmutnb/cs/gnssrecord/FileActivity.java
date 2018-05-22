@@ -15,15 +15,13 @@ import th.ac.kmutnb.cs.gnssrecord.adapter.FileAdapter;
 
 public class FileActivity extends AppCompatActivity {
 
-    RecyclerView recyclerView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        recyclerView = findViewById(R.id.file_recyclerView);
+        RecyclerView recyclerView = findViewById(R.id.file_recyclerView);
 
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
         recyclerView.setAdapter(new FileAdapter(getFilesRinex()));

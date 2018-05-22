@@ -55,21 +55,20 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileHolder> {
                             @Override
                             public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                                 Log.i(TAG, "Dialog which: " + which);
-                                //TODO
                                 if (which == 0) {
                                     Log.i(TAG, "Open file" + file.getPath());
                                     if (file.exists()) {
-                                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                                        intent.setType("thisis/sonotreal");
-                                        intent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + file.getPath()));
-                                        view.getContext().startActivity(Intent.createChooser(intent, "Share File " + file.getName()));
+                                        Intent intent = new Intent(Intent.ACTION_VIEW)
+                                                .setDataAndType(Uri.parse("file://" + file.getPath()), "text/plain");
+                                        view.getContext().startActivity(Intent.createChooser(intent, "Open with"));
                                     }
                                 } else if (which == 1) {
                                     Log.i(TAG, "Share file " + file.getPath());
                                     if (file.exists()) {
                                         Intent intent = new Intent(Intent.ACTION_SEND)
-                                                .setDataAndType(Uri.parse("file://" + file.getPath()), "file/*");
-                                        view.getContext().startActivity(Intent.createChooser(intent, "Share File " + file.getName()));
+                                                .setType("text/*")
+                                                .putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + file.getPath()));
+                                        view.getContext().startActivity(Intent.createChooser(intent, "Share file"));
                                     }
                                 } else if (which == 2) {
                                     Log.i(TAG, "Delete file" + file.getPath());
