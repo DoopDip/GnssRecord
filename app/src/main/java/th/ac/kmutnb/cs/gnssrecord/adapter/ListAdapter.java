@@ -61,10 +61,11 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListHolder> {
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Pair[] pairs = new Pair[3];
-                pairs[0] = new Pair<View, String>(holder.imageViewLogo, "list_logoTransition");
-                pairs[1] = new Pair<View, String>(holder.textViewSvId, "list_SvidTransition");
-                pairs[2] = new Pair<View, String>(holder.textViewSatelliteName, "list_SatelliteNameTransition");
+                Pair[] pairs = new Pair[]{
+                        new Pair<View, String>(holder.imageViewLogo, "list_logoTransition"),
+                        new Pair<View, String>(holder.textViewSvId, "list_SvidTransition"),
+                        new Pair<View, String>(holder.textViewSatelliteName, "list_SatelliteNameTransition")
+                };
 
                 ActivityOptions activityOptions = ActivityOptions.makeSceneTransitionAnimation(
                         (Activity) v.getContext(), pairs

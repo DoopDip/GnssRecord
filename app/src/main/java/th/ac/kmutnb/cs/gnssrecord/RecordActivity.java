@@ -3,6 +3,8 @@ package th.ac.kmutnb.cs.gnssrecord;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -16,6 +18,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -153,15 +156,21 @@ public class RecordActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "Click -> File");
-                startActivity(new Intent(RecordActivity.this, FileActivity.class));
+                startActivity(
+                        new Intent(RecordActivity.this, FileActivity.class),
+                        ActivityOptions.makeSceneTransitionAnimation((Activity) v.getContext()).toBundle()
+                );
             }
         });
 
         textViewBtnSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(TAG, "Click -> Setting");
-                startActivity(new Intent(RecordActivity.this, SettingActivity.class));
+                Log.i(TAG, "Click -> Setting (RinexHeader)");
+                startActivity(
+                        new Intent(RecordActivity.this, SettingActivity.class),
+                        ActivityOptions.makeSceneTransitionAnimation((Activity) v.getContext()).toBundle()
+                );
             }
         });
     }
@@ -231,7 +240,7 @@ public class RecordActivity extends AppCompatActivity {
         linearLayoutGroupMenu.setVisibility(View.INVISIBLE);
         linearLayoutGroupMenu.setAlpha(0f);
         //Animation
-        ObjectAnimator.ofFloat(textViewStart, View.TRANSLATION_Y, tempYBtnStart - 430)
+        ObjectAnimator.ofFloat(textViewStart, View.TRANSLATION_Y, tempYBtnStart - 380)
                 .setDuration(500).start();
         ObjectAnimator animatorLog = ObjectAnimator.ofFloat(scrollViewLog, View.ALPHA, 1f);
         animatorLog.setDuration(1000);
