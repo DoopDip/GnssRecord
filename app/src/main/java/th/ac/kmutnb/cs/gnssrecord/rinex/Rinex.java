@@ -178,9 +178,9 @@ public class Rinex {
 
         //APPROX POSITION XYZ
         resetLine();
-        String xPosition = String.format("%.4f", rinexHeader.getCartesianX());
-        String yPosition = String.format("%.4f", rinexHeader.getCartesianY());
-        String zPosition = String.format("%.4f", rinexHeader.getCartesianZ());
+        String xPosition = rinexHeader.getCartesianX();
+        String yPosition = rinexHeader.getCartesianY();
+        String zPosition = rinexHeader.getCartesianZ();
         for (int i = 0; i < xPosition.length(); i++)
             line[i + 1] = xPosition.charAt(i);
         for (int i = 0; i < yPosition.length(); i++)

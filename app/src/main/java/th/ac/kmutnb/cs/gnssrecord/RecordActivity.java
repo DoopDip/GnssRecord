@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.location.GnssMeasurement;
 import android.location.GnssMeasurementsEvent;
 import android.location.GnssStatus;
+import android.location.Location;
 import android.location.LocationManager;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
@@ -28,6 +29,7 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import th.ac.kmutnb.cs.gnssrecord.model.RinexData;
@@ -253,6 +255,22 @@ public class RecordActivity extends AppCompatActivity {
     }
 
     private void startRecordRinex() {
+
+        //TODO
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        double lng = location.getLongitude();
+        double lat = location.getLatitude();
+        double r = 6371000 + location.getAltitude();
+        double cartesianX = r * Math.cos(lat) * Math.cos(lng);
+        double cartesianY = r * Math.cos(lat) * Math.sin(lng);
+        double cartesianZ = r * Math.sin(lat);
+        Log.i(TAG, "Lat: "+lat + ", Lng: " + lng + ", Alt: " + location.getAltitude());
+        Log.i(TAG, "Cartesian X: " + cartesianX + ", Y:" + cartesianY + ", Z:" + cartesianZ);
+        DecimalFormat decimalFormat = new DecimalFormat("#.####");
+
         rinex = new Rinex(getApplicationContext());
         rinex.writeHeader(new RinexHeader(
                 sharedPreferences.getString(SettingActivity.KEY_MARK_NAME, SettingActivity.DEF_MARK_NAME),
@@ -267,9 +285,9 @@ public class RecordActivity extends AppCompatActivity {
                 Double.parseDouble(sharedPreferences.getString(SettingActivity.KEY_ANTENNA_ECCENTRICITY_EAST, SettingActivity.DEF_ANTENNA_ECCENTRICITY_EAST)),
                 Double.parseDouble(sharedPreferences.getString(SettingActivity.KEY_ANTENNA_ECCENTRICITY_NORTH, SettingActivity.DEF_ANTENNA_ECCENTRICITY_NORTH)),
                 Double.parseDouble(sharedPreferences.getString(SettingActivity.KEY_ANTENNA_HEIGHT, SettingActivity.DEF_ANTENNA_HEIGHT)),
-                -1129349.1474,
-                6091633.9329,
-                1510495.6984
+                decimalFormat.format(cartesianX),
+                decimalFormat.format(cartesianY),
+                decimalFormat.format(cartesianZ)
         ));
     }
 
@@ -304,7 +322,7 @@ public class RecordActivity extends AppCompatActivity {
             return "C" + sSvid;
         else if (constellationType == GnssStatus.CONSTELLATION_GALILEO)
             return "E" + sSvid;
-        return "";
+        return "SNN";
     }
 
     private void log(ArrayList<GnssMeasurement> measurementList) {

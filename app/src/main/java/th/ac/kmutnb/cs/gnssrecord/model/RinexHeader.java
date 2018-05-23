@@ -13,11 +13,11 @@ public class RinexHeader {
     private double antennaEccentricityEast;
     private double antennaEccentricityNorth;
     private double antennaHeight;
-    private double cartesianX;
-    private double cartesianY;
-    private double cartesianZ;
+    private String cartesianX;
+    private String cartesianY;
+    private String cartesianZ;
 
-    public RinexHeader(String markName, String markType, String observerName, String observerAgencyName, String receiverNumber, String receiverType, String receiverVersion, String antennaNumber, String antennaType, double antennaEccentricityEast, double antennaEccentricityNorth, double antennaHeight, double cartesianX, double cartesianY, double cartesianZ) {
+    public RinexHeader(String markName, String markType, String observerName, String observerAgencyName, String receiverNumber, String receiverType, String receiverVersion, String antennaNumber, String antennaType, double antennaEccentricityEast, double antennaEccentricityNorth, double antennaHeight, String cartesianX, String cartesianY, String cartesianZ) {
         this.markName = markName;
         this.markType = markType;
         this.observerName = observerName;
@@ -83,15 +83,15 @@ public class RinexHeader {
         return antennaHeight;
     }
 
-    public double getCartesianX() {
+    public String getCartesianX() {
         return cartesianX;
     }
 
-    public double getCartesianY() {
+    public String getCartesianY() {
         return cartesianY;
     }
 
-    public double getCartesianZ() {
+    public String getCartesianZ() {
         return cartesianZ;
     }
 }
