@@ -14,7 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,9 +23,9 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private RelativeLayout relativeLayoutPosition;
-    private RelativeLayout relativeLayoutList;
-    private RelativeLayout relativeLayoutRecord;
+    private TextView textViewBtnPosition;
+    private TextView textViewBtnList;
+    private TextView textViewBtnRecord;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,14 +33,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        relativeLayoutPosition = findViewById(R.id.main_position);
-        relativeLayoutList = findViewById(R.id.main_list);
-        relativeLayoutRecord = findViewById(R.id.main_record);
+        textViewBtnPosition = findViewById(R.id.main_btnPosition);
+        textViewBtnList = findViewById(R.id.main_btnList);
+        textViewBtnRecord = findViewById(R.id.main_btnRecord);
 
         startAnimation();
         checkPermission();
 
-        relativeLayoutPosition.setOnClickListener(new View.OnClickListener() {
+        textViewBtnPosition.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "Click -> MenuPosition");
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        relativeLayoutList.setOnClickListener(new View.OnClickListener() {
+        textViewBtnList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "Click -> MenuList");
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        relativeLayoutRecord.setOnClickListener(new View.OnClickListener() {
+        textViewBtnRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "Click -> MenuRecord");
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
                     else
                         startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 } else {
-                    Snackbar.make(relativeLayoutRecord, R.string.please_internet, Snackbar.LENGTH_INDEFINITE)
+                    Snackbar.make(textViewBtnRecord, R.string.please_internet, Snackbar.LENGTH_INDEFINITE)
                             .setAction(R.string.ok, new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -102,12 +102,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void startAnimation() {
         Log.i(TAG, "Play Animation");
-        relativeLayoutPosition.setAlpha(0f);
-        relativeLayoutList.setAlpha(0f);
-        relativeLayoutRecord.setAlpha(0f);
-        ObjectAnimator animatorPosition = ObjectAnimator.ofFloat(relativeLayoutPosition, View.ALPHA, 1f);
-        ObjectAnimator animatorList = ObjectAnimator.ofFloat(relativeLayoutList, View.ALPHA, 1f);
-        ObjectAnimator animatorRecord = ObjectAnimator.ofFloat(relativeLayoutRecord, View.ALPHA, 1f);
+        textViewBtnPosition.setAlpha(0f);
+        textViewBtnList.setAlpha(0f);
+        textViewBtnRecord.setAlpha(0f);
+        ObjectAnimator animatorPosition = ObjectAnimator.ofFloat(textViewBtnPosition, View.ALPHA, 1f);
+        ObjectAnimator animatorList = ObjectAnimator.ofFloat(textViewBtnList, View.ALPHA, 1f);
+        ObjectAnimator animatorRecord = ObjectAnimator.ofFloat(textViewBtnRecord, View.ALPHA, 1f);
         animatorPosition.setStartDelay(200);
         animatorPosition.setDuration(1200).start();
         animatorList.setStartDelay(400);

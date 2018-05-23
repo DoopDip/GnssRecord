@@ -10,7 +10,7 @@
         android:layout_width="280dp"
         android:layout_height="120dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="10dp"
         android:layout_marginTop="30dp"
         android:contentDescription="@string/app_name"
         android:paddingEnd="0dp"
@@ -25,73 +25,43 @@
         android:layout_centerHorizontal="true"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:id="@+id/main_position"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp">
+        <TextView
+            android:id="@+id/main_btnPosition"
+            android:layout_width="240dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/bg_btn_menu"
+            android:fontFamily="@font/thaisansneue_semibold"
+            android:gravity="center"
+            android:text="@string/position"
+            android:textAllCaps="true"
+            android:textColor="@color/colorWhite"
+            android:textSize="25sp" />
 
-            <ImageView
-                android:layout_width="240dp"
-                android:layout_height="50dp"
-                android:contentDescription="@string/position"
-                android:src="@drawable/bg_btn_menu" />
+        <TextView
+            android:id="@+id/main_btnList"
+            android:layout_width="240dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/bg_btn_menu"
+            android:fontFamily="@font/thaisansneue_semibold"
+            android:gravity="center"
+            android:text="@string/list"
+            android:textAllCaps="true"
+            android:textColor="@color/colorWhite"
+            android:textSize="25sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:fontFamily="@font/thaisansneue_semibold"
-                android:text="@string/position"
-                android:textAllCaps="true"
-                android:textColor="@color/colorWhite"
-                android:textSize="25sp" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/main_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp">
-
-            <ImageView
-                android:layout_width="240dp"
-                android:layout_height="50dp"
-                android:contentDescription="@string/list"
-                android:src="@drawable/bg_btn_menu" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:fontFamily="@font/thaisansneue_semibold"
-                android:text="@string/list"
-                android:textAllCaps="true"
-                android:textColor="@color/colorWhite"
-                android:textSize="25sp" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/main_record"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:layout_width="240dp"
-                android:layout_height="50dp"
-                android:contentDescription="@string/record"
-                android:src="@drawable/bg_btn_menu" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:fontFamily="@font/thaisansneue_semibold"
-                android:text="@string/record"
-                android:textAllCaps="true"
-                android:textColor="@color/colorWhite"
-                android:textSize="25sp" />
-        </RelativeLayout>
+        <TextView
+            android:id="@+id/main_btnRecord"
+            android:layout_width="240dp"
+            android:layout_height="50dp"
+            android:background="@drawable/bg_btn_menu"
+            android:fontFamily="@font/thaisansneue_semibold"
+            android:gravity="center"
+            android:text="@string/record"
+            android:textAllCaps="true"
+            android:textColor="@color/colorWhite"
+            android:textSize="25sp" />
     </LinearLayout>
 
     <ImageView
