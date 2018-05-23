@@ -11,6 +11,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.location.GnssMeasurement;
 import android.location.GnssMeasurementsEvent;
+import android.location.GnssStatus;
 import android.location.LocationManager;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
@@ -18,7 +19,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Pair;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -280,12 +280,31 @@ public class RecordActivity extends AppCompatActivity {
     private void writeRecordRinex(ArrayList<GnssMeasurement> measurementList) {
         ArrayList<RinexData> rinexData = new ArrayList<>();
         for (GnssMeasurement measurement : measurementList)
-            rinexData.add(new RinexData(measurement.getSvid() + "",
+            rinexData.add(new RinexData(numberSatellite(measurement.getConstellationType(), measurement.getSvid()),
                     measurement.getAccumulatedDeltaRangeMeters(),
                     772467.6560,
                     -3009.854,
                     measurement.getCn0DbHz()));
         rinex.writeData(rinexData);
+    }
+
+    private String numberSatellite(int constellationType, int svid) {
+        String sSvid = "" + svid;
+        if (svid < 10)
+            sSvid = "0" + svid;
+        if (constellationType == GnssStatus.CONSTELLATION_GPS)
+            return "G" + sSvid;
+        else if (constellationType == GnssStatus.CONSTELLATION_SBAS)
+            return "S" + sSvid;
+        else if (constellationType == GnssStatus.CONSTELLATION_GLONASS)
+            return "R" + sSvid;
+        else if (constellationType == GnssStatus.CONSTELLATION_QZSS)
+            return "J" + sSvid;
+        else if (constellationType == GnssStatus.CONSTELLATION_BEIDOU)
+            return "C" + sSvid;
+        else if (constellationType == GnssStatus.CONSTELLATION_GALILEO)
+            return "E" + sSvid;
+        return "";
     }
 
     private void log(ArrayList<GnssMeasurement> measurementList) {
