@@ -7,10 +7,12 @@ import android.util.Log;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import th.ac.kmutnb.cs.gnssrecord.R;
 import th.ac.kmutnb.cs.gnssrecord.model.RinexData;
@@ -59,7 +61,7 @@ public class Rinex {
 
         String dateString = new SimpleDateFormat("yyyyMMddhhmmss", Locale.US).format(date);
         String type = "o"; //Observable file
-        int year = 18; //TODO
+        int year = Integer.parseInt(new SimpleDateFormat("yy", Locale.US).format(date));
         String yearString;
         if (year - 10 < 0)
             yearString = "0" + year;
@@ -68,7 +70,7 @@ public class Rinex {
         String fileName = "GN" + dateString + "." + yearString + type;
 
         try {
-            File rootFile = new File(Environment.getExternalStorageDirectory(), context.getString(R.string.app_name)+"_Rinex");
+            File rootFile = new File(Environment.getExternalStorageDirectory(), context.getString(R.string.app_name) + "_Rinex");
             if (!rootFile.exists()) rootFile.mkdirs();
 
             File file = new File(rootFile, fileName);
@@ -102,7 +104,9 @@ public class Rinex {
         resetLine();
         String program = "GnssRecord";
         String agency = "KMUTNB";
-        String dateCreation = new SimpleDateFormat("yyyyMMdd hhmmss", Locale.US).format(date) + " UTC";
+        SimpleDateFormat formatDate = new SimpleDateFormat("yyyyMMdd hhmmss");
+        formatDate.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String dateCreation = formatDate.format(date) + " UTC";
         for (int i = 0; i < program.length(); i++)
             line[i] = program.charAt(i);
         for (int i = 0; i < agency.length(); i++)
@@ -238,12 +242,25 @@ public class Rinex {
 
         //TIME OF FIRST OBS
         resetLine();
-        String year = new SimpleDateFormat("yyyy", Locale.US).format(date);
-        String month = new SimpleDateFormat("M", Locale.US).format(date);
-        String day = new SimpleDateFormat("d", Locale.US).format(date);
-        String hour = new SimpleDateFormat("h", Locale.US).format(date);
-        String min = new SimpleDateFormat("m", Locale.US).format(date);
-        String sec = new SimpleDateFormat("ss.SSSSSSS", Locale.US).format(date);
+        SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
+        formatYear.setTimeZone(TimeZone.getTimeZone("UTC"));
+        SimpleDateFormat formatMonth = new SimpleDateFormat("M");
+        formatMonth.setTimeZone(TimeZone.getTimeZone("UTC"));
+        SimpleDateFormat formatDay = new SimpleDateFormat("d");
+        formatDay.setTimeZone(TimeZone.getTimeZone("UTC"));
+        SimpleDateFormat formatHour = new SimpleDateFormat("h");
+        formatHour.setTimeZone(TimeZone.getTimeZone("UTC"));
+        SimpleDateFormat formatMin = new SimpleDateFormat("m");
+        formatMin.setTimeZone(TimeZone.getTimeZone("UTC"));
+        SimpleDateFormat formatSec = new SimpleDateFormat("ss.SSSSSSS");
+        formatSec.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+        String year = formatYear.format(date);
+        String month = formatMonth.format(date);
+        String day = formatDay.format(date);
+        String hour = formatHour.format(date);
+        String min = formatMin.format(date);
+        String sec = formatSec.format(date);
         String system = "GLO";
         for (int i = 0; i < year.length(); i++)
             line[5 - i] = year.charAt(year.length() - 1 - i);
@@ -277,16 +294,28 @@ public class Rinex {
 
     public void writeData(List<RinexData> dataList) {
         Log.i(TAG, "writeData");
-        Date date = new Date();
-
         //Date time and total (Title)
         resetLine();
-        String year = new SimpleDateFormat("yyyy", Locale.US).format(date);
-        String month = new SimpleDateFormat("M", Locale.US).format(date);
-        String day = new SimpleDateFormat("d", Locale.US).format(date);
-        String hour = new SimpleDateFormat("h", Locale.US).format(date);
-        String min = new SimpleDateFormat("m", Locale.US).format(date);
-        String sec = new SimpleDateFormat("ss.SSSSSSS", Locale.US).format(date);
+        Date date = new Date();
+        SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
+        formatYear.setTimeZone(TimeZone.getTimeZone("UTC"));
+        SimpleDateFormat formatMonth = new SimpleDateFormat("M");
+        formatMonth.setTimeZone(TimeZone.getTimeZone("UTC"));
+        SimpleDateFormat formatDay = new SimpleDateFormat("d");
+        formatDay.setTimeZone(TimeZone.getTimeZone("UTC"));
+        SimpleDateFormat formatHour = new SimpleDateFormat("h");
+        formatHour.setTimeZone(TimeZone.getTimeZone("UTC"));
+        SimpleDateFormat formatMin = new SimpleDateFormat("m");
+        formatMin.setTimeZone(TimeZone.getTimeZone("UTC"));
+        SimpleDateFormat formatSec = new SimpleDateFormat("ss.SSSSSSS");
+        formatSec.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+        String year = formatYear.format(date);
+        String month = formatMonth.format(date);
+        String day = formatDay.format(date);
+        String hour = formatHour.format(date);
+        String min = formatMin.format(date);
+        String sec = formatSec.format(date);
         String type = "0";
         String total = String.valueOf(dataList.size());
         line[0] = '>';
