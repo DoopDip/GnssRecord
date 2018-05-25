@@ -58,4 +58,7 @@
     <string name="restore_defaults">Restore Defaults</string>
     <string name="cancel">Cancel</string>
     <string name="please_confirm">Please confirm</string>
+    <string name="upload">Upload</string>
+    <string name="upload_success">Upload success</string>
+    <string name="upload_failed">Upload failed</string>
 </resources>
