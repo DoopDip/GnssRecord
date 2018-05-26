@@ -59,7 +59,8 @@ public class RegisterActivity extends AppCompatActivity {
                                     if (task.isSuccessful()) {
                                         addDisplayName(editTextName.getText().toString());
                                         Log.i(TAG, "createUserWithEmail:success");
-                                        startActivity(new Intent(RegisterActivity.this, RecordActivity.class));
+                                        FirebaseAuth.getInstance().signOut();
+                                        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                                         finish();
                                     } else {
                                         Log.i(TAG, "createUserWithEmail:failure", task.getException());
