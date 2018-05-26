@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
+    <!--<link rel="stylesheet" href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css" integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">-->
+    <link rel="stylesheet" href="bt.css">
+    <title>Gnss Record</title>
+    <style>
+        .icon-delete, .icon-download {
+            cursor: pointer;
+        }
+        .icon-delete:hover {
+            color: #bc2330;
+        }
+        .icon-download:hover {
+            color: #3e95dd;
+        }
+    </style>
+</head>
+<body style="background: black url(img/earth_night.png) no-repeat;" class="text-white pb-5">
+
+<!-- Modal -->
+<div class="modal fade text-dark" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered p-5" role="document">
+        <div class="modal-content">
+            <div class="modal-header ml-4 mt-2">
+                <h3 class="modal-title" id="loginModalLongTitle">Please login</h3>
+            </div>
+            <div class="modal-body pl-5 pr-5 pb-1 pt-1">
+                <form>
+                    <div class="form-group">
+                        <label for="inputEmail" class="bmd-label-floating">Email address</label>
+                        <input type="email" class="form-control" id="inputEmail" value="c@c.com">
+                        <span class="bmd-help">Please enter your email</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword" class="bmd-label-floating">Password</label>
+                        <input type="password" class="form-control" id="inputPassword" value="cccccc">
+                        <span class="bmd-help">Please enter your password</span>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer pl-5 pr-5 pb-4 pt-1">
+                <button type="button" class="btn btn-outline-secondary btn-lg btn-block" onclick="login()">Login
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <h1 class="text-center mt-5 mb-3">GNSS RECORD</h1>
+
+    <div class="row">
+        <div class="col-10 m-auto">
+            <div class="text-secondary ml-2" id="welcomeName">
+                <button type="button" class="btn btn-outline-info btn-sm pl-5 pr-5" data-toggle="modal" data-target="#loginModal">Login</button>
+            </div>
+            <table class="table table-hover table-dark mt-3" style="background-color: initial">
+                <thead>
+                <tr>
+                    <th scope="col" class="text-secondary">File name</th>
+                    <th scope="col" class="text-secondary">Date</th>
+                    <th scope="col" class="text-secondary">Time</th>
+                </tr>
+                </thead>
+                <tbody id="listFile">
+                <tr class="text-secondary">
+                    <th scope="row">xxxxxxxxxxxxxxxx.xxx</th>
+                    <td>xx/xx/xxxx</td>
+                    <td>xx:xx:xx</td>
+                    <td class="text-center">
+                        <i class="material-icons mr-3 icon-download" data-toggle="tooltip" data-placement="left"
+                           title="Download">cloud_download</i>
+                        <i class="material-icons icon-delete" data-toggle="tooltip" data-placement="right"
+                           title="Delete">delete</i>
+                    </td>
+                </tr>
+                <tr class="text-secondary">
+                    <th scope="row">xxxxxxxxxxxxxxxx.xxx</th>
+                    <td>xx/xx/xxxx</td>
+                    <td>xx:xx:xx</td>
+                    <td class="text-center">
+                        <i class="material-icons mr-3 icon-download" title="Download">cloud_download</i>
+                        <i class="material-icons icon-delete" title="Delete">delete</i>
+                    </td>
+                </tr>
+                <tr class="text-secondary">
+                    <th scope="row">xxxxxxxxxxxxxxxx.xxx</th>
+                    <td>xx/xx/xxxx</td>
+                    <td>xx:xx:xx</td>
+                    <td class="text-center">
+                        <i class="material-icons mr-3 icon-download" title="Download">cloud_download</i>
+                        <i class="material-icons icon-delete" title="Delete">delete</i>
+                    </td>
+                </tr>
+                <tr class="text-secondary">
+                    <th scope="row">xxxxxxxxxxxxxxxx.xxx</th>
+                    <td>xx/xx/xxxx</td>
+                    <td>xx:xx:xx</td>
+                    <td class="text-center">
+                        <i class="material-icons mr-3 icon-download" title="Download">cloud_download</i>
+                        <i class="material-icons icon-delete" title="Delete">delete</i>
+                    </td>
+                </tr>
+                <tr class="text-secondary">
+                    <th scope="row">xxxxxxxxxxxxxxxx.xxx</th>
+                    <td>xx/xx/xxxx</td>
+                    <td>xx:xx:xx</td>
+                    <td class="text-center">
+                        <i class="material-icons mr-3 icon-download" title="Download">cloud_download</i>
+                        <i class="material-icons icon-delete" title="Delete">delete</i>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <h2 id="status" class="text-center mt-5"></h2>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js"
+        integrity="sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U"
+        crossorigin="anonymous"></script>
+<script src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js"
+        integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9"
+        crossorigin="anonymous"></script>
+
+<script src="https://www.gstatic.com/firebasejs/5.0.4/firebase.js"></script>
+<script>
+    $(document).ready(function () {
+        $('body').bootstrapMaterialDesign();
+        $('#loginModal').modal('show');
+    });
+
+    var config = {
+        apiKey: "AIzaSyDPSepKRaaHHGYdjPELqDymRQ5fJ9SuK1Q",
+        authDomain: "gnssraw-1517417324455.firebaseapp.com",
+        databaseURL: "https://gnssraw-1517417324455.firebaseio.com",
+        projectId: "gnssraw-1517417324455",
+        storageBucket: "gnssraw-1517417324455.appspot.com",
+        messagingSenderId: "484573983823"
+    };
+    firebase.initializeApp(config);
+
+    var auth = null;
+
+    function login() {
+        var data = {
+            email: $('#inputEmail').val(),
+            password: $('#inputPassword').val()
+        };
+        firebase
+            .auth()
+            .signInWithEmailAndPassword(data.email, data.password)
+            .then(function (user) {
+                console.log("Authenticated successfully with payload:", user);
+                auth = user.user;
+                $('#welcomeName').html("WELCOME <span class='text-white ml-3'>[ " + auth.displayName+" ]</span>");
+                $('#listFile').html("");
+                $('#status').html("Loading...");
+                listFile();
+
+                $('#loginModal').modal('hide');
+            })
+            .catch(function (error) {
+                $('#loginModalLongTitle').html('<span class="text-danger">Login Failed !</span>');
+                console.log("Login Failed!", error);
+            });
+    }
+
+    function listFile() {
+        console.log(auth.uid);
+        firebase.database().ref(auth.uid).on("value", function (snapshot) {
+            var html = "";
+            if (snapshot.val() !== null) {
+                snapshot.forEach(function (file) {
+                    console.log(file.ref.path.pieces_[1]);
+                    var fileName = file.val().name;
+                    var fileObject = file.ref.path.pieces_[1];
+                    html += " <tr>\n" +
+                        "<th scope=\"row\">" + fileName + "</th>\n" +
+                        "<td>" + getDate(fileName) + "</td>" +
+                        "<td>" + getTime(fileName) + "</td>" +
+                        "<td class=\"text-center\">\n" +
+                        "<i class=\"material-icons mr-3 icon-download\" title=\"Download\" onclick=\"fileDownload('" + fileName + "')\">cloud_download</i>\n" +
+                        "<i class=\"material-icons icon-delete\" title=\"Delete\" onclick=\"fileDelete('" + fileObject + "','" + fileName + "')\">delete</i>\n" +
+                        "</td>\n" +
+                        "</tr>";
+                });
+                $('#status').html("");
+                $('#listFile').html(html);
+            } else {
+                $('#status').html("No Data.");
+            }
+        }, function (errorObject) {
+            console.log("The read failed: " + errorObject.code);
+        });
+    }
+
+    function getDate(fileName) {
+        return fileName.substring(8, 10) + "/" + fileName.substring(6, 8) + "/" + fileName.substring(2, 6);
+    }
+
+    function getTime(fileName) {
+        return fileName.substring(10, 12) + ":" + fileName.substring(12, 14) + ":" + fileName.substring(14, 16);
+    }
+
+    function fileDownload(fileName) {
+        var storageRef = firebase.storage().ref('/');
+        var starsRef = storageRef.child(auth.uid + "/" + fileName);
+        starsRef.getDownloadURL().then(function (url) {
+            console.log(url);
+            window.location.href = url;
+        }).catch(function (error) {
+            console.log("Error download: " + error.message);
+        });
+    }
+
+    function fileDelete(fileObject, fileName) {
+        firebase.database().ref(auth.uid + "/" + fileObject)
+            .remove().then(function () {
+            console.log("Remove succeeded.")
+        }).catch(function (error) {
+            console.log("Remove failed: " + error.message)
+        });
+
+        var storageRef = firebase.storage().ref('/');
+        var desertRef = storageRef.child(auth.uid + "/" + fileName);
+        desertRef.delete().then(function () {
+            console.log("delete: SS");
+        }).catch(function (error) {
+            console.log("Error delete: " + error.message);
+        });
+    }
+
+</script>
+</body>
+</html>
