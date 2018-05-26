@@ -58,7 +58,7 @@
         android:textSize="36sp" />
 
     <TextView
-        android:id="@+id/record_start"
+        android:id="@+id/record_btnStartStop"
         android:layout_width="284dp"
         android:layout_height="110dp"
         android:layout_below="@id/record_name"
@@ -112,7 +112,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/record_btnLogOut"
-        android:layout_below="@id/record_start"
+        android:layout_below="@id/record_btnStartStop"
         android:layout_marginBottom="15dp"
         android:layout_marginTop="50dp"
         android:background="#101010"

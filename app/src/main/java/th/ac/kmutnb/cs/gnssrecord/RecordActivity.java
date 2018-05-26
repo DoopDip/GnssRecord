@@ -42,7 +42,7 @@ public class RecordActivity extends AppCompatActivity {
 
     private TextView textViewWelcome;
     private TextView textViewName;
-    private TextView textViewStart;
+    private TextView textViewBtnStartStop;
     private TextView textViewBtnScroll;
     private TextView textViewBtnLogOut;
     private ScrollView scrollViewLog;
@@ -92,7 +92,7 @@ public class RecordActivity extends AppCompatActivity {
 
         textViewWelcome = findViewById(R.id.record_welcome);
         textViewName = findViewById(R.id.record_name);
-        textViewStart = findViewById(R.id.record_start);
+        textViewBtnStartStop = findViewById(R.id.record_btnStartStop);
         textViewBtnScroll = findViewById(R.id.record_btnScroll);
         textViewBtnLogOut = findViewById(R.id.record_btnLogOut);
         scrollViewLog = findViewById(R.id.record_logScroll);
@@ -102,9 +102,9 @@ public class RecordActivity extends AppCompatActivity {
         linearLayoutGroupMenu = findViewById(R.id.record_groupMenu);
 
         if (firebaseUser != null) textViewName.setText(firebaseUser.getDisplayName());
-        tempYBtnStart = textViewStart.getY();
+        tempYBtnStart = textViewBtnStartStop.getY();
 
-        textViewStart.setOnClickListener(new View.OnClickListener() {
+        textViewBtnStartStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!statusRecord) {
@@ -131,12 +131,12 @@ public class RecordActivity extends AppCompatActivity {
                 if (!statusScroll) {
                     Log.i(TAG, "Click -> textViewBtnScroll = UnAuto");
                     textViewBtnScroll.setText(R.string.auto_scrollbar);
-                    Snackbar.make(textViewStart, R.string.un_auto_scrollbar, Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(textViewBtnScroll, R.string.un_auto_scrollbar, Snackbar.LENGTH_SHORT).show();
                     statusScroll = true;
                 } else {
                     Log.i(TAG, "Click -> textViewBtnScroll = Auto");
                     textViewBtnScroll.setText(R.string.un_auto_scrollbar);
-                    Snackbar.make(textViewStart, R.string.auto_scrollbar, Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(textViewBtnScroll, R.string.auto_scrollbar, Snackbar.LENGTH_SHORT).show();
                     statusScroll = false;
                 }
             }
@@ -207,14 +207,14 @@ public class RecordActivity extends AppCompatActivity {
     private void animationClickStop() {
         textViewWelcome.setVisibility(View.VISIBLE);
         textViewName.setVisibility(View.VISIBLE);
-        textViewStart.setBackgroundResource(R.drawable.bg_btn_green);
-        textViewStart.setText(R.string.start);
+        textViewBtnStartStop.setBackgroundResource(R.drawable.bg_btn_green);
+        textViewBtnStartStop.setText(R.string.start);
         textViewBtnScroll.setVisibility(View.INVISIBLE);
         textViewBtnScroll.setAlpha(0f);
         textViewBtnLogOut.setVisibility(View.VISIBLE);
         linearLayoutGroupMenu.setVisibility(View.VISIBLE);
         //Animation
-        ObjectAnimator.ofFloat(textViewStart, View.TRANSLATION_Y, tempYBtnStart)
+        ObjectAnimator.ofFloat(textViewBtnStartStop, View.TRANSLATION_Y, tempYBtnStart)
                 .setDuration(500).start();
         ObjectAnimator animatorLog = ObjectAnimator.ofFloat(scrollViewLog, View.ALPHA, 0f);
         animatorLog.setDuration(200);
@@ -235,8 +235,8 @@ public class RecordActivity extends AppCompatActivity {
     private void animationClickStart() {
         textViewWelcome.setVisibility(View.INVISIBLE);
         textViewName.setVisibility(View.INVISIBLE);
-        textViewStart.setBackgroundResource(R.drawable.bg_btn_red);
-        textViewStart.setText(R.string.stop);
+        textViewBtnStartStop.setBackgroundResource(R.drawable.bg_btn_red);
+        textViewBtnStartStop.setText(R.string.stop);
         scrollViewLog.setVisibility(View.VISIBLE);
         textViewBtnScroll.setVisibility(View.VISIBLE);
         textViewBtnLogOut.setVisibility(View.INVISIBLE);
@@ -244,7 +244,7 @@ public class RecordActivity extends AppCompatActivity {
         linearLayoutGroupMenu.setVisibility(View.INVISIBLE);
         linearLayoutGroupMenu.setAlpha(0f);
         //Animation
-        ObjectAnimator.ofFloat(textViewStart, View.TRANSLATION_Y, tempYBtnStart - 380)
+        ObjectAnimator.ofFloat(textViewBtnStartStop, View.TRANSLATION_Y, tempYBtnStart - 380)
                 .setDuration(500).start();
         ObjectAnimator animatorLog = ObjectAnimator.ofFloat(scrollViewLog, View.ALPHA, 1f);
         animatorLog.setDuration(1000);
