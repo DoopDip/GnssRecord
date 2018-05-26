@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.TextView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -21,10 +23,16 @@ public class FileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_file);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+        TextView textViewEmpty = findViewById(R.id.file_empty);
         RecyclerView recyclerView = findViewById(R.id.file_recyclerView);
 
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
-        recyclerView.setAdapter(new FileAdapter(getFilesRinex()));
+        List<File> files = getFilesRinex();
+        if (!files.isEmpty()) {
+            textViewEmpty.setVisibility(View.INVISIBLE);
+            recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
+            recyclerView.setAdapter(new FileAdapter(getFilesRinex()));
+        } else
+            textViewEmpty.setVisibility(View.VISIBLE);
     }
 
     private List<File> getFilesRinex() {
