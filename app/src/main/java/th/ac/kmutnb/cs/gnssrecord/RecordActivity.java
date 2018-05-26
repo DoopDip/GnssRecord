@@ -178,8 +178,12 @@ public class RecordActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        locationManager.unregisterGnssMeasurementsCallback(measurementsEvent);
-        Log.i(TAG, "!! UnRegister callback -> measurementsEvent");
+        if (statusRecord) {
+            stopRecordRinex();
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            statusRecord = false;
+        }
+        unregisterGnssMeasurements();
     }
 
     private void registerGnssMeasurements() {
@@ -265,7 +269,7 @@ public class RecordActivity extends AppCompatActivity {
         double cartesianX = r * Math.cos(lat) * Math.cos(lng);
         double cartesianY = r * Math.cos(lat) * Math.sin(lng);
         double cartesianZ = r * Math.sin(lat);
-        Log.i(TAG, "Lat: "+lat + ", Lng: " + lng + ", Alt: " + location.getAltitude());
+        Log.i(TAG, "Lat: " + lat + ", Lng: " + lng + ", Alt: " + location.getAltitude());
         Log.i(TAG, "Cartesian X: " + cartesianX + ", Y:" + cartesianY + ", Z:" + cartesianZ);
         DecimalFormat decimalFormat = new DecimalFormat("#.####");
 
