@@ -59,7 +59,7 @@ public class Rinex {
     private void createFile() {
         Date date = new Date();
 
-        String dateString = new SimpleDateFormat("yyyyMMddhhmmss", Locale.US).format(date);
+        String dateString = new SimpleDateFormat("yyyyMMddHHmmss", Locale.US).format(date);
         String type = "o"; //Observable file
         int year = Integer.parseInt(new SimpleDateFormat("yy", Locale.US).format(date));
         String yearString;

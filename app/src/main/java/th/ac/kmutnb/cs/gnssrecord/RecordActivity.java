@@ -60,8 +60,6 @@ public class RecordActivity extends AppCompatActivity {
 
     private float tempYBtnStart;
 
-    private FirebaseUser firebaseUser;
-
     private String log;
     private Handler handler;
     private LocationManager locationManager;
@@ -82,7 +80,7 @@ public class RecordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_record);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         sharedPreferences = getSharedPreferences(SettingActivity.FILE_SETTING, 0);
 
