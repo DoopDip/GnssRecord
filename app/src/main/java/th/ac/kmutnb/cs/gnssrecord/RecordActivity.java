@@ -301,9 +301,9 @@ public class RecordActivity extends AppCompatActivity {
         ArrayList<RinexData> rinexData = new ArrayList<>();
         for (GnssMeasurement measurement : measurementList)
             rinexData.add(new RinexData(numberSatellite(measurement.getConstellationType(), measurement.getSvid()),
-                    measurement.getAccumulatedDeltaRangeMeters(),
-                    772467.6560,
-                    -3009.854,
+                    measurement.getAccumulatedDeltaRangeMeters(), //TODO
+                    772467.6560, //TODO
+                    -3009.854, //TODO
                     measurement.getCn0DbHz()));
         rinex.writeData(rinexData);
     }
