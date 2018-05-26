@@ -21,6 +21,8 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 
 import org.apache.commons.validator.routines.EmailValidator;
 
+import java.util.Objects;
+
 public class RegisterActivity extends AppCompatActivity {
 
     private static final String TAG = RegisterActivity.class.getSimpleName();
@@ -58,13 +60,13 @@ public class RegisterActivity extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
                                         addDisplayName(editTextName.getText().toString());
-                                        Log.i(TAG, "createUserWithEmail:success");
+                                        Log.i(TAG, "Register -> Successfully");
                                         FirebaseAuth.getInstance().signOut();
                                         startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                                         finish();
                                     } else {
-                                        Log.i(TAG, "createUserWithEmail:failure", task.getException());
-                                        Snackbar.make(textViewBtnRegister, R.string.register_failed, Snackbar.LENGTH_SHORT).show();
+                                        Log.i(TAG, "Register ->" + Objects.requireNonNull(task.getException()).getLocalizedMessage());
+                                        Snackbar.make(textViewBtnRegister, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
                                     }
                                 }
                             });
