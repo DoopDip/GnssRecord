@@ -18,8 +18,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -54,7 +57,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileHolder> {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "Click -> File: " + file.getName());
-                Context context = v.getContext();
+                final Context context = v.getContext();
                 new MaterialDialog.Builder(context)
                         .title(file.getName())
                         .items(new String[]{
@@ -79,24 +82,48 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileHolder> {
                                     if (file.exists()) {
                                         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                         if (user != null) {
-                                            FirebaseStorage storage = FirebaseStorage.getInstance();
-                                            StorageReference riversRef = storage.getReference().child(user.getUid() + "/" + file.getName());
-                                            UploadTask uploadTask = riversRef.putFile(Uri.fromFile(file));
-                                            uploadTask.addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception exception) {
-                                                    Log.i(TAG, "Upload " + file.getName() + ": Failure");
-                                                    Snackbar.make(holder.relativeLayout, R.string.upload_failed, Snackbar.LENGTH_SHORT).show();
-                                                }
-                                            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                                @Override
-                                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                                    Log.i(TAG, "Upload " + file.getName() + ": Success");
-                                                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-                                                    reference.child(user.getUid()).push().child("name").setValue(file.getName());
-                                                    Snackbar.make(holder.relativeLayout, R.string.upload_success, Snackbar.LENGTH_SHORT).show();
-                                                }
-                                            });
+                                            final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+                                            reference.child(user.getUid()).orderByChild("name").equalTo(file.getName())
+                                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                            if (dataSnapshot.exists()) {
+                                                                Snackbar.make(holder.relativeLayout,
+                                                                        "[ " + file.getName() + " ] " + context.getString(R.string.already_exists),
+                                                                        Snackbar.LENGTH_SHORT
+                                                                ).show();
+                                                            } else {
+                                                                FirebaseStorage storage = FirebaseStorage.getInstance();
+                                                                StorageReference riversRef = storage.getReference().child(user.getUid() + "/" + file.getName());
+                                                                UploadTask uploadTask = riversRef.putFile(Uri.fromFile(file));
+                                                                uploadTask.addOnFailureListener(new OnFailureListener() {
+                                                                    @Override
+                                                                    public void onFailure(@NonNull Exception exception) {
+                                                                        Log.i(TAG, "Upload " + file.getName() + ": Failure");
+                                                                        Snackbar.make(holder.relativeLayout,
+                                                                                context.getString(R.string.upload) + " [ " + file.getName() + " ] " + context.getString(R.string.failed),
+                                                                                Snackbar.LENGTH_SHORT
+                                                                        ).show();
+                                                                    }
+                                                                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                                    @Override
+                                                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                                        Log.i(TAG, "Upload " + file.getName() + ": Success");
+                                                                        reference.child(user.getUid()).push().child("name").setValue(file.getName());
+                                                                        Snackbar.make(holder.relativeLayout,
+                                                                                context.getString(R.string.upload) + " [ " + file.getName() + " ] " + context.getString(R.string.successfully),
+                                                                                Snackbar.LENGTH_SHORT
+                                                                        ).show();
+                                                                    }
+                                                                });
+                                                            }
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                        }
+                                                    });
                                         }
                                     }
                                 } else if (which == 2) {

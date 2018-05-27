@@ -59,7 +59,8 @@
     <string name="cancel">Cancel</string>
     <string name="please_confirm">Please confirm</string>
     <string name="upload">Upload</string>
-    <string name="upload_success">Upload success</string>
-    <string name="upload_failed">Upload failed</string>
+    <string name="successfully">successfully</string>
+    <string name="failed">failed</string>
     <string name="empty_file">Empty File !!</string>
+    <string name="already_exists">already exists !</string>
 </resources>
