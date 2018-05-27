@@ -30,7 +30,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import th.ac.kmutnb.cs.gnssrecord.model.RinexData;
 import th.ac.kmutnb.cs.gnssrecord.model.RinexHeader;
@@ -60,7 +63,7 @@ public class RecordActivity extends AppCompatActivity {
 
     private float tempYBtnStart;
 
-    private String log;
+    private StringBuilder log;
     private Handler handler;
     private LocationManager locationManager;
     private GnssMeasurementsEvent.Callback measurementsEvent =
@@ -84,6 +87,7 @@ public class RecordActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences(SettingActivity.FILE_SETTING, 0);
 
+        log = new StringBuilder();
         handler = new Handler();
         locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
 
@@ -109,6 +113,7 @@ public class RecordActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (!statusRecord) {
                     Log.i(TAG, "Click -> textViewStart = Start");
+                    logClear();
                     animationClickStart();
                     registerGnssMeasurements();
                     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -328,10 +333,15 @@ public class RecordActivity extends AppCompatActivity {
     }
 
     private void log(ArrayList<GnssMeasurement> measurementList) {
-        if (log == null) log = "";
-        log += "Satellite total : " + +measurementList.size();
-        log += "\n";
-
+        log.append(new SimpleDateFormat("HH:mm:ss", Locale.US).format(new Date()))
+                .append(" > [")
+                .append(measurementList.size())
+                .append("]=");
+        for (int i = 0; i < measurementList.size(); i++) {
+            log.append(numberSatellite(measurementList.get(i).getConstellationType(), measurementList.get(i).getSvid()));
+            if (i != measurementList.size()-1) log.append(",");
+        }
+        log.append("\n");
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -340,6 +350,17 @@ public class RecordActivity extends AppCompatActivity {
             }
         });
         Log.i(TAG, "GnssMeasurementsEvent callback -> Satellite total : " + measurementList.size());
+    }
+
+    private void logClear() {
+        log.setLength(0);
+        log.append(this.getString(R.string.searching)).append("\n");
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                textViewLog.setText(log);
+            }
+        });
     }
 
 }

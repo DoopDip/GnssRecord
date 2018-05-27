@@ -96,6 +96,9 @@
         android:paddingEnd="18dp"
         android:paddingStart="18dp"
         android:paddingTop="10dp"
+        android:fadingEdgeLength="20dp"
+        android:overScrollMode="never"
+        android:requiresFadingEdge="vertical"
         android:visibility="invisible">
 
         <TextView
@@ -103,7 +106,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/thaisansneue_light"
-            android:text="@string/record"
+            android:text="@string/searching"
             android:textSize="20sp" />
     </ScrollView>
 
