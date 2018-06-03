@@ -109,44 +109,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/thaisansneue_semibold"
-                    android:text="@string/mark_type"
-                    android:textColor="@color/colorGray"
-                    android:textSize="17sp" />
-
-                <TextView
-                    android:id="@+id/setting_markType"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:fontFamily="@font/thaisansneue_light"
-                    android:text="@string/mark_type"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="30sp" />
-
-                <TextView
-                    android:id="@+id/setting_btnMarkType"
-                    android:layout_width="60dp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/bg_btn_edit"
-                    android:fontFamily="@font/thaisansneue_light"
-                    android:gravity="center"
-                    android:text="@string/edit"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="20sp" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_setting_list"
-                android:paddingTop="5dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/thaisansneue_semibold"
                     android:text="@string/observer_name"
                     android:textColor="@color/colorGray"
                     android:textSize="17sp" />

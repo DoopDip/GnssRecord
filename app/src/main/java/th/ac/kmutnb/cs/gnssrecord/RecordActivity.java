@@ -9,16 +9,19 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.location.GnssClock;
 import android.location.GnssMeasurement;
 import android.location.GnssMeasurementsEvent;
 import android.location.GnssStatus;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -31,17 +34,26 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import th.ac.kmutnb.cs.gnssrecord.model.RinexData;
 import th.ac.kmutnb.cs.gnssrecord.model.RinexHeader;
 import th.ac.kmutnb.cs.gnssrecord.rinex.Rinex;
 
-public class RecordActivity extends AppCompatActivity {
+public class RecordActivity extends AppCompatActivity implements LocationListener {
 
     private static final String TAG = RecordActivity.class.getSimpleName();
+
+    private static final double SPEED_OF_LIGHT = 299792458.0; // [m/s]
+    private static final double GPS_L1_FREQ = 154.0 * 10.23e6;
+    private static final double GPS_L1_WAVELENGTH = SPEED_OF_LIGHT / GPS_L1_FREQ;
+    private static final double GPS_WEEK_SECS = 604800; // Number of seconds in a week
+    private static final double NS_TO_S = 1.0e-9;
 
     private TextView textViewWelcome;
     private TextView textViewName;
@@ -63,6 +75,10 @@ public class RecordActivity extends AppCompatActivity {
 
     private float tempYBtnStart;
 
+    private Location location;
+    private Boolean locationStatus;
+    private long gpsTime;
+
     private StringBuilder log;
     private Handler handler;
     private LocationManager locationManager;
@@ -71,9 +87,16 @@ public class RecordActivity extends AppCompatActivity {
                 @Override
                 public void onGnssMeasurementsReceived(GnssMeasurementsEvent eventArgs) {
                     super.onGnssMeasurementsReceived(eventArgs);
-                    ArrayList<GnssMeasurement> measurementList = new ArrayList<>(eventArgs.getMeasurements());
-                    writeRecordRinex(measurementList);
-                    log(measurementList);
+                    if (statusRecord) {
+                        ArrayList<GnssMeasurement> measurementList = new ArrayList<>(eventArgs.getMeasurements());
+                        writeRecordRinex(measurementList, eventArgs.getClock());
+                    }
+
+                    gpsTime += 1000;
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSS");
+                    simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+                    Date date = new Date(gpsTime);
+                    Log.i(TAG, "GnssMeasurements [available], GPS time (UTC): " + simpleDateFormat.format(date));
                 }
             };
 
@@ -94,6 +117,8 @@ public class RecordActivity extends AppCompatActivity {
         statusRecord = false;
         statusScroll = false;
 
+        locationStatus = false;
+
         textViewWelcome = findViewById(R.id.record_welcome);
         textViewName = findViewById(R.id.record_name);
         textViewBtnStartStop = findViewById(R.id.record_btnStartStop);
@@ -108,24 +133,49 @@ public class RecordActivity extends AppCompatActivity {
         if (firebaseUser != null) textViewName.setText(firebaseUser.getDisplayName());
         tempYBtnStart = textViewBtnStartStop.getY();
 
+        btnEvent();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (statusRecord) {
+            stopRecordRinex();
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            statusRecord = false;
+        }
+        unregisterGnssMeasurements();
+        locationStatus = false;
+        textViewBtnStartStop.setBackgroundResource(R.drawable.bg_btn_gray);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerGnssMeasurements();
+    }
+
+    private void btnEvent() {
         textViewBtnStartStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!statusRecord) {
-                    Log.i(TAG, "Click -> textViewStart = Start");
-                    logClear();
-                    animationClickStart();
-                    registerGnssMeasurements();
-                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                    startRecordRinex();
-                    statusRecord = true;
+                    if (locationStatus) {
+                        Log.i(TAG, "Click -> textViewStart = Start");
+                        logClear();
+                        animationClickStart();
+                        registerGnssMeasurements();
+                        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                        startRecordRinex();
+                        statusRecord = true;
+                    } else
+                        Snackbar.make(textViewBtnScroll, R.string.wait_location, Snackbar.LENGTH_SHORT).show();
                 } else {
                     Log.i(TAG, "Click -> textViewStart = Stop");
+                    statusRecord = false;
                     stopRecordRinex();
                     animationClickStop();
-                    unregisterGnssMeasurements();
                     getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                    statusRecord = false;
                 }
             }
         });
@@ -180,17 +230,6 @@ public class RecordActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (statusRecord) {
-            stopRecordRinex();
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-            statusRecord = false;
-        }
-        unregisterGnssMeasurements();
-    }
-
     private void registerGnssMeasurements() {
         //Check Permission
         if (ActivityCompat.checkSelfPermission(RecordActivity.this,
@@ -202,11 +241,17 @@ public class RecordActivity extends AppCompatActivity {
         }
         locationManager.registerGnssMeasurementsCallback(measurementsEvent);
         Log.i(TAG, "Register callback -> measurementsEvent");
+
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
+        Log.i(TAG, "requestLocationUpdates -> GPS");
     }
 
     private void unregisterGnssMeasurements() {
         locationManager.unregisterGnssMeasurementsCallback(measurementsEvent);
         Log.i(TAG, "!! UnRegister callback -> measurementsEvent");
+
+        locationStatus = false;
+        Log.i(TAG, "!! locationStatus -> false");
     }
 
     private void animationClickStop() {
@@ -263,11 +308,6 @@ public class RecordActivity extends AppCompatActivity {
 
     private void startRecordRinex() {
 
-        //TODO
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         double lng = location.getLongitude();
         double lat = location.getLatitude();
         double r = 6371000 + location.getAltitude();
@@ -281,7 +321,6 @@ public class RecordActivity extends AppCompatActivity {
         rinex = new Rinex(getApplicationContext());
         rinex.writeHeader(new RinexHeader(
                 sharedPreferences.getString(SettingActivity.KEY_MARK_NAME, SettingActivity.DEF_MARK_NAME),
-                sharedPreferences.getString(SettingActivity.KEY_MARK_TYPE, SettingActivity.DEF_MARK_TYPE),
                 sharedPreferences.getString(SettingActivity.KEY_OBSERVER_NAME, SettingActivity.DEF_OBSERVER_NAME),
                 sharedPreferences.getString(SettingActivity.KEY_OBSERVER_AGENCY_NAME, SettingActivity.DEF_OBSERVER_AGENCY_NAME),
                 sharedPreferences.getString(SettingActivity.KEY_RECEIVER_NUMBER, SettingActivity.DEF_RECEIVER_NUMBER),
@@ -294,7 +333,8 @@ public class RecordActivity extends AppCompatActivity {
                 Double.parseDouble(sharedPreferences.getString(SettingActivity.KEY_ANTENNA_HEIGHT, SettingActivity.DEF_ANTENNA_HEIGHT)),
                 decimalFormat.format(cartesianX),
                 decimalFormat.format(cartesianY),
-                decimalFormat.format(cartesianZ)
+                decimalFormat.format(cartesianZ),
+                gpsTime
         ));
     }
 
@@ -302,15 +342,46 @@ public class RecordActivity extends AppCompatActivity {
         rinex.closeFile();
     }
 
-    private void writeRecordRinex(ArrayList<GnssMeasurement> measurementList) {
+    private void writeRecordRinex(ArrayList<GnssMeasurement> measurementList, GnssClock clock) {
         ArrayList<RinexData> rinexData = new ArrayList<>();
-        for (GnssMeasurement measurement : measurementList)
-            rinexData.add(new RinexData(numberSatellite(measurement.getConstellationType(), measurement.getSvid()),
-                    measurement.getAccumulatedDeltaRangeMeters(), //TODO
-                    772467.6560, //TODO
-                    -3009.854, //TODO
-                    measurement.getCn0DbHz()));
-        rinex.writeData(rinexData);
+        for (GnssMeasurement measurement : measurementList) {
+            int constellationType = measurement.getConstellationType();
+            if (constellationType == GnssStatus.CONSTELLATION_GPS || constellationType == GnssStatus.CONSTELLATION_GLONASS || constellationType == GnssStatus.CONSTELLATION_GALILEO) {
+
+                double fullBiasNanos = clock.getFullBiasNanos();
+                double gpsWeek = Math.floor(-fullBiasNanos * NS_TO_S / GPS_WEEK_SECS);
+                double local_est_GPS_time = clock.getTimeNanos() - (fullBiasNanos + clock.getBiasNanos());
+                double gpsSow = local_est_GPS_time * NS_TO_S - gpsWeek * GPS_WEEK_SECS;
+
+                double tRxSeconds = gpsSow - measurement.getTimeOffsetNanos() * NS_TO_S;
+                double tTxSeconds = measurement.getReceivedSvTimeNanos() * NS_TO_S;
+
+                double tau = tRxSeconds - tTxSeconds;
+
+                if (tau < 0) tau += GPS_WEEK_SECS;
+
+                double c1 = tau * SPEED_OF_LIGHT;
+                double l1 = measurement.getAccumulatedDeltaRangeMeters() / GPS_L1_WAVELENGTH;
+                double d1 = -measurement.getPseudorangeRateMetersPerSecond() / GPS_L1_WAVELENGTH;
+                DecimalFormat df = new DecimalFormat("0.000");
+
+                if (c1 > 30e6 || c1 < 10e6) {
+                    Log.e(TAG, "State=" + measurement.getState() + ", C1: " + df.format(c1) + ", L1: " + df.format(l1) + ", D1: " + df.format(d1) + ", S1: " + df.format(measurement.getCn0DbHz()));
+                    continue;
+                } else
+                    Log.i(TAG, "State=" + measurement.getState() + ", C1: " + df.format(c1) + ", L1: " + df.format(l1) + ", D1: " + df.format(d1) + ", S1: " + df.format(measurement.getCn0DbHz()));
+
+                rinexData.add(new RinexData(
+                        numberSatellite(measurement.getConstellationType(), measurement.getSvid()),
+                        df.format(c1),
+                        df.format(l1),
+                        df.format(measurement.getCn0DbHz()),
+                        df.format(d1)
+                ));
+            }
+        }
+        rinex.writeData(rinexData, gpsTime);
+        log(rinexData);
     }
 
     private String numberSatellite(int constellationType, int svid) {
@@ -332,14 +403,14 @@ public class RecordActivity extends AppCompatActivity {
         return "SNN";
     }
 
-    private void log(ArrayList<GnssMeasurement> measurementList) {
+    private void log(ArrayList<RinexData> rinexData) {
         log.append(new SimpleDateFormat("HH:mm:ss", Locale.US).format(new Date()))
                 .append(" > [")
-                .append(measurementList.size())
+                .append(rinexData.size())
                 .append("]=");
-        for (int i = 0; i < measurementList.size(); i++) {
-            log.append(numberSatellite(measurementList.get(i).getConstellationType(), measurementList.get(i).getSvid()));
-            if (i != measurementList.size()-1) log.append(",");
+        for (int i = 0; i < rinexData.size(); i++) {
+            log.append(rinexData.get(i).getSatellite());
+            if (i != rinexData.size() - 1) log.append(",");
         }
         log.append("\n");
         handler.post(new Runnable() {
@@ -349,7 +420,7 @@ public class RecordActivity extends AppCompatActivity {
                 if (!statusScroll) scrollViewLog.fullScroll(ScrollView.FOCUS_DOWN);
             }
         });
-        Log.i(TAG, "GnssMeasurementsEvent callback -> Satellite total : " + measurementList.size());
+        Log.i(TAG, "GnssMeasurementsEvent callback -> Satellite total : " + rinexData.size());
     }
 
     private void logClear() {
@@ -363,4 +434,28 @@ public class RecordActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onLocationChanged(Location location) {
+        this.location = location;
+        if (!locationStatus) {
+            locationStatus = true;
+            gpsTime = location.getTime();
+            textViewBtnStartStop.setBackgroundResource(R.drawable.bg_btn_green);
+        }
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
 }

@@ -16,7 +16,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 public class SettingActivity extends AppCompatActivity {
 
     public static final String KEY_MARK_NAME = "markName";
-    public static final String KEY_MARK_TYPE = "markType";
     public static final String KEY_OBSERVER_NAME = "observerName";
     public static final String KEY_OBSERVER_AGENCY_NAME = "observerAgencyName";
     public static final String KEY_RECEIVER_NUMBER = "receiverNumber";
@@ -29,7 +28,6 @@ public class SettingActivity extends AppCompatActivity {
     public static final String KEY_ANTENNA_HEIGHT = "antennaHeight";
 
     public static final String DEF_MARK_NAME = "GnssRecord";
-    public static final String DEF_MARK_TYPE = "Geodetic";
     public static final String DEF_OBSERVER_NAME = "RINEX Logger user";
     public static final String DEF_OBSERVER_AGENCY_NAME = "GnssRecord";
     public static final String DEF_RECEIVER_NUMBER = Build.SERIAL;
@@ -46,7 +44,6 @@ public class SettingActivity extends AppCompatActivity {
     private static final String TAG = SettingActivity.class.getSimpleName();
 
     private TextView textViewMarkName;
-    private TextView textViewMarkType;
     private TextView textViewObserverName;
     private TextView textViewObserverAgencyName;
     private TextView textViewReceiverNumber;
@@ -59,7 +56,6 @@ public class SettingActivity extends AppCompatActivity {
     private TextView textViewAntennaHeight;
 
     private TextView textViewBtnMarkName;
-    private TextView textViewBtnMarkType;
     private TextView textViewBtnObserverName;
     private TextView textViewBtnObserverAgencyName;
     private TextView textViewBtnReceiverNumber;
@@ -82,7 +78,6 @@ public class SettingActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         textViewMarkName = findViewById(R.id.setting_markName);
-        textViewMarkType = findViewById(R.id.setting_markType);
         textViewObserverName = findViewById(R.id.setting_observerName);
         textViewObserverAgencyName = findViewById(R.id.setting_observerAgencyName);
         textViewReceiverNumber = findViewById(R.id.setting_receiverNumber);
@@ -95,7 +90,6 @@ public class SettingActivity extends AppCompatActivity {
         textViewAntennaHeight = findViewById(R.id.setting_antennaHeight);
 
         textViewBtnMarkName = findViewById(R.id.setting_btnMarkName);
-        textViewBtnMarkType = findViewById(R.id.setting_btnMarkType);
         textViewBtnObserverName = findViewById(R.id.setting_btnObserverName);
         textViewBtnObserverAgencyName = findViewById(R.id.setting_btnObserverAgencyName);
         textViewBtnReceiverNumber = findViewById(R.id.setting_btnReceiverNumber);
@@ -130,40 +124,6 @@ public class SettingActivity extends AppCompatActivity {
                                         textViewMarkName.setText(input.toString());
                                     }
                                 }).show();
-            }
-        });
-
-        textViewBtnMarkType.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG, "Click -> MarkType");
-                String[] type = {
-                        "Geodetic",
-                        "Non Geodetic",
-                        "Non Physical",
-                        "Space borne",
-                        "Air borne",
-                        "Water Craft",
-                        "Ground Craft",
-                        "Fixed Buoy",
-                        "Floating Buoy",
-                        "Floating Ice",
-                        "Glacier",
-                        "Ballistic",
-                        "Animal",
-                        "Human"
-                };
-                new MaterialDialog.Builder(v.getContext())
-                        .title(R.string.mark_type)
-                        .items(type)
-                        .itemsCallback(new MaterialDialog.ListCallback() {
-                            @Override
-                            public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                                sharedPreferences.edit().putString(KEY_MARK_TYPE, text.toString()).apply();
-                                textViewMarkType.setText(text.toString());
-                            }
-                        })
-                        .show();
             }
         });
 
@@ -382,7 +342,6 @@ public class SettingActivity extends AppCompatActivity {
 
     private void reloadSettingText() {
         textViewMarkName.setText(sharedPreferences.getString(KEY_MARK_NAME, DEF_MARK_NAME));
-        textViewMarkType.setText(sharedPreferences.getString(KEY_MARK_TYPE, DEF_MARK_TYPE));
         textViewObserverName.setText(sharedPreferences.getString(KEY_OBSERVER_NAME, DEF_OBSERVER_NAME));
         textViewObserverAgencyName.setText(sharedPreferences.getString(KEY_OBSERVER_AGENCY_NAME, DEF_OBSERVER_AGENCY_NAME));
         textViewReceiverNumber.setText(sharedPreferences.getString(KEY_RECEIVER_NUMBER, DEF_RECEIVER_NUMBER));
@@ -397,7 +356,6 @@ public class SettingActivity extends AppCompatActivity {
 
     private void restoreSettingText() {
         sharedPreferences.edit().putString(KEY_MARK_NAME, DEF_MARK_NAME).apply();
-        sharedPreferences.edit().putString(KEY_MARK_TYPE, DEF_MARK_TYPE).apply();
         sharedPreferences.edit().putString(KEY_OBSERVER_NAME, DEF_OBSERVER_NAME).apply();
         sharedPreferences.edit().putString(KEY_OBSERVER_AGENCY_NAME, DEF_OBSERVER_AGENCY_NAME).apply();
         sharedPreferences.edit().putString(KEY_RECEIVER_NUMBER, DEF_RECEIVER_NUMBER).apply();

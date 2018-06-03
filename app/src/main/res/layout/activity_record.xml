@@ -63,7 +63,7 @@
         android:layout_height="110dp"
         android:layout_below="@id/record_name"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/bg_btn_green"
+        android:background="@drawable/bg_btn_gray"
         android:fontFamily="@font/thaisansneue_extrabold"
         android:gravity="center"
         android:text="@string/start"

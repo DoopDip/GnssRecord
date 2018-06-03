@@ -2,36 +2,36 @@ package th.ac.kmutnb.cs.gnssrecord.model;
 
 public class RinexData {
     private String satellite;
-    private double pseudoRange;
-    private double carrierPhase;
-    private double doppler;
-    private double signalStrength;
+    private String pseudoRange;
+    private String carrierPhase;
+    private String signalStrength;
+    private String doppler;
 
-    public RinexData(String satellite, double pseudoRange, double carrierPhase, double doppler, double signalStrength) {
+    public RinexData(String satellite, String pseudoRange, String carrierPhase, String signalStrength, String doppler) {
         this.satellite = satellite;
         this.pseudoRange = pseudoRange;
         this.carrierPhase = carrierPhase;
-        this.doppler = doppler;
         this.signalStrength = signalStrength;
+        this.doppler = doppler;
     }
 
     public String getSatellite() {
         return satellite;
     }
 
-    public double getPseudoRange() {
+    public String getPseudoRange() {
         return pseudoRange;
     }
 
-    public double getCarrierPhase() {
+    public String getCarrierPhase() {
         return carrierPhase;
     }
 
-    public double getDoppler() {
-        return doppler;
+    public String getSignalStrength() {
+        return signalStrength;
     }
 
-    public double getSignalStrength() {
-        return signalStrength;
+    public String getDoppler() {
+        return doppler;
     }
 }
