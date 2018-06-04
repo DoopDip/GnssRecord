@@ -84,12 +84,12 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
                 @Override
                 public void onGnssMeasurementsReceived(GnssMeasurementsEvent eventArgs) {
                     super.onGnssMeasurementsReceived(eventArgs);
-                    if (statusRecord) {
+                    if (statusRecord) { //หากมีการบันทึกค่าก็จะทำการดึงรายการดาวเทียมและนำไปเขียนลง file
                         ArrayList<GnssMeasurement> measurementList = new ArrayList<>(eventArgs.getMeasurements());
                         writeRecordRinex(measurementList, eventArgs.getClock());
                     }
 
-                    gpsTime += 1000;
+                    gpsTime += 1000; //บวกเวลา Gps ให้เพิ่มขึ้น 1 วินาที ทุกครั้งเมื่อ GnssMeasurementsEvent.Callback ทำงาน
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSS");
                     simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
                     Date date = new Date(gpsTime);
@@ -305,9 +305,9 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
 
     private void startRecordRinex() {
 
-        double lng = location.getLongitude();
-        double lat = location.getLatitude();
-        double r = 6371000 + location.getAltitude();
+        double lng = location.getLongitude(); //ดึงค่า Longitude
+        double lat = location.getLatitude(); //ดึงค่า Latitude
+        double r = 6371000 + location.getAltitude(); //หาค่า R โดยนำ
         double cartesianX = r * Math.cos(lat) * Math.cos(lng);
         double cartesianY = r * Math.cos(lat) * Math.sin(lng);
         double cartesianZ = r * Math.sin(lat);

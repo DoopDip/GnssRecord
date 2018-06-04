@@ -4,8 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
-    <!--<link rel="stylesheet" href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css" integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">-->
-    <link rel="stylesheet" href="bt.css">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css" integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">
     <title>Gnss Record - GNSS Satellite raw data recording</title>
     <style>
         .icon-delete, .icon-download, .icon-logout {
@@ -111,6 +110,7 @@
     });
 
     function dontLogin() {
+        $('#status').html("");
         $('#welcomeName').html("<button type='button' class='btn btn-outline-info btn-sm pl-5 pr-5' " +
             "data-toggle='modal' data-target='#loginModal'>Login</button>");
         var html = "";
@@ -177,6 +177,7 @@
                 $('#status').html("");
                 $('#listFile').html(html);
             } else {
+                $('#listFile').html("");
                 $('#status').html("No Data.");
             }
         }, function (errorObject) {
