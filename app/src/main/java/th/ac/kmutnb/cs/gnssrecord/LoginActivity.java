@@ -43,6 +43,10 @@ public class LoginActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
 
+        /*
+          54 > ตรวจสอบว่าช่องข้อมูลมีการเว้นว่าง ใส่อีเมล์ถูกต้องหรือไม่ หรือใส่รหัสผ่านน้อยกว่า 6 ตัวหรือไม่
+          55-69 > ทำการตรวจสอบอีเมล์กับรหัสผ่านที่ผู้ใช้ใส่เข้ามากับ Firebase หากถูกต้องก็จะทำการเปิดหน้า RecordActivity แต่ถ้าหากไม่สำเร็จก็จะแจ้งข้อความ Login failed
+         */
         textViewBtnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

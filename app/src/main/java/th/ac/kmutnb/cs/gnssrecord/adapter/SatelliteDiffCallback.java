@@ -26,7 +26,7 @@ public class SatelliteDiffCallback extends DiffUtil.Callback {
     }
 
     /**
-     * 30-31 หากหมายเลขดาวเทียมและชนิดดาวเทียมของเก่ากับของใหม่ไม่ตรงกันจะให้ทำการอัพเดทรายการใหม่
+     * 37-39 > หากหมายเลขดาวเทียมและชนิดดาวเทียมของเก่ากับของใหม่ไม่ตรงกันจะให้ทำการอัพเดทรายการใหม่
      *
      * @param oldItemPosition
      * @param newItemPosition
@@ -40,7 +40,7 @@ public class SatelliteDiffCallback extends DiffUtil.Callback {
     }
 
     /**
-     * 49-60 หากข้อมูลในรายการดาวเทียมค่าของ Cn0DbHz มีการเปลี่ยนแปลงก็จะทำการอัพเดทแต่ข้อมูลตัวรายการนั้น
+     * 51-62 > หากข้อมูลในรายการดาวเทียมค่าของ Cn0DbHz มีการเปลี่ยนแปลงก็จะทำการอัพเดทแต่ข้อมูลตัวรายการนั้น
      *
      * @param oldItemPosition
      * @param newItemPosition
