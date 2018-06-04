@@ -25,6 +25,13 @@ public class SatelliteDiffCallback extends DiffUtil.Callback {
         return measurementListNew != null ? measurementListNew.size() : 0;
     }
 
+    /**
+     * 30-31 หากหมายเลขดาวเทียมและชนิดดาวเทียมของเก่ากับของใหม่ไม่ตรงกันจะให้ทำการอัพเดทรายการใหม่
+     *
+     * @param oldItemPosition
+     * @param newItemPosition
+     * @return
+     */
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
         GnssMeasurement measurementOld = measurementListOld.get(oldItemPosition);
@@ -32,6 +39,13 @@ public class SatelliteDiffCallback extends DiffUtil.Callback {
         return measurementOld.getSvid() == measurementNew.getSvid() && measurementOld.getConstellationType() == measurementNew.getConstellationType();
     }
 
+    /**
+     * 49-60 หากข้อมูลในรายการดาวเทียมค่าของ Cn0DbHz มีการเปลี่ยนแปลงก็จะทำการอัพเดทแต่ข้อมูลตัวรายการนั้น
+     *
+     * @param oldItemPosition
+     * @param newItemPosition
+     * @return
+     */
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
         GnssMeasurement measurementOld = measurementListOld.get(oldItemPosition);
