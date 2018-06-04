@@ -49,6 +49,10 @@ public class RegisterActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
 
+        /*
+          59 > ตรวจสอบว่าช่องข้อมูลมีการเว้นว่าง ใส่อีเมล์ถูกต้องหรือไม่ หรือใส่รหัสผ่านน้อยกว่า 6 ตัวหรือไม่
+          60-75 > ทำการเพิ่มอีเมล์และรหัสผ่านที่ผู้ใช้สมัครทำการเก็บไว้ใน Firebase ถ้าหากสำเร็จก็จะเพิ่มชื่อผู้ใช้ผูกกับอีเมล์ และถ้าหากไม่สำเร็จก็จะแสดงข้อความแจ้งเตือนแสดงออกมา
+         */
         textViewBtnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
