@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/thaisansneue_extrabold"
-            android:text="@string/header"
+            android:text="@string/setting"
             android:textColor="@color/colorWhite"
             android:textSize="60sp" />
     </LinearLayout>

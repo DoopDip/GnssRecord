@@ -62,6 +62,11 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
     private TextView textViewBtnFile;
     private TextView textViewBtnSetting;
     private LinearLayout linearLayoutGroupMenu;
+    private TextView textViewLatitude;
+    private TextView textViewLongitude;
+    private TextView textViewHeight;
+    private TextView textViewTime;
+    private TextView textViewDate;
 
     private Rinex rinex;
 
@@ -84,16 +89,28 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
                 @Override
                 public void onGnssMeasurementsReceived(GnssMeasurementsEvent eventArgs) {
                     super.onGnssMeasurementsReceived(eventArgs);
+                    Log.i(TAG, "GnssMeasurements [available]");
+                    gpsTime += 1000; //บวกเวลา Gps ให้เพิ่มขึ้น 1 วินาที ทุกครั้งเมื่อ GnssMeasurementsEvent.Callback ทำงาน
+
                     if (statusRecord) { //หากมีการบันทึกค่าก็จะทำการดึงรายการดาวเทียมและนำไปเขียนลง file
                         ArrayList<GnssMeasurement> measurementList = new ArrayList<>(eventArgs.getMeasurements());
                         writeRecordRinex(measurementList, eventArgs.getClock());
-                    }
+                    } else if (locationStatus) {
+                        final Date date = new Date(gpsTime);
+                        final SimpleDateFormat formatTime = new SimpleDateFormat("HH:mm:ss");
+                        final SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/YY");
+                        formatTime.setTimeZone(TimeZone.getTimeZone("UTC"));
+                        formatDate.setTimeZone(TimeZone.getTimeZone("UTC"));
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                textViewTime.setText(formatTime.format(date));
+                                textViewDate.setText(formatDate.format(date));
+                            }
+                        });
+                        Log.i(TAG, "GPS time (UTC): " + formatTime.format(date) + " " + formatDate.format(date));
 
-                    gpsTime += 1000; //บวกเวลา Gps ให้เพิ่มขึ้น 1 วินาที ทุกครั้งเมื่อ GnssMeasurementsEvent.Callback ทำงาน
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSS");
-                    simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-                    Date date = new Date(gpsTime);
-                    Log.i(TAG, "GnssMeasurements [available], GPS time (UTC): " + simpleDateFormat.format(date));
+                    }
                 }
             };
 
@@ -126,6 +143,11 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
         textViewBtnFile = findViewById(R.id.record_btnFile);
         textViewBtnSetting = findViewById(R.id.record_btnSetting);
         linearLayoutGroupMenu = findViewById(R.id.record_groupMenu);
+        textViewLatitude = findViewById(R.id.record_latitude);
+        textViewLongitude = findViewById(R.id.record_longitude);
+        textViewHeight = findViewById(R.id.record_height);
+        textViewTime = findViewById(R.id.record_time);
+        textViewDate = findViewById(R.id.record_date);
 
         if (firebaseUser != null) textViewName.setText(firebaseUser.getDisplayName());
         tempYBtnStart = textViewBtnStartStop.getY();
@@ -432,13 +454,23 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
     }
 
     @Override
-    public void onLocationChanged(Location location) {
+    public void onLocationChanged(final Location location) {
         this.location = location;
         if (!locationStatus) {
             locationStatus = true;
             gpsTime = location.getTime();
             textViewBtnStartStop.setBackgroundResource(R.drawable.bg_btn_green);
         }
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                DecimalFormat df = new DecimalFormat("#.00000");
+                textViewLatitude.setText(df.format(location.getLatitude()));
+                textViewLongitude.setText(df.format(location.getLongitude()));
+                textViewHeight.setText(df.format(location.getAltitude()));
+            }
+        });
     }
 
     @Override
