@@ -16,7 +16,11 @@ import android.location.GnssStatus;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -28,8 +32,11 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.shawnlin.numberpicker.NumberPicker;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -64,9 +71,12 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
     private LinearLayout linearLayoutGroupMenu;
     private TextView textViewLatitude;
     private TextView textViewLongitude;
-    private TextView textViewHeight;
+    private TextView textViewAltitude;
     private TextView textViewTime;
     private TextView textViewDate;
+    private LinearLayout linearLayoutGroupTimeScroll;
+    private TextView textViewBtnTimer;
+    private TextView textViewTimer;
 
     private Rinex rinex;
 
@@ -81,6 +91,9 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
     private Boolean locationStatus;
     private long gpsTime;
 
+    private long timer;
+    private boolean statusTimer;
+
     private StringBuilder log;
     private Handler handler;
     private LocationManager locationManager;
@@ -90,11 +103,48 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
                 public void onGnssMeasurementsReceived(GnssMeasurementsEvent eventArgs) {
                     super.onGnssMeasurementsReceived(eventArgs);
                     Log.i(TAG, "GnssMeasurements [available]");
-                    gpsTime += 1000; //บวกเวลา Gps ให้เพิ่มขึ้น 1 วินาที ทุกครั้งเมื่อ GnssMeasurementsEvent.Callback ทำงาน
-
-                    if (statusRecord) { //หากมีการบันทึกค่าก็จะทำการดึงรายการดาวเทียมและนำไปเขียนลง file
+                    gpsTime += 1000;
+                    if (statusRecord) {
                         ArrayList<GnssMeasurement> measurementList = new ArrayList<>(eventArgs.getMeasurements());
                         writeRecordRinex(measurementList, eventArgs.getClock());
+                        if (statusTimer) {
+                            timer--;
+                            if (timer <= 0) {
+                                statusTimer = false;
+                                statusRecord = false;
+                                stopRecordRinex();
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        animationClickStop();
+                                        textViewTimer.setTextColor(getColor(R.color.colorWhite));
+                                    }
+                                });
+                                RingtoneManager.getRingtone(
+                                        getApplicationContext(),
+                                        RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+                                ).play();
+                            } else if (timer < 10) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        textViewTimer.setTextColor(getColor(R.color.colorDanger));
+                                    }
+                                });
+                            }
+                        } else {
+                            timer++;
+                        }
+                        final long hour = timer / 3600;
+                        final long min = (timer % 3600) / 60;
+                        final long sec = timer % 60;
+                        final DecimalFormat df = new DecimalFormat("00");
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                textViewTimer.setText(df.format(hour) + ":" + df.format(min) + ":" + df.format(sec));
+                            }
+                        });
                     } else if (locationStatus) {
                         final Date date = new Date(gpsTime);
                         final SimpleDateFormat formatTime = new SimpleDateFormat("HH:mm:ss");
@@ -109,7 +159,6 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
                             }
                         });
                         Log.i(TAG, "GPS time (UTC): " + formatTime.format(date) + " " + formatDate.format(date));
-
                     }
                 }
             };
@@ -130,8 +179,9 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
 
         statusRecord = false;
         statusScroll = false;
-
         locationStatus = false;
+        statusTimer = false;
+        timer = 0;
 
         textViewWelcome = findViewById(R.id.record_welcome);
         textViewName = findViewById(R.id.record_name);
@@ -145,9 +195,12 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
         linearLayoutGroupMenu = findViewById(R.id.record_groupMenu);
         textViewLatitude = findViewById(R.id.record_latitude);
         textViewLongitude = findViewById(R.id.record_longitude);
-        textViewHeight = findViewById(R.id.record_height);
+        textViewAltitude = findViewById(R.id.record_altitude);
         textViewTime = findViewById(R.id.record_time);
         textViewDate = findViewById(R.id.record_date);
+        linearLayoutGroupTimeScroll = findViewById(R.id.record_groupTimeScroll);
+        textViewBtnTimer = findViewById(R.id.record_btnTimer);
+        textViewTimer = findViewById(R.id.record_timer);
 
         if (firebaseUser != null) textViewName.setText(firebaseUser.getDisplayName());
         tempYBtnStart = textViewBtnStartStop.getY();
@@ -182,9 +235,14 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
                     if (locationStatus) {
                         Log.i(TAG, "Click -> textViewStart = Start");
                         logClear();
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                textViewTimer.setText(getString(R.string.zero_time));
+                            }
+                        });
                         animationClickStart();
                         registerGnssMeasurements();
-                        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                         startRecordRinex();
                         statusRecord = true;
                     } else
@@ -194,7 +252,6 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
                     statusRecord = false;
                     stopRecordRinex();
                     animationClickStop();
-                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 }
             }
         });
@@ -247,6 +304,44 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
                 );
             }
         });
+
+        textViewBtnTimer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                new MaterialDialog.Builder(v.getContext())
+                        .customView(R.layout.dialog_timer, true)
+                        .positiveText(R.string.cancel)
+                        .negativeText(R.string.set)
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                Log.i(TAG, "Timer dialog Click -> Cancel");
+                                statusTimer = false;
+                                timer = 0;
+                                textViewBtnTimer.setTextColor(getColor(R.color.colorWhite));
+                                textViewBtnTimer.setBackground(getDrawable(R.drawable.bg_btn_menu));
+                            }
+                        })
+                        .onNegative(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                Log.i(TAG, "Timer dialog Click -> Set");
+                                assert dialog.getCustomView() != null;
+                                NumberPicker hour = dialog.getCustomView().findViewById(R.id.dialogTimer_hour);
+                                NumberPicker min = dialog.getCustomView().findViewById(R.id.dialogTimer_min);
+                                NumberPicker sec = dialog.getCustomView().findViewById(R.id.dialogTimer_sec);
+                                Log.i(TAG, "Set time = " + hour.getValue() + ":" + min.getValue() + ":" + sec.getValue());
+                                timer = sec.getValue() + (min.getValue() * 60) + (hour.getValue() * 60 * 60);
+                                Log.e(TAG, "Timer = " + timer);
+                                statusTimer = true;
+                                textViewBtnTimer.setTextColor(getColor(R.color.colorGreen));
+                                textViewBtnTimer.setBackground(getDrawable(R.drawable.bg_btn_menu_green));
+                            }
+                        })
+                        .show();
+            }
+        });
     }
 
     private void registerGnssMeasurements() {
@@ -274,12 +369,15 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
     }
 
     private void animationClickStop() {
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        textViewBtnTimer.setTextColor(getColor(R.color.colorWhite));
+        textViewBtnTimer.setBackground(getDrawable(R.drawable.bg_btn_menu));
         textViewWelcome.setVisibility(View.VISIBLE);
         textViewName.setVisibility(View.VISIBLE);
         textViewBtnStartStop.setBackgroundResource(R.drawable.bg_btn_green);
         textViewBtnStartStop.setText(R.string.start);
-        textViewBtnScroll.setVisibility(View.INVISIBLE);
-        textViewBtnScroll.setAlpha(0f);
+        linearLayoutGroupTimeScroll.setVisibility(View.INVISIBLE);
+        linearLayoutGroupTimeScroll.setAlpha(0f);
         textViewBtnLogOut.setVisibility(View.VISIBLE);
         linearLayoutGroupMenu.setVisibility(View.VISIBLE);
         //Animation
@@ -302,12 +400,13 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
     }
 
     private void animationClickStart() {
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         textViewWelcome.setVisibility(View.INVISIBLE);
         textViewName.setVisibility(View.INVISIBLE);
         textViewBtnStartStop.setBackgroundResource(R.drawable.bg_btn_red);
         textViewBtnStartStop.setText(R.string.stop);
         scrollViewLog.setVisibility(View.VISIBLE);
-        textViewBtnScroll.setVisibility(View.VISIBLE);
+        linearLayoutGroupTimeScroll.setVisibility(View.VISIBLE);
         textViewBtnLogOut.setVisibility(View.INVISIBLE);
         textViewBtnLogOut.setAlpha(0f);
         linearLayoutGroupMenu.setVisibility(View.INVISIBLE);
@@ -319,7 +418,7 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
         animatorLog.setDuration(1000);
         animatorLog.setStartDelay(200);
         animatorLog.start();
-        ObjectAnimator animatorBtnScroll = ObjectAnimator.ofFloat(textViewBtnScroll, View.ALPHA, 1f);
+        ObjectAnimator animatorBtnScroll = ObjectAnimator.ofFloat(linearLayoutGroupTimeScroll, View.ALPHA, 1f);
         animatorBtnScroll.setDuration(800);
         animatorBtnScroll.setStartDelay(700);
         animatorBtnScroll.start();
@@ -359,6 +458,7 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
 
     private void stopRecordRinex() {
         rinex.closeFile();
+        timer = 0;
     }
 
     private void writeRecordRinex(ArrayList<GnssMeasurement> measurementList, GnssClock clock) {
@@ -468,7 +568,7 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
                 DecimalFormat df = new DecimalFormat("#.00000");
                 textViewLatitude.setText(df.format(location.getLatitude()));
                 textViewLongitude.setText(df.format(location.getLongitude()));
-                textViewHeight.setText(df.format(location.getAltitude()));
+                textViewAltitude.setText(df.format(location.getAltitude()));
             }
         });
     }

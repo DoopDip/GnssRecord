@@ -17,7 +17,7 @@
     <string name="welcome">Welcome</string>
     <string name="stop">Stop</string>
     <string name="auto_scrollbar">Auto scrollbar</string>
-    <string name="un_auto_scrollbar">UnAuto scrollbar</string>
+    <string name="un_auto_scrollbar">Unauto scrollbar</string>
     <string name="logout">Logout</string>
     <string name="please_email">Please enter your email</string>
     <string name="please_password">Please enter your password</string>
@@ -67,10 +67,14 @@
     <string name="wait_location">Wait for location</string>
     <string name="latitude">Latitude&#160;&#160;&#160;:</string>
     <string name="longitude">Longitude&#160;:</string>
-    <string name="height">Height&#160;&#160;&#160;&#160;:</string>
+    <string name="altitude">Altitude&#160;&#160;&#160;:</string>
     <string name="gps_time">GPS Time&#160;:</string>
     <string name="timer">Timer</string>
     <string name="zero_5_digit">00.00000</string>
     <string name="zero_time">00:00:00</string>
     <string name="zero_date">00/00/00</string>
+    <string name="set">Set</string>
+    <string name="hour">Hour</string>
+    <string name="min">Min</string>
+    <string name="sec">Sec</string>
 </resources>

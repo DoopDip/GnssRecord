@@ -37,8 +37,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage:16.0.1'
 
     implementation 'com.github.rubensousa:gravitysnaphelper:1.5'
-
     implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
+    implementation 'com.shawnlin:number-picker:2.4.6'
 }
 
 apply plugin: 'com.google.gms.google-services'

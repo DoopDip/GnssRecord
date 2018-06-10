@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/thaisansneue_semibold"
+            android:gravity="center"
+            android:text="@string/hour"
+            android:textSize="30sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/thaisansneue_semibold"
+            android:gravity="center"
+            android:text="@string/min"
+            android:textSize="30sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/thaisansneue_semibold"
+            android:gravity="center"
+            android:text="@string/sec"
+            android:textSize="30sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="-40dp"
+        android:layout_marginTop="-20dp"
+        android:orientation="horizontal">
+
+        <com.shawnlin.numberpicker.NumberPicker
+            android:id="@+id/dialogTimer_hour"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:np_height="120dp"
+            app:np_max="999"
+            app:np_min="0"
+            app:np_textSize="20sp"
+            app:np_value="0"
+            app:np_width="44dp" />
+
+        <com.shawnlin.numberpicker.NumberPicker
+            android:id="@+id/dialogTimer_min"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:np_height="120dp"
+            app:np_max="59"
+            app:np_min="0"
+            app:np_textSize="20sp"
+            app:np_value="0"
+            app:np_width="44dp" />
+
+        <com.shawnlin.numberpicker.NumberPicker
+            android:id="@+id/dialogTimer_sec"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:np_height="120dp"
+            app:np_max="59"
+            app:np_min="10"
+            app:np_textSize="20sp"
+            app:np_value="10"
+            app:np_width="44dp" />
+    </LinearLayout>
+
+</LinearLayout>
