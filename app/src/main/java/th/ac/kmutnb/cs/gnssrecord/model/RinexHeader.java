@@ -2,6 +2,7 @@ package th.ac.kmutnb.cs.gnssrecord.model;
 
 public class RinexHeader {
     private String markName;
+    private String markType;
     private String observerName;
     private String observerAgencyName;
     private String receiverNumber;
@@ -17,8 +18,9 @@ public class RinexHeader {
     private String cartesianZ;
     private long gpsTime;
 
-    public RinexHeader(String markName, String observerName, String observerAgencyName, String receiverNumber, String receiverType, String receiverVersion, String antennaNumber, String antennaType, double antennaEccentricityEast, double antennaEccentricityNorth, double antennaHeight, String cartesianX, String cartesianY, String cartesianZ, long gpsTime) {
+    public RinexHeader(String markName, String markType, String observerName, String observerAgencyName, String receiverNumber, String receiverType, String receiverVersion, String antennaNumber, String antennaType, double antennaEccentricityEast, double antennaEccentricityNorth, double antennaHeight, String cartesianX, String cartesianY, String cartesianZ, long gpsTime) {
         this.markName = markName;
+        this.markType = markType;
         this.observerName = observerName;
         this.observerAgencyName = observerAgencyName;
         this.receiverNumber = receiverNumber;
@@ -37,6 +39,10 @@ public class RinexHeader {
 
     public String getMarkName() {
         return markName;
+    }
+
+    public String getMarkType() {
+        return markType;
     }
 
     public String getObserverName() {

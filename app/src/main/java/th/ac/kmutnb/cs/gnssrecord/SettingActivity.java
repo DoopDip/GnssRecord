@@ -16,6 +16,8 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
+import th.ac.kmutnb.cs.gnssrecord.rinex.Rinex;
+
 public class SettingActivity extends AppCompatActivity {
 
     public static final String KEY_RINEX_VER = "rinexVer"; // value 0=2.11, 1=3.03
@@ -32,7 +34,7 @@ public class SettingActivity extends AppCompatActivity {
     public static final String KEY_ANTENNA_ECCENTRICITY_NORTH = "antennaEccentricityNorth";
     public static final String KEY_ANTENNA_HEIGHT = "antennaHeight";
 
-    public static final int DEF_RINEX_VER = 0;
+    public static final int DEF_RINEX_VER = Rinex.VER_2_11;
     public static final String DEF_MARK_NAME = "GnssRecord";
     public static final String DEF_MARK_TYPE = "Geodetic";
     public static final String DEF_OBSERVER_NAME = "RINEX Logger user";

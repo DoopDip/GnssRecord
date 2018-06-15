@@ -434,9 +434,10 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
         Log.i(TAG, "Cartesian X: " + cartesianX + ", Y:" + cartesianY + ", Z:" + cartesianZ);
         DecimalFormat decimalFormat = new DecimalFormat("#.####");
 
-        rinex = new Rinex(getApplicationContext());
+        rinex = new Rinex(getApplicationContext(), sharedPreferences.getInt(SettingActivity.KEY_RINEX_VER, SettingActivity.DEF_RINEX_VER));
         rinex.writeHeader(new RinexHeader(
                 sharedPreferences.getString(SettingActivity.KEY_MARK_NAME, SettingActivity.DEF_MARK_NAME),
+                sharedPreferences.getString(SettingActivity.KEY_MARK_TYPE, SettingActivity.DEF_MARK_TYPE),
                 sharedPreferences.getString(SettingActivity.KEY_OBSERVER_NAME, SettingActivity.DEF_OBSERVER_NAME),
                 sharedPreferences.getString(SettingActivity.KEY_OBSERVER_AGENCY_NAME, SettingActivity.DEF_OBSERVER_AGENCY_NAME),
                 sharedPreferences.getString(SettingActivity.KEY_RECEIVER_NUMBER, SettingActivity.DEF_RECEIVER_NUMBER),
@@ -461,44 +462,53 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
 
     private void writeRecordRinex(ArrayList<GnssMeasurement> measurementList, GnssClock clock) {
         ArrayList<RinexData> rinexData = new ArrayList<>();
+        int rinexVer = sharedPreferences.getInt(SettingActivity.KEY_RINEX_VER, SettingActivity.DEF_RINEX_VER);
         for (GnssMeasurement measurement : measurementList) {
             int constellationType = measurement.getConstellationType();
-            if (constellationType == GnssStatus.CONSTELLATION_GPS || constellationType == GnssStatus.CONSTELLATION_GLONASS || constellationType == GnssStatus.CONSTELLATION_GALILEO) {
-
-                double fullBiasNanos = clock.getFullBiasNanos();
-                double gpsWeek = Math.floor(-fullBiasNanos * NS_TO_S / GPS_WEEK_SECS);
-                double local_est_GPS_time = clock.getTimeNanos() - (fullBiasNanos + clock.getBiasNanos());
-                double gpsSow = local_est_GPS_time * NS_TO_S - gpsWeek * GPS_WEEK_SECS;
-
-                double tRxSeconds = gpsSow - measurement.getTimeOffsetNanos() * NS_TO_S;
-                double tTxSeconds = measurement.getReceivedSvTimeNanos() * NS_TO_S;
-
-                double tau = tRxSeconds - tTxSeconds;
-
-                if (tau < 0) tau += GPS_WEEK_SECS;
-
-                double c1 = tau * SPEED_OF_LIGHT;
-                double l1 = measurement.getAccumulatedDeltaRangeMeters() / GPS_L1_WAVELENGTH;
-                double d1 = -measurement.getPseudorangeRateMetersPerSecond() / GPS_L1_WAVELENGTH;
-                DecimalFormat df = new DecimalFormat("0.000");
-
-                if (c1 > 30e6 || c1 < 10e6) {
-                    Log.e(TAG, "State=" + measurement.getState() + ", C1: " + df.format(c1) + ", L1: " + df.format(l1) + ", D1: " + df.format(d1) + ", S1: " + df.format(measurement.getCn0DbHz()));
-                    continue;
-                } else
-                    Log.i(TAG, "State=" + measurement.getState() + ", C1: " + df.format(c1) + ", L1: " + df.format(l1) + ", D1: " + df.format(d1) + ", S1: " + df.format(measurement.getCn0DbHz()));
-
-                rinexData.add(new RinexData(
-                        numberSatellite(measurement.getConstellationType(), measurement.getSvid()),
-                        df.format(c1),
-                        df.format(l1),
-                        df.format(measurement.getCn0DbHz()),
-                        df.format(d1)
-                ));
+            if (rinexVer == Rinex.VER_2_11 && (constellationType == GnssStatus.CONSTELLATION_SBAS || constellationType == GnssStatus.CONSTELLATION_QZSS || constellationType == GnssStatus.CONSTELLATION_BEIDOU)) {
+                continue;
             }
+
+            double c1 = calculateC1(
+                    clock.getFullBiasNanos(),
+                    clock.getBiasNanos(),
+                    clock.getTimeNanos(),
+                    measurement.getTimeOffsetNanos(),
+                    measurement.getReceivedSvTimeNanos()
+            );
+            double l1 = measurement.getAccumulatedDeltaRangeMeters() / GPS_L1_WAVELENGTH;
+            double d1 = -measurement.getPseudorangeRateMetersPerSecond() / GPS_L1_WAVELENGTH;
+            DecimalFormat df = new DecimalFormat("0.000");
+
+            if (c1 > 30e6 || c1 < 10e6) {
+                Log.e(TAG, "State=" + measurement.getState() + ", C1: " + df.format(c1) + ", L1: " + df.format(l1) + ", D1: " + df.format(d1) + ", S1: " + df.format(measurement.getCn0DbHz()));
+                continue;
+            } else
+                Log.i(TAG, "State=" + measurement.getState() + ", C1: " + df.format(c1) + ", L1: " + df.format(l1) + ", D1: " + df.format(d1) + ", S1: " + df.format(measurement.getCn0DbHz()));
+
+            rinexData.add(new RinexData(
+                    numberSatellite(measurement.getConstellationType(), measurement.getSvid()),
+                    df.format(c1),
+                    df.format(l1),
+                    df.format(measurement.getCn0DbHz()),
+                    df.format(d1)
+            ));
         }
         rinex.writeData(rinexData, gpsTime);
         log(rinexData);
+    }
+
+    private double calculateC1(double fullBiasNanos, double biasNanos, long timeNanos, double timeOffsetNanos, long receivedSvTimeNanos) {
+        double gpsWeek = Math.floor(-fullBiasNanos * NS_TO_S / GPS_WEEK_SECS);
+        double local_est_GPS_time = timeNanos - (fullBiasNanos + biasNanos);
+        double gpsSow = local_est_GPS_time * NS_TO_S - gpsWeek * GPS_WEEK_SECS;
+
+        double tRxSeconds = gpsSow - timeOffsetNanos * NS_TO_S;
+        double tTxSeconds = receivedSvTimeNanos * NS_TO_S;
+
+        double tau = tRxSeconds - tTxSeconds;
+        if (tau < 0) tau += GPS_WEEK_SECS;
+        return tau * SPEED_OF_LIGHT;
     }
 
     private String numberSatellite(int constellationType, int svid) {

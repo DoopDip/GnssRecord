@@ -7,7 +7,6 @@ import android.util.Log;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -19,15 +18,20 @@ import th.ac.kmutnb.cs.gnssrecord.model.RinexData;
 import th.ac.kmutnb.cs.gnssrecord.model.RinexHeader;
 
 public class Rinex {
+    public static final int VER_2_11 = 0;
+    public static final int VER_3_03 = 1;
+
     private static final String TAG = Rinex.class.getSimpleName();
 
     private FileWriter out = null;
     private char line[] = new char[81];
 
     private Context context;
+    private int ver;
 
-    public Rinex(Context context) {
+    public Rinex(Context context, int ver) {
         this.context = context;
+        this.ver = ver;
         createFile();
     }
 
@@ -67,7 +71,7 @@ public class Rinex {
             yearString = "0" + year;
         else
             yearString = "" + year;
-        String fileName = "GN" + dateString + "." + yearString + type;
+        String fileName = "GN" + dateString + ver + "." + yearString + type;
 
         try {
             File rootFile = new File(Environment.getExternalStorageDirectory(), context.getString(R.string.app_name) + "_Rinex");
@@ -88,6 +92,7 @@ public class Rinex {
         //RINEX VERSION / TYPE
         resetLine();
         String version = "2.11";
+        if (ver == VER_3_03) version = "3.03";
         String type = "OBSERVATION DATA";
         String source = "M: Mixed";
         for (int i = 0; i < version.length(); i++)
@@ -142,6 +147,13 @@ public class Rinex {
             line[i] = rinexHeader.getMarkName().charAt(i);
         writeLine("MARKER NAME");
 
+        //MARKER TYPE
+        if (ver == VER_3_03) {
+            resetLine();
+            for (int i = 0; i < rinexHeader.getMarkType().length(); i++)
+                line[i] = rinexHeader.getMarkType().toUpperCase().charAt(i);
+            writeLine("MARKER TYPE");
+        }
 
         //OBSERVER / AGENCY
         resetLine();
@@ -199,13 +211,41 @@ public class Rinex {
             line[i + 36] = nDelta.charAt(i);
         writeLine("ANTENNA: DELTA H/E/N");
 
-
-        //# / TYPES OF OBSERV
-        String typeOfObserv = "4    C1    L1    S1    D1";
-        resetLine();
-        for (int i = 0; i < typeOfObserv.length(); i++)
-            line[i + 5] = typeOfObserv.charAt(i);
-        writeLine("# / TYPES OF OBSERV");
+        if (ver == VER_2_11) {
+            //# / TYPES OF OBSERV
+            String typeOfObserv = "4    C1    L1    S1    D1";
+            resetLine();
+            for (int i = 0; i < typeOfObserv.length(); i++)
+                line[i + 5] = typeOfObserv.charAt(i);
+            writeLine("# / TYPES OF OBSERV");
+        } else if (ver == VER_3_03) {
+            //SYS / # / OBS TYPES
+            String gSys = "G    4 C1C L1C D1C S1C";
+            String rSys = "R    4 C1C L1C D1C S1C";
+            String eSys = "E    4 C1B L1B D1B S1B";
+            String cSys = "C    4 C2I L2I D2I S2I";
+            String jSys = "J    4 C1C L1C D1C S1C";
+            resetLine();
+            for (int i = 0; i < gSys.length(); i++)
+                line[i] = gSys.charAt(i);
+            writeLine("SYS / # / OBS TYPES");
+            resetLine();
+            for (int i = 0; i < rSys.length(); i++)
+                line[i] = rSys.charAt(i);
+            writeLine("SYS / # / OBS TYPES");
+            resetLine();
+            for (int i = 0; i < eSys.length(); i++)
+                line[i] = eSys.charAt(i);
+            writeLine("SYS / # / OBS TYPES");
+            resetLine();
+            for (int i = 0; i < cSys.length(); i++)
+                line[i] = cSys.charAt(i);
+            writeLine("SYS / # / OBS TYPES");
+            resetLine();
+            for (int i = 0; i < jSys.length(); i++)
+                line[i] = jSys.charAt(i);
+            writeLine("SYS / # / OBS TYPES");
+        }
 
         //TIME OF FIRST OBS
         resetLine();
@@ -245,6 +285,15 @@ public class Rinex {
             line[50 - i] = system.charAt(system.length() - 1 - i);
         writeLine("TIME OF FIRST OBS");
 
+        if (ver == VER_3_03) {
+            //SYS / PHASE SHIFTS
+            char satelliteIdentifier[] = {'G', 'R', 'E', 'C', 'J'};
+            resetLine();
+            for (char aSatelliteIdentifier : satelliteIdentifier) {
+                line[0] = aSatelliteIdentifier;
+                writeLine("SYS / PHASE SHIFTS");
+            }
+        }
 
         //END OF HEADER
         resetLine();
@@ -278,61 +327,99 @@ public class Rinex {
         String type = "0";
         String total = String.valueOf(dataList.size());
 
-        for (int i = 0; i < year.length(); i++)
-            line[2 - i] = year.charAt(year.length() - 1 - i);
-        for (int i = 0; i < month.length(); i++)
-            line[5 - i] = month.charAt(month.length() - 1 - i);
-        for (int i = 0; i < day.length(); i++)
-            line[8 - i] = day.charAt(day.length() - 1 - i);
-        for (int i = 0; i < hour.length(); i++)
-            line[11 - i] = hour.charAt(hour.length() - 1 - i);
-        for (int i = 0; i < min.length(); i++)
-            line[14 - i] = min.charAt(min.length() - 1 - i);
-        for (int i = 0; i < sec.length(); i++)
-            line[25 - i] = sec.charAt(sec.length() - 1 - i);
-        for (int i = 0; i < type.length(); i++)
-            line[28 - i] = type.charAt(type.length() - 1 - i);
-        for (int i = 0; i < total.length(); i++)
-            line[31 - i] = total.charAt(total.length() - 1 - i);
-        for (int i = 0; i < dataList.size(); i++) {
-            if (i < 12)
-                for (int j = 0; j < dataList.get(i).getSatellite().length(); j++)
-                    line[32 + j + i * 3] = dataList.get(i).getSatellite().charAt(j);
-            else
-                break;
-        }
-        writeLine("");
-        if (dataList.size() > 11) { //Satellite total more 12 to new line
-            resetLine();
-            for (int i = 12; i < dataList.size(); i++)
-                if (i < 23)
+        if (ver == VER_2_11) { //For Rinex version 2.11
+            for (int i = 0; i < year.length(); i++)
+                line[2 - i] = year.charAt(year.length() - 1 - i);
+            for (int i = 0; i < month.length(); i++)
+                line[5 - i] = month.charAt(month.length() - 1 - i);
+            for (int i = 0; i < day.length(); i++)
+                line[8 - i] = day.charAt(day.length() - 1 - i);
+            for (int i = 0; i < hour.length(); i++)
+                line[11 - i] = hour.charAt(hour.length() - 1 - i);
+            for (int i = 0; i < min.length(); i++)
+                line[14 - i] = min.charAt(min.length() - 1 - i);
+            for (int i = 0; i < sec.length(); i++)
+                line[25 - i] = sec.charAt(sec.length() - 1 - i);
+            for (int i = 0; i < type.length(); i++)
+                line[28 - i] = type.charAt(type.length() - 1 - i);
+            for (int i = 0; i < total.length(); i++)
+                line[31 - i] = total.charAt(total.length() - 1 - i);
+            for (int i = 0; i < dataList.size(); i++) {
+                if (i < 12)
                     for (int j = 0; j < dataList.get(i).getSatellite().length(); j++)
-                        line[32 + j + ((i - 12) * 3)] = dataList.get(i).getSatellite().charAt(j);
-                else break;
+                        line[32 + j + i * 3] = dataList.get(i).getSatellite().charAt(j);
+                else
+                    break;
+            }
             writeLine("");
-        }
-        if (dataList.size() > 23) { //Satellite total more 24 to new line
-            resetLine();
-            for (int i = 24; i < dataList.size(); i++)
-                if (i < 35)
-                    for (int j = 0; j < dataList.get(i).getSatellite().length(); j++)
-                        line[32 + j + ((i - 24) * 3)] = dataList.get(i).getSatellite().charAt(j);
-                else break;
-            writeLine("");
-        }
+            if (dataList.size() > 11) { //Satellite total more 12 to new line
+                resetLine();
+                for (int i = 12; i < dataList.size(); i++)
+                    if (i < 23)
+                        for (int j = 0; j < dataList.get(i).getSatellite().length(); j++)
+                            line[32 + j + ((i - 12) * 3)] = dataList.get(i).getSatellite().charAt(j);
+                    else break;
+                writeLine("");
+            }
+            if (dataList.size() > 23) { //Satellite total more 24 to new line
+                resetLine();
+                for (int i = 24; i < dataList.size(); i++)
+                    if (i < 35)
+                        for (int j = 0; j < dataList.get(i).getSatellite().length(); j++)
+                            line[32 + j + ((i - 24) * 3)] = dataList.get(i).getSatellite().charAt(j);
+                    else break;
+                writeLine("");
+            }
 
-        //Data (content)
-        for (RinexData data : dataList) {
-            resetLine();
-            for (int i = 0; i < data.getPseudoRange().length(); i++)
-                line[13 - i] = data.getPseudoRange().charAt(data.getPseudoRange().length() - 1 - i);
-            for (int i = 0; i < data.getCarrierPhase().length(); i++)
-                line[30 - i] = data.getCarrierPhase().charAt(data.getCarrierPhase().length() - 1 - i);
-            for (int i = 0; i < data.getSignalStrength().length(); i++)
-                line[45 - i] = data.getSignalStrength().charAt(data.getSignalStrength().length() - 1 - i);
-            for (int i = 0; i < data.getDoppler().length(); i++)
-                line[61 - i] = data.getDoppler().charAt(data.getDoppler().length() - 1 - i);
+            //Data (content)
+            for (RinexData data : dataList) {
+                resetLine();
+                for (int i = 0; i < data.getPseudoRange().length(); i++)
+                    line[13 - i] = data.getPseudoRange().charAt(data.getPseudoRange().length() - 1 - i);
+                for (int i = 0; i < data.getCarrierPhase().length(); i++)
+                    line[30 - i] = data.getCarrierPhase().charAt(data.getCarrierPhase().length() - 1 - i);
+                for (int i = 0; i < data.getSignalStrength().length(); i++)
+                    line[45 - i] = data.getSignalStrength().charAt(data.getSignalStrength().length() - 1 - i);
+                for (int i = 0; i < data.getDoppler().length(); i++)
+                    line[61 - i] = data.getDoppler().charAt(data.getDoppler().length() - 1 - i);
+                writeLine("");
+            }
+
+        } else if (ver == VER_3_03) { //For Rinex version 3.03
+            line[0] = '>';
+            for (int i = 0; i < year.length(); i++)
+                line[5 - i] = year.charAt(year.length() - 1 - i);
+            for (int i = 0; i < month.length(); i++)
+                line[8 - i] = month.charAt(month.length() - 1 - i);
+            for (int i = 0; i < day.length(); i++)
+                line[11 - i] = day.charAt(day.length() - 1 - i);
+            for (int i = 0; i < hour.length(); i++)
+                line[14 - i] = hour.charAt(hour.length() - 1 - i);
+            for (int i = 0; i < min.length(); i++)
+                line[17 - i] = min.charAt(min.length() - 1 - i);
+            for (int i = 0; i < sec.length(); i++)
+                line[28 - i] = sec.charAt(sec.length() - 1 - i);
+            for (int i = 0; i < type.length(); i++)
+                line[31 - i] = type.charAt(type.length() - 1 - i);
+            for (int i = 0; i < total.length(); i++)
+                line[34 - i] = total.charAt(total.length() - 1 - i);
             writeLine("");
+
+            //Data (content)
+            for (RinexData data : dataList) {
+                resetLine();
+                for (int i = 0; i < data.getSatellite().length(); i++)
+                    line[2 - i] = data.getSatellite().charAt(data.getSatellite().length() - 1 - i);
+                for (int i = 0; i < data.getPseudoRange().length(); i++)
+                    line[16 - i] = data.getPseudoRange().charAt(data.getPseudoRange().length() - 1 - i);
+                for (int i = 0; i < data.getCarrierPhase().length(); i++)
+                    line[33 - i] = data.getCarrierPhase().charAt(data.getCarrierPhase().length() - 1 - i);
+                for (int i = 0; i < data.getDoppler().length(); i++)
+                    line[48 - i] = data.getDoppler().charAt(data.getDoppler().length() - 1 - i);
+                for (int i = 0; i < data.getSignalStrength().length(); i++)
+                    line[64 - i] = data.getSignalStrength().charAt(data.getSignalStrength().length() - 1 - i);
+                writeLine("");
+            }
         }
     }
 }
