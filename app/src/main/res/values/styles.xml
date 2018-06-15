@@ -9,4 +9,12 @@
         <item name="android:windowBackground">@color/colorBlack</item>
     </style>
 
+    <style name="Spinner" parent="Widget.AppCompat.Light.DropDownItem.Spinner">
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingEnd">0dp</item>
+        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:fontFamily">@font/thaisansneue_semibold</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
 </resources>
