@@ -5,8 +5,8 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="5dp"
     android:background="@drawable/bg_adapter_file"
-    android:paddingTop="5dp"
-    android:paddingBottom="10dp">
+    android:paddingBottom="10dp"
+    android:paddingTop="5dp">
 
     <TextView
         android:layout_width="wrap_content"
@@ -27,15 +27,31 @@
         android:textColor="@color/colorWhite"
         android:textSize="22sp" />
 
+
     <TextView
         android:id="@+id/adapter_file_dateTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="30dp"
         android:layout_marginTop="5dp"
+        android:layout_toStartOf="@+id/adapter_file_ver"
         android:fontFamily="@font/thaisansneue_light"
         android:text="@string/hyphen"
         android:textColor="@color/colorWhite"
         android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/adapter_file_ver"
+        android:layout_width="32dp"
+        android:layout_height="18dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="6dp"
+        android:paddingTop="2dp"
+        android:background="@drawable/bg_ver"
+        android:fontFamily="@font/thaisansneue_semibold"
+        android:gravity="center"
+        android:text="@string/hyphen"
+        android:textColor="@color/colorGray"
+        android:textSize="12sp" />
 </RelativeLayout>

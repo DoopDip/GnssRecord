@@ -52,7 +52,8 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileHolder> {
     public void onBindViewHolder(final FileHolder holder, int position) {
         final File file = fileList.get(position);
         holder.textViewName.setText(file.getName());
-        holder.textViewDateTime.setText(getFileDateTime(file.getName()));
+        holder.textViewDateTime.setText(fileDateTime(file.getName()));
+        holder.textViewVer.setText(fileVersion(file.getName()));
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -158,21 +159,27 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileHolder> {
 
         TextView textViewName;
         TextView textViewDateTime;
+        TextView textViewVer;
         RelativeLayout relativeLayout;
 
         FileHolder(View itemView) {
             super(itemView);
             textViewName = itemView.findViewById(R.id.adapter_file_name);
             textViewDateTime = itemView.findViewById(R.id.adapter_file_dateTime);
+            textViewVer = itemView.findViewById(R.id.adapter_file_ver);
             relativeLayout = itemView.findViewById(R.id.adapter_file);
         }
     }
 
-    private String getFileDateTime(String name) {
-        return name.substring(2, 6) + "/" +
-                name.substring(6, 8) + "/" +
-                name.substring(8, 10) + " " +
+    private String fileDateTime(String name) {
+        return name.substring(6, 8) + "/" +
+                name.substring(8, 10) + "/" +
+                name.substring(2, 6) + " " +
                 name.substring(10, 12) + ":" +
                 name.substring(12, 14);
+    }
+
+    private String fileVersion(String name) {
+        return "0".equals(name.substring(16, 17)) ? "v2.11" : "v3.03";
     }
 }
