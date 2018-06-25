@@ -7,6 +7,8 @@
         <item name="colorPrimaryDark">@color/colorBlack</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowBackground">@color/colorBlack</item>
+        <item name="android:fontFamily">@font/thaisansneue_semibold</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
     <style name="Spinner" parent="Widget.AppCompat.Light.DropDownItem.Spinner">
@@ -14,7 +16,7 @@
         <item name="android:paddingEnd">0dp</item>
         <item name="android:textColor">@color/colorBlack</item>
         <item name="android:fontFamily">@font/thaisansneue_semibold</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
 </resources>

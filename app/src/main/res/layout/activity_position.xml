@@ -20,7 +20,7 @@
             android:fontFamily="@font/thaisansneue_light"
             android:paddingEnd="10dp"
             android:paddingStart="0dp"
-            android:text="@string/satellite"
+            android:text="@string/title_position_1"
             android:textColor="@color/colorWhite"
             android:textSize="60sp" />
 
@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/thaisansneue_extrabold"
-            android:text="@string/position"
+            android:text="@string/title_position_2"
             android:textColor="@color/colorWhite"
             android:textSize="60sp" />
     </LinearLayout>

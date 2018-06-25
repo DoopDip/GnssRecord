@@ -17,18 +17,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/thaisansneue_light"
-            android:paddingEnd="10dp"
-            android:paddingStart="0dp"
-            android:text="@string/satellite"
-            android:textColor="@color/colorWhite"
-            android:textSize="60sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:fontFamily="@font/thaisansneue_extrabold"
-            android:text="@string/record"
+            android:text="@string/register"
             android:textColor="@color/colorWhite"
             android:textSize="60sp" />
     </LinearLayout>
@@ -212,7 +202,7 @@
         android:background="@drawable/bg_btn_white"
         android:fontFamily="@font/thaisansneue_semibold"
         android:gravity="center"
-        android:text="@string/register"
+        android:text="@string/confirm"
         android:textAllCaps="true"
         android:textColor="@color/colorBlack"
         android:textSize="28sp" />

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GnssRecord</string>
+    <string name="app_name" translatable="false">GnssRecord</string>
     <string name="position">Position</string>
     <string name="list">List</string>
     <string name="record">Record</string>
@@ -12,7 +12,7 @@
     <string name="please_fill">Please fill in your information</string>
     <string name="re_password">Re-Password</string>
     <string name="name">Name</string>
-    <string name="earth_night">Earth night</string>
+    <string name="earth_night" translatable="false">Earth night</string>
     <string name="start">Start</string>
     <string name="welcome">Welcome</string>
     <string name="stop">Stop</string>
@@ -30,18 +30,18 @@
     <string name="password_6">Password should be at least 6 characters</string>
     <string name="please_internet">Please connect to the internet</string>
     <string name="ok">OK</string>
-    <string name="sv_id">SvId</string>
-    <string name="zero">0</string>
+    <string name="sv_id" translatable="false">SvId</string>
+    <string name="zero" translatable="false">0</string>
     <string name="all">All:</string>
     <string name="unknown">Unknown</string>
-    <string name="hyphen">-</string>
+    <string name="hyphen" translatable="false">-</string>
     <string name="file">File</string>
-    <string name="rinex">Rinex</string>
+    <string name="rinex" translatable="false">Rinex</string>
     <string name="setting">Setting</string>
     <string name="open">Open</string>
     <string name="share">Share</string>
     <string name="delete">Delete</string>
-    <string name="header">Header</string>
+    <string name="header" translatable="false">Header</string>
     <string name="edit">Edit</string>
     <string name="mark_name">Mark name</string>
     <string name="mark_type">Mark type</string>
@@ -65,16 +65,24 @@
     <string name="already_exists">already exists !</string>
     <string name="searching">Searching…</string>
     <string name="wait_location">Wait for location</string>
-    <string name="latitude">Latitude&#160;&#160;&#160;:</string>
-    <string name="longitude">Longitude&#160;:</string>
-    <string name="altitude">Altitude&#160;&#160;&#160;:</string>
-    <string name="gps_time">GPS Time&#160;:</string>
+    <string name="latitude">Latitude :</string>
+    <string name="longitude">Longitude :</string>
+    <string name="altitude">Altitude :</string>
+    <string name="gps_time">GPS Time :</string>
     <string name="timer">Timer</string>
-    <string name="zero_5_digit">00.00000</string>
-    <string name="zero_time">00:00:00</string>
-    <string name="zero_date">00/00/00</string>
+    <string name="zero_5_digit" translatable="false">00.00000</string>
+    <string name="zero_time" translatable="false">00:00:00</string>
+    <string name="zero_date" translatable="false">00/00/00</string>
     <string name="set">Set</string>
     <string name="hour">Hour</string>
     <string name="min">Min</string>
     <string name="sec">Sec</string>
+    <string name="version">Version</string>
+    <string name="confirm">Confirm</string>
+    <string name="title_position_1">Satellite</string>
+    <string name="title_position_2">Position</string>
+    <string name="title_list_1">Satellite</string>
+    <string name="title_list_2">List</string>
+    <string name="title_record_1">Satellite</string>
+    <string name="title_record_2">Record</string>
 </resources>

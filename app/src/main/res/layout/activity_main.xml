@@ -71,4 +71,17 @@
         android:layout_centerHorizontal="true"
         android:contentDescription="@string/earth_night"
         android:src="@drawable/earth_night" />
+
+    <android.support.v7.widget.AppCompatSpinner
+        android:id="@+id/main_language"
+        android:layout_width="40dp"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="30dp"
+        android:layout_marginEnd="30dp"
+        android:alpha=".5"
+        android:background="@drawable/bg_btn_edit"
+        android:spinnerMode="dropdown"
+        android:theme="@style/Spinner" />
 </RelativeLayout>

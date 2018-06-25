@@ -4,20 +4,29 @@ import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,6 +35,10 @@ public class MainActivity extends AppCompatActivity {
     private TextView textViewBtnPosition;
     private TextView textViewBtnList;
     private TextView textViewBtnRecord;
+    private Spinner spinnerLanguage;
+
+    private SharedPreferences sharedPreferences;
+    private String[][] language = {{"en", "th"}, {"Eng", "ไทย"}};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
         textViewBtnPosition = findViewById(R.id.main_btnPosition);
         textViewBtnList = findViewById(R.id.main_btnList);
         textViewBtnRecord = findViewById(R.id.main_btnRecord);
+        spinnerLanguage = findViewById(R.id.main_language);
+
+        sharedPreferences = getSharedPreferences(SettingActivity.FILE_SETTING, 0);
 
         startAnimation();
         checkPermission();
@@ -75,6 +91,47 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             }).show();
                 }
+            }
+        });
+
+        spinnerLanguage.setAdapter(
+                new ArrayAdapter<>(
+                        this,
+                        android.R.layout.simple_dropdown_item_1line,
+                        new String[]{language[1][0], language[1][1]}
+                )
+        );
+        spinnerLanguage.setSelection(sharedPreferences.getInt("language", 0), true);
+        TextView textViewSpinnerLanguage = (TextView) spinnerLanguage.getSelectedView();
+        textViewSpinnerLanguage.setTextColor(getColor(R.color.colorWhite));
+        textViewSpinnerLanguage.setTypeface(ResourcesCompat.getFont(this, R.font.thaisansneue_semibold));
+        textViewSpinnerLanguage.setTextSize(20f);
+        spinnerLanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                TextView textViewSpinnerLanguage = (TextView) spinnerLanguage.getSelectedView();
+                textViewSpinnerLanguage.setTextColor(getColor(R.color.colorWhite));
+                textViewSpinnerLanguage.setTypeface(ResourcesCompat.getFont(view.getContext(), R.font.thaisansneue_semibold));
+                textViewSpinnerLanguage.setTextSize(20f);
+                Locale locale = new Locale(language[0][position]);
+                Locale.setDefault(locale);
+                Configuration config = new Configuration();
+                config.locale = locale;
+                getBaseContext().getResources().updateConfiguration(config,
+                        getBaseContext().getResources().getDisplayMetrics());
+                new Handler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        textViewBtnPosition.setText(R.string.position);
+                        textViewBtnList.setText(R.string.list);
+                        textViewBtnRecord.setText(R.string.record);
+                    }
+                });
+                sharedPreferences.edit().putInt("language", position).apply();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
             }
         });
     }
