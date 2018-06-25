@@ -23,7 +23,6 @@
     <string name="please_password">Please enter your password</string>
     <string name="please_re_password">Please enter your re-password</string>
     <string name="login_failed">Login failed</string>
-    <string name="register_failed">Register failed</string>
     <string name="please_name">Please enter your name</string>
     <string name="password_match">Passwords do not match</string>
     <string name="email_invalid">Email is invalid</string>
@@ -32,7 +31,6 @@
     <string name="ok">OK</string>
     <string name="sv_id" translatable="false">SvId</string>
     <string name="zero" translatable="false">0</string>
-    <string name="all">All:</string>
     <string name="unknown">Unknown</string>
     <string name="hyphen" translatable="false">-</string>
     <string name="file">File</string>
@@ -41,7 +39,6 @@
     <string name="open">Open</string>
     <string name="share">Share</string>
     <string name="delete">Delete</string>
-    <string name="header" translatable="false">Header</string>
     <string name="edit">Edit</string>
     <string name="mark_name">Mark name</string>
     <string name="mark_type">Mark type</string>

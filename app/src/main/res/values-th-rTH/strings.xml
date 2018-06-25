@@ -20,14 +20,12 @@
     <string name="please_password">กรุณากรอกรหัสผ่าน</string>
     <string name="please_re_password">กรุณากรอกรหัสผ่านอีกครั้ง</string>
     <string name="login_failed">ไม่สามารถเข้าสู่ระบบได้</string>
-    <string name="register_failed">ไม่สามารถสมัครสมาชิกได้</string>
     <string name="please_name">กรุณากรอกชื่อของคุณ</string>
     <string name="password_match">รหัสผ่านไม่ตรงกัน</string>
     <string name="email_invalid">อีเมลไม่ถูกต้อง</string>
     <string name="password_6">กรุณากรอกรหัสผ่าน 6 ตัวขึ้นไป</string>
     <string name="please_internet">กรุณาเชื่อมต่ออินเตอร์เน็ต</string>
     <string name="ok">ตกลง</string>
-    <string name="all">ทั้งหมด</string>
     <string name="unknown">ไม่รู้จัก</string>
     <string name="file">ไฟล์</string>
     <string name="setting">ตั้งค่า</string>
