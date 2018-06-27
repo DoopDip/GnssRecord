@@ -17,6 +17,7 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -30,6 +31,13 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String KEY_FONT_SIZE_MENU = "fontSizeMenu";
+    public static final String KEY_FONT_SIZE_TITLE = "fontSizeTitle";
+
+    public static final float DEF_FONT_SIZE_MENU = 25;
+    public static final float DEF_FONT_SIZE_TITLE = 60;
+
+    private static final String KEY_LANGUAGE = "language";
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private TextView textViewBtnPosition;
@@ -38,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private Spinner spinnerLanguage;
 
     private SharedPreferences sharedPreferences;
-    private String[][] language = {{"en", "th"}, {"Eng", "ไทย"}};
+    private String[][] language = {{"en", "th", "zh"}, {"EN", "TH", "CN"}};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         spinnerLanguage = findViewById(R.id.main_language);
 
         sharedPreferences = getSharedPreferences(SettingActivity.FILE_SETTING, 0);
+        setFontSize();
 
         startAnimation();
         checkPermission();
@@ -98,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
                 new ArrayAdapter<>(
                         this,
                         android.R.layout.simple_dropdown_item_1line,
-                        new String[]{language[1][0], language[1][1]}
+                        new String[]{language[1][0], language[1][1], language[1][2]}
                 )
         );
         spinnerLanguage.setSelection(sharedPreferences.getInt("language", 0), true);
@@ -109,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
         spinnerLanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.i(TAG, "Set language = " + language[0][position]);
                 TextView textViewSpinnerLanguage = (TextView) spinnerLanguage.getSelectedView();
                 textViewSpinnerLanguage.setTextColor(getColor(R.color.colorWhite));
                 textViewSpinnerLanguage.setTypeface(ResourcesCompat.getFont(view.getContext(), R.font.thaisansneue_semibold));
@@ -119,15 +129,24 @@ public class MainActivity extends AppCompatActivity {
                 config.locale = locale;
                 getBaseContext().getResources().updateConfiguration(config,
                         getBaseContext().getResources().getDisplayMetrics());
+                sharedPreferences.edit().putInt(KEY_LANGUAGE, position).apply();
+                if (position == 0 || position == 1) {
+                    sharedPreferences.edit().putFloat(KEY_FONT_SIZE_MENU, DEF_FONT_SIZE_MENU).apply();
+                    sharedPreferences.edit().putFloat(KEY_FONT_SIZE_TITLE, DEF_FONT_SIZE_TITLE).apply();
+                } else if (position == 2) {
+                    sharedPreferences.edit().putFloat(KEY_FONT_SIZE_MENU, 17).apply();
+                    sharedPreferences.edit().putFloat(KEY_FONT_SIZE_TITLE, 50).apply();
+                }
+
                 new Handler().post(new Runnable() {
                     @Override
                     public void run() {
+                        setFontSize();
                         textViewBtnPosition.setText(R.string.position);
                         textViewBtnList.setText(R.string.list);
                         textViewBtnRecord.setText(R.string.record);
                     }
                 });
-                sharedPreferences.edit().putInt("language", position).apply();
             }
 
             @Override
@@ -171,6 +190,21 @@ public class MainActivity extends AppCompatActivity {
         animatorList.setDuration(1200).start();
         animatorRecord.setStartDelay(600);
         animatorRecord.setDuration(1200).start();
+    }
+
+    private void setFontSize() {
+        textViewBtnPosition.setTextSize(
+                TypedValue.COMPLEX_UNIT_SP,
+                sharedPreferences.getFloat(KEY_FONT_SIZE_MENU, DEF_FONT_SIZE_MENU)
+        );
+        textViewBtnList.setTextSize(
+                TypedValue.COMPLEX_UNIT_SP,
+                sharedPreferences.getFloat(KEY_FONT_SIZE_MENU, DEF_FONT_SIZE_MENU)
+        );
+        textViewBtnRecord.setTextSize(
+                TypedValue.COMPLEX_UNIT_SP,
+                sharedPreferences.getFloat(KEY_FONT_SIZE_MENU, DEF_FONT_SIZE_MENU)
+        );
     }
 
     @Override

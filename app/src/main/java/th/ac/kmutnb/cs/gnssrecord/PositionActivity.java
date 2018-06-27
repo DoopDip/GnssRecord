@@ -1,6 +1,7 @@
 package th.ac.kmutnb.cs.gnssrecord;
 
 import android.Manifest;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
@@ -15,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -31,6 +33,11 @@ public class PositionActivity extends AppCompatActivity implements LocationListe
 
     private SensorManager sensorManager;
     private float currentDegree = 0f;
+
+    private SharedPreferences sharedPreferences;
+
+    private TextView textViewTitle1;
+    private TextView textViewTitle2;
 
     private TextView textViewTotalGps;
     private TextView textViewTotalSbas;
@@ -52,6 +59,10 @@ public class PositionActivity extends AppCompatActivity implements LocationListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_position);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        sharedPreferences = getSharedPreferences(SettingActivity.FILE_SETTING, 0);
+
+        textViewTitle1 = findViewById(R.id.position_title_1);
+        textViewTitle2 = findViewById(R.id.position_title_2);
 
         textViewTotalGps = findViewById(R.id.position_totalGps);
         textViewTotalSbas = findViewById(R.id.position_totalSbas);
@@ -61,6 +72,8 @@ public class PositionActivity extends AppCompatActivity implements LocationListe
         textViewTotalGalileo = findViewById(R.id.position_totalGalileo);
 
         textViewTotalSatellite = findViewById(R.id.position_totalSatellite);
+
+        setFontSize();
 
         relativeLayoutRadar = findViewById(R.id.position_radar);
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -77,6 +90,17 @@ public class PositionActivity extends AppCompatActivity implements LocationListe
                 textViewTotalSatellite.setText(String.valueOf(status.getSatelliteCount()));
             }
         };
+    }
+
+    private void setFontSize() {
+        textViewTitle1.setTextSize(
+                TypedValue.COMPLEX_UNIT_SP,
+                sharedPreferences.getFloat(MainActivity.KEY_FONT_SIZE_TITLE, MainActivity.DEF_FONT_SIZE_TITLE)
+        );
+        textViewTitle2.setTextSize(
+                TypedValue.COMPLEX_UNIT_SP,
+                sharedPreferences.getFloat(MainActivity.KEY_FONT_SIZE_TITLE, MainActivity.DEF_FONT_SIZE_TITLE)
+        );
     }
 
     private void radarPosition(float azimuth, float elevation, int type) {

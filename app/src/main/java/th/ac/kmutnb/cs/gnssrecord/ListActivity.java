@@ -1,6 +1,7 @@
 package th.ac.kmutnb.cs.gnssrecord;
 
 import android.Manifest;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.location.GnssMeasurement;
@@ -10,21 +11,16 @@ import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SnapHelper;
 import android.util.Log;
-import android.view.Gravity;
+import android.util.TypedValue;
 import android.widget.TextView;
-
-import com.github.rubensousa.gravitysnaphelper.GravitySnapHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import th.ac.kmutnb.cs.gnssrecord.adapter.ListAdapter;
-import th.ac.kmutnb.cs.gnssrecord.adapter.SatelliteDiffCallback;
 
 public class ListActivity extends AppCompatActivity {
 
@@ -34,6 +30,10 @@ public class ListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ListAdapter listAdapter;
 
+    private SharedPreferences sharedPreferences;
+
+    private TextView textViewTitle1;
+    private TextView textViewTitle2;
     private TextView textViewTotalSatellite;
 
     private Handler handler;
@@ -76,15 +76,31 @@ public class ListActivity extends AppCompatActivity {
 
         listAdapter = new ListAdapter(measurementListNew);
 
+        sharedPreferences = getSharedPreferences(SettingActivity.FILE_SETTING, 0);
+
+        textViewTitle1 = findViewById(R.id.list_title_1);
+        textViewTitle2 = findViewById(R.id.list_title_2);
         textViewTotalSatellite = findViewById(R.id.list_totalSatellite);
         textViewTotalSatellite.setText("0");
+
+        setFontSize();
 
         recyclerView = findViewById(R.id.list_recyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setAdapter(listAdapter);
-        //new GravitySnapHelper(Gravity.START).attachToRecyclerView(recyclerView);
 
         locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
+    }
+
+    private void setFontSize() {
+        textViewTitle1.setTextSize(
+                TypedValue.COMPLEX_UNIT_SP,
+                sharedPreferences.getFloat(MainActivity.KEY_FONT_SIZE_TITLE, MainActivity.DEF_FONT_SIZE_TITLE)
+        );
+        textViewTitle2.setTextSize(
+                TypedValue.COMPLEX_UNIT_SP,
+                sharedPreferences.getFloat(MainActivity.KEY_FONT_SIZE_TITLE, MainActivity.DEF_FONT_SIZE_TITLE)
+        );
     }
 
     @Override
