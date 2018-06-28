@@ -30,10 +30,6 @@ public class ListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ListAdapter listAdapter;
 
-    private SharedPreferences sharedPreferences;
-
-    private TextView textViewTitle1;
-    private TextView textViewTitle2;
     private TextView textViewTotalSatellite;
 
     private Handler handler;
@@ -76,31 +72,14 @@ public class ListActivity extends AppCompatActivity {
 
         listAdapter = new ListAdapter(measurementListNew);
 
-        sharedPreferences = getSharedPreferences(SettingActivity.FILE_SETTING, 0);
-
-        textViewTitle1 = findViewById(R.id.list_title_1);
-        textViewTitle2 = findViewById(R.id.list_title_2);
         textViewTotalSatellite = findViewById(R.id.list_totalSatellite);
         textViewTotalSatellite.setText("0");
-
-        setFontSize();
 
         recyclerView = findViewById(R.id.list_recyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setAdapter(listAdapter);
 
         locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
-    }
-
-    private void setFontSize() {
-        textViewTitle1.setTextSize(
-                TypedValue.COMPLEX_UNIT_SP,
-                sharedPreferences.getFloat(MainActivity.KEY_FONT_SIZE_TITLE, MainActivity.DEF_FONT_SIZE_TITLE)
-        );
-        textViewTitle2.setTextSize(
-                TypedValue.COMPLEX_UNIT_SP,
-                sharedPreferences.getFloat(MainActivity.KEY_FONT_SIZE_TITLE, MainActivity.DEF_FONT_SIZE_TITLE)
-        );
     }
 
     @Override

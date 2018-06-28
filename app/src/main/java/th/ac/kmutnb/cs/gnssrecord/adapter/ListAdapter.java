@@ -3,7 +3,6 @@ package th.ac.kmutnb.cs.gnssrecord.adapter;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.location.GnssMeasurement;
 import android.location.GnssStatus;
 import android.support.v7.util.DiffUtil;

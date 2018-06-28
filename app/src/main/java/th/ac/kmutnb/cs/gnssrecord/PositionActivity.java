@@ -34,11 +34,6 @@ public class PositionActivity extends AppCompatActivity implements LocationListe
     private SensorManager sensorManager;
     private float currentDegree = 0f;
 
-    private SharedPreferences sharedPreferences;
-
-    private TextView textViewTitle1;
-    private TextView textViewTitle2;
-
     private TextView textViewTotalGps;
     private TextView textViewTotalSbas;
     private TextView textViewTotalGlonass;
@@ -59,10 +54,6 @@ public class PositionActivity extends AppCompatActivity implements LocationListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_position);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        sharedPreferences = getSharedPreferences(SettingActivity.FILE_SETTING, 0);
-
-        textViewTitle1 = findViewById(R.id.position_title_1);
-        textViewTitle2 = findViewById(R.id.position_title_2);
 
         textViewTotalGps = findViewById(R.id.position_totalGps);
         textViewTotalSbas = findViewById(R.id.position_totalSbas);
@@ -72,8 +63,6 @@ public class PositionActivity extends AppCompatActivity implements LocationListe
         textViewTotalGalileo = findViewById(R.id.position_totalGalileo);
 
         textViewTotalSatellite = findViewById(R.id.position_totalSatellite);
-
-        setFontSize();
 
         relativeLayoutRadar = findViewById(R.id.position_radar);
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -90,17 +79,6 @@ public class PositionActivity extends AppCompatActivity implements LocationListe
                 textViewTotalSatellite.setText(String.valueOf(status.getSatelliteCount()));
             }
         };
-    }
-
-    private void setFontSize() {
-        textViewTitle1.setTextSize(
-                TypedValue.COMPLEX_UNIT_SP,
-                sharedPreferences.getFloat(MainActivity.KEY_FONT_SIZE_TITLE, MainActivity.DEF_FONT_SIZE_TITLE)
-        );
-        textViewTitle2.setTextSize(
-                TypedValue.COMPLEX_UNIT_SP,
-                sharedPreferences.getFloat(MainActivity.KEY_FONT_SIZE_TITLE, MainActivity.DEF_FONT_SIZE_TITLE)
-        );
     }
 
     private void radarPosition(float azimuth, float elevation, int type) {

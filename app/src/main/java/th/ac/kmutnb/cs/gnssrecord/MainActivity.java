@@ -31,12 +31,6 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String KEY_FONT_SIZE_MENU = "fontSizeMenu";
-    public static final String KEY_FONT_SIZE_TITLE = "fontSizeTitle";
-
-    public static final float DEF_FONT_SIZE_MENU = 25;
-    public static final float DEF_FONT_SIZE_TITLE = 60;
-
     private static final String KEY_LANGUAGE = "language";
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -46,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private Spinner spinnerLanguage;
 
     private SharedPreferences sharedPreferences;
-    private String[][] language = {{"en", "th", "zh"}, {"EN", "TH", "CN"}};
+    private String[][] language = {{"en", "th"}, {"EN", "TH"}};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         spinnerLanguage = findViewById(R.id.main_language);
 
         sharedPreferences = getSharedPreferences(SettingActivity.FILE_SETTING, 0);
-        setFontSize();
+        setDisplayLanguage(language[0][sharedPreferences.getInt("language", 0)]);
 
         startAnimation();
         checkPermission();
@@ -107,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                 new ArrayAdapter<>(
                         this,
                         android.R.layout.simple_dropdown_item_1line,
-                        new String[]{language[1][0], language[1][1], language[1][2]}
+                        new String[]{language[1][0], language[1][1]}
                 )
         );
         spinnerLanguage.setSelection(sharedPreferences.getInt("language", 0), true);
@@ -123,25 +117,12 @@ public class MainActivity extends AppCompatActivity {
                 textViewSpinnerLanguage.setTextColor(getColor(R.color.colorWhite));
                 textViewSpinnerLanguage.setTypeface(ResourcesCompat.getFont(view.getContext(), R.font.thaisansneue_semibold));
                 textViewSpinnerLanguage.setTextSize(20f);
-                Locale locale = new Locale(language[0][position]);
-                Locale.setDefault(locale);
-                Configuration config = new Configuration();
-                config.locale = locale;
-                getBaseContext().getResources().updateConfiguration(config,
-                        getBaseContext().getResources().getDisplayMetrics());
+                setDisplayLanguage(language[0][position]);
                 sharedPreferences.edit().putInt(KEY_LANGUAGE, position).apply();
-                if (position == 0 || position == 1) {
-                    sharedPreferences.edit().putFloat(KEY_FONT_SIZE_MENU, DEF_FONT_SIZE_MENU).apply();
-                    sharedPreferences.edit().putFloat(KEY_FONT_SIZE_TITLE, DEF_FONT_SIZE_TITLE).apply();
-                } else if (position == 2) {
-                    sharedPreferences.edit().putFloat(KEY_FONT_SIZE_MENU, 17).apply();
-                    sharedPreferences.edit().putFloat(KEY_FONT_SIZE_TITLE, 50).apply();
-                }
 
                 new Handler().post(new Runnable() {
                     @Override
                     public void run() {
-                        setFontSize();
                         textViewBtnPosition.setText(R.string.position);
                         textViewBtnList.setText(R.string.list);
                         textViewBtnRecord.setText(R.string.record);
@@ -192,24 +173,18 @@ public class MainActivity extends AppCompatActivity {
         animatorRecord.setDuration(1200).start();
     }
 
-    private void setFontSize() {
-        textViewBtnPosition.setTextSize(
-                TypedValue.COMPLEX_UNIT_SP,
-                sharedPreferences.getFloat(KEY_FONT_SIZE_MENU, DEF_FONT_SIZE_MENU)
-        );
-        textViewBtnList.setTextSize(
-                TypedValue.COMPLEX_UNIT_SP,
-                sharedPreferences.getFloat(KEY_FONT_SIZE_MENU, DEF_FONT_SIZE_MENU)
-        );
-        textViewBtnRecord.setTextSize(
-                TypedValue.COMPLEX_UNIT_SP,
-                sharedPreferences.getFloat(KEY_FONT_SIZE_MENU, DEF_FONT_SIZE_MENU)
-        );
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
         startAnimation();
+    }
+
+    private void setDisplayLanguage(String code) {
+        Locale locale = new Locale(code);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getBaseContext().getResources().updateConfiguration(config,
+                getBaseContext().getResources().getDisplayMetrics());
     }
 }
