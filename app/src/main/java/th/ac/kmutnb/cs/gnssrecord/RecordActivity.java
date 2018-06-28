@@ -223,6 +223,8 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
     protected void onResume() {
         super.onResume();
         registerGnssMeasurements();
+        locationStatus = false;
+        textViewBtnStartStop.setBackgroundResource(R.drawable.bg_btn_gray);
     }
 
     private void btnEvent() {
