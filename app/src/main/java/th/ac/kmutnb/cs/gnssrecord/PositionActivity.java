@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -19,8 +20,12 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import static th.ac.kmutnb.cs.gnssrecord.adapter.ListAdapter.STATUS_SATELLITE_GREEN;
+import static th.ac.kmutnb.cs.gnssrecord.adapter.ListAdapter.STATUS_SATELLITE_YELLOW;
 
 public class PositionActivity extends AppCompatActivity implements LocationListener, SensorEventListener {
 
@@ -74,14 +79,14 @@ public class PositionActivity extends AppCompatActivity implements LocationListe
                 totalSatelliteSetZero();
                 relativeLayoutRadar.removeAllViews();
                 for (int i = 0; i < status.getSatelliteCount(); i++)
-                    radarPosition(status.getAzimuthDegrees(i), status.getElevationDegrees(i), status.getConstellationType(i));
+                    radarPosition(status.getAzimuthDegrees(i), status.getElevationDegrees(i), status.getConstellationType(i), status.getCn0DbHz(i));
                 totalSatelliteTextView();
                 textViewTotalSatellite.setText(String.valueOf(status.getSatelliteCount()));
             }
         };
     }
 
-    private void radarPosition(float azimuth, float elevation, int type) {
+    private void radarPosition(float azimuth, float elevation, int type, float cn0DbHz) {
         int radarWidth = relativeLayoutRadar.getLayoutParams().width;
         int radarHeight = relativeLayoutRadar.getLayoutParams().height;
         float margin = 20;
@@ -94,6 +99,9 @@ public class PositionActivity extends AppCompatActivity implements LocationListe
 
         ImageView imageView = new ImageView(this);
         imageView.setImageResource(logoAndTotalSatellite(type));
+        if (cn0DbHz > STATUS_SATELLITE_GREEN) imageView.setColorFilter(Color.parseColor("#99cc00"));
+        else if (cn0DbHz > STATUS_SATELLITE_YELLOW) imageView.setColorFilter(Color.parseColor("#ffbb33"));
+        else imageView.setColorFilter(Color.parseColor("#ff4444"));
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(radarWidth / 12, radarHeight / 12);
         imageView.setLayoutParams(params);
         imageView.setRotation(currentDegree);
@@ -106,22 +114,22 @@ public class PositionActivity extends AppCompatActivity implements LocationListe
     private int logoAndTotalSatellite(int constellationType) {
         int logoImageResource = R.drawable.logo_unknow;
         if (constellationType == GnssStatus.CONSTELLATION_GPS) {
-            logoImageResource = R.drawable.logo_gps;
+            logoImageResource = R.drawable.ic_position_1;
             totalGps++;
         } else if (constellationType == GnssStatus.CONSTELLATION_SBAS) {
-            logoImageResource = R.drawable.logo_sbas;
+            logoImageResource = R.drawable.ic_position_2;
             totalSbas++;
         } else if (constellationType == GnssStatus.CONSTELLATION_GLONASS) {
-            logoImageResource = R.drawable.logo_glonass;
+            logoImageResource = R.drawable.ic_position_3;
             totalGlonass++;
         } else if (constellationType == GnssStatus.CONSTELLATION_QZSS) {
-            logoImageResource = R.drawable.logo_qzss;
+            logoImageResource = R.drawable.ic_position_4;
             totalQzss++;
         } else if (constellationType == GnssStatus.CONSTELLATION_BEIDOU) {
-            logoImageResource = R.drawable.logo_beidou;
+            logoImageResource = R.drawable.ic_position_5;
             totalBeidou++;
         } else if (constellationType == GnssStatus.CONSTELLATION_GALILEO) {
-            logoImageResource = R.drawable.logo_galileo;
+            logoImageResource = R.drawable.ic_position_6;
             totalGalileo++;
         }
         return logoImageResource;

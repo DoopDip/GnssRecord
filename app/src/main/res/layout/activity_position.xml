@@ -62,6 +62,7 @@
         android:background="@drawable/radar" />
 
     <LinearLayout
+        android:id="@+id/position_groupSatelliteIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/position_radar"
@@ -80,7 +81,7 @@
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:contentDescription="@string/satellite"
-                android:src="@drawable/logo_gps" />
+                android:src="@drawable/ic_position_1" />
 
             <TextView
                 android:id="@+id/position_totalGps"
@@ -103,7 +104,7 @@
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:contentDescription="@string/satellite"
-                android:src="@drawable/logo_sbas" />
+                android:src="@drawable/ic_position_2" />
 
             <TextView
                 android:id="@+id/position_totalSbas"
@@ -126,7 +127,7 @@
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:contentDescription="@string/satellite"
-                android:src="@drawable/logo_glonass" />
+                android:src="@drawable/ic_position_3" />
 
             <TextView
                 android:id="@+id/position_totalGlonass"
@@ -149,7 +150,7 @@
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:contentDescription="@string/satellite"
-                android:src="@drawable/logo_qzss" />
+                android:src="@drawable/ic_position_4" />
 
             <TextView
                 android:id="@+id/position_totalQzss"
@@ -172,7 +173,7 @@
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:contentDescription="@string/satellite"
-                android:src="@drawable/logo_beidou" />
+                android:src="@drawable/ic_position_5" />
 
             <TextView
                 android:id="@+id/position_totalBeidou"
@@ -194,7 +195,7 @@
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:contentDescription="@string/satellite"
-                android:src="@drawable/logo_galileo" />
+                android:src="@drawable/ic_position_6" />
 
             <TextView
                 android:id="@+id/position_totalGalileo"
@@ -208,5 +209,13 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <ImageView
+        android:layout_width="280dp"
+        android:layout_height="100dp"
+        android:layout_below="@+id/position_groupSatelliteIcon"
+        android:layout_centerHorizontal="true"
+        android:alpha=".7"
+        android:src="@drawable/ic_cn0dbhz_color" />
 
 </RelativeLayout>

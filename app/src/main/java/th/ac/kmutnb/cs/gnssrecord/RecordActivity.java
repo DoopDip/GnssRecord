@@ -62,19 +62,19 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
     private TextView textViewBtnStartStop;
     private TextView textViewBtnScroll;
     private TextView textViewBtnLogOut;
-    private ScrollView scrollViewLog;
     private TextView textViewLog;
     private TextView textViewBtnFile;
     private TextView textViewBtnSetting;
-    private LinearLayout linearLayoutGroupMenu;
     private TextView textViewLatitude;
     private TextView textViewLongitude;
     private TextView textViewAltitude;
     private TextView textViewTime;
     private TextView textViewDate;
-    private LinearLayout linearLayoutGroupTimeScroll;
     private TextView textViewBtnTimer;
     private TextView textViewTimer;
+    private ScrollView scrollViewLog;
+    private LinearLayout linearLayoutGroupMenu;
+    private LinearLayout linearLayoutGroupTimeScroll;
 
     private Rinex rinex;
 
@@ -215,16 +215,14 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
             statusRecord = false;
         }
         unregisterGnssMeasurements();
-        locationStatus = false;
-        textViewBtnStartStop.setBackgroundResource(R.drawable.bg_btn_gray);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        registerGnssMeasurements();
         locationStatus = false;
         textViewBtnStartStop.setBackgroundResource(R.drawable.bg_btn_gray);
+        registerGnssMeasurements();
     }
 
     private void btnEvent() {
