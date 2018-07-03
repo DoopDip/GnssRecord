@@ -96,7 +96,7 @@ public class Rinex {
         String type = "OBSERVATION DATA";
         String source = "M: Mixed";
         for (int i = 0; i < version.length(); i++)
-            line[i + 4] = version.charAt(i);
+            line[i + 5] = version.charAt(i);
         for (int i = 0; i < type.length(); i++)
             line[i + 20] = type.charAt(i);
         for (int i = 0; i < source.length(); i++)
@@ -190,11 +190,11 @@ public class Rinex {
         String yPosition = rinexHeader.getCartesianY();
         String zPosition = rinexHeader.getCartesianZ();
         for (int i = 0; i < xPosition.length(); i++)
-            line[i + 1] = xPosition.charAt(i);
+            line[13 - i] = xPosition.charAt(xPosition.length() - 1 - i);
         for (int i = 0; i < yPosition.length(); i++)
-            line[i + 16] = yPosition.charAt(i);
+            line[27 - i] = yPosition.charAt(yPosition.length() - 1 - i);
         for (int i = 0; i < zPosition.length(); i++)
-            line[i + 30] = zPosition.charAt(i);
+            line[41 - i] = zPosition.charAt(zPosition.length() - 1 - i);
         writeLine("APPROX POSITION XYZ");
 
 
@@ -204,11 +204,11 @@ public class Rinex {
         String eDelta = String.format("%.4f", rinexHeader.getAntennaEccentricityEast());
         String nDelta = String.format("%.4f", rinexHeader.getAntennaEccentricityNorth());
         for (int i = 0; i < hDelta.length(); i++)
-            line[i + 8] = hDelta.charAt(i);
+            line[13 - i] = hDelta.charAt(hDelta.length() - 1 - i);
         for (int i = 0; i < eDelta.length(); i++)
-            line[i + 22] = eDelta.charAt(i);
+            line[27 - i] = eDelta.charAt(eDelta.length() - 1 - i);
         for (int i = 0; i < nDelta.length(); i++)
-            line[i + 36] = nDelta.charAt(i);
+            line[41 - i] = nDelta.charAt(nDelta.length() - 1 - i);
         writeLine("ANTENNA: DELTA H/E/N");
 
         if (ver == VER_2_11) {
@@ -377,11 +377,11 @@ public class Rinex {
                 for (int i = 0; i < data.getPseudoRange().length(); i++)
                     line[13 - i] = data.getPseudoRange().charAt(data.getPseudoRange().length() - 1 - i);
                 for (int i = 0; i < data.getCarrierPhase().length(); i++)
-                    line[30 - i] = data.getCarrierPhase().charAt(data.getCarrierPhase().length() - 1 - i);
+                    line[29 - i] = data.getCarrierPhase().charAt(data.getCarrierPhase().length() - 1 - i);
                 for (int i = 0; i < data.getSignalStrength().length(); i++)
-                    line[45 - i] = data.getSignalStrength().charAt(data.getSignalStrength().length() - 1 - i);
+                    line[46 - i] = data.getSignalStrength().charAt(data.getSignalStrength().length() - 1 - i);
                 for (int i = 0; i < data.getDoppler().length(); i++)
-                    line[61 - i] = data.getDoppler().charAt(data.getDoppler().length() - 1 - i);
+                    line[62 - i] = data.getDoppler().charAt(data.getDoppler().length() - 1 - i);
                 writeLine("");
             }
 
