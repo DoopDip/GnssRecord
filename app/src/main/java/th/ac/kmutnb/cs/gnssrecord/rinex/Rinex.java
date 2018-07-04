@@ -379,9 +379,9 @@ public class Rinex {
                 for (int i = 0; i < data.getCarrierPhase().length(); i++)
                     line[29 - i] = data.getCarrierPhase().charAt(data.getCarrierPhase().length() - 1 - i);
                 for (int i = 0; i < data.getSignalStrength().length(); i++)
-                    line[46 - i] = data.getSignalStrength().charAt(data.getSignalStrength().length() - 1 - i);
+                    line[45 - i] = data.getSignalStrength().charAt(data.getSignalStrength().length() - 1 - i);
                 for (int i = 0; i < data.getDoppler().length(); i++)
-                    line[62 - i] = data.getDoppler().charAt(data.getDoppler().length() - 1 - i);
+                    line[60 - i] = data.getDoppler().charAt(data.getDoppler().length() - 1 - i);
                 writeLine("");
             }
 
