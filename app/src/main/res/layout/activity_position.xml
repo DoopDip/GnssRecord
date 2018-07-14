@@ -67,8 +67,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/position_radar"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:alpha=".8"
+        android:background="@drawable/bg_adapter_file"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -210,12 +211,46 @@
 
     </LinearLayout>
 
-    <ImageView
+    <TextView
+        android:id="@+id/position_tapCn0dbhz"
         android:layout_width="280dp"
-        android:layout_height="100dp"
+        android:layout_height="7dp"
+        android:layout_marginTop="10dp"
         android:layout_below="@+id/position_groupSatelliteIcon"
         android:layout_centerHorizontal="true"
+        android:background="@drawable/ic_cn0dbhz_color" />
+
+    <LinearLayout
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/position_tapCn0dbhz"
+        android:layout_centerHorizontal="true"
         android:alpha=".7"
-        android:src="@drawable/ic_cn0dbhz_color" />
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/thaisansneue_semibold"
+            android:text="0"
+            android:textColor="@color/colorWhite" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="76dp"
+            android:fontFamily="@font/thaisansneue_semibold"
+            android:text="15"
+            android:textColor="@color/colorWhite" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="74dp"
+            android:fontFamily="@font/thaisansneue_semibold"
+            android:text="30"
+            android:textColor="@color/colorWhite" />
+    </LinearLayout>
+
 
 </RelativeLayout>
