@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -89,18 +91,26 @@ public class PositionActivity extends AppCompatActivity implements LocationListe
     private void radarPosition(float azimuth, float elevation, int type, float cn0DbHz) {
         int radarWidth = relativeLayoutRadar.getLayoutParams().width;
         int radarHeight = relativeLayoutRadar.getLayoutParams().height;
-        float margin = 20;
-        float cX = radarWidth / 2 - margin;
-        float cY = radarHeight / 2 - margin;
-        float average = ((cX / 90) + (cY / 90)) / 2;
+        int sizeSatellite = 20;
 
-        float x = cX + Math.round(Math.cos(Math.toRadians(azimuth)) * (elevation * average));
-        float y = cY + Math.round(Math.sin(Math.toRadians(azimuth)) * (elevation * average));
+        int centerWidth = radarWidth / 2;
+        int centerHeight = radarHeight / 2;
+        if (centerWidth > centerHeight) centerHeight -= sizeSatellite;
+        else centerHeight = centerWidth - sizeSatellite;
+
+        int n = Math.round(centerHeight / 15);
+
+        double d1 = (90.0F - elevation) / 90.0F * centerHeight;
+        double d2 = azimuth * Math.PI / 180.0D;
+        sizeSatellite += centerHeight;
+        int x = ((int) Math.round(Math.sin(d2) * d1) + sizeSatellite) - n;
+        int y = (sizeSatellite - (int) Math.round(d1 * Math.cos(d2))) - n;
 
         ImageView imageView = new ImageView(this);
         imageView.setImageResource(logoAndTotalSatellite(type));
         if (cn0DbHz > STATUS_SATELLITE_GREEN) imageView.setColorFilter(Color.parseColor("#99cc00"));
-        else if (cn0DbHz > STATUS_SATELLITE_YELLOW) imageView.setColorFilter(Color.parseColor("#ffbb33"));
+        else if (cn0DbHz > STATUS_SATELLITE_YELLOW)
+            imageView.setColorFilter(Color.parseColor("#ffbb33"));
         else imageView.setColorFilter(Color.parseColor("#ff4444"));
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(radarWidth / 12, radarHeight / 12);
         imageView.setLayoutParams(params);
@@ -108,7 +118,6 @@ public class PositionActivity extends AppCompatActivity implements LocationListe
         imageView.setX(x);
         imageView.setY(y);
         relativeLayoutRadar.addView(imageView);
-
     }
 
     private int logoAndTotalSatellite(int constellationType) {
@@ -184,7 +193,7 @@ public class PositionActivity extends AppCompatActivity implements LocationListe
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        currentDegree = Math.round(event.values[0] + 90);
+        currentDegree = Math.round(event.values[0]);
         relativeLayoutRadar.setRotation(-currentDegree);
         for (int i = 0; i < relativeLayoutRadar.getChildCount(); i++) {
             relativeLayoutRadar.getChildAt(i).setRotation(currentDegree);
