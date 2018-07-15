@@ -20,11 +20,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 
 import static th.ac.kmutnb.cs.gnssrecord.adapter.ListAdapter.STATUS_SATELLITE_GREEN;
 import static th.ac.kmutnb.cs.gnssrecord.adapter.ListAdapter.STATUS_SATELLITE_YELLOW;
@@ -49,6 +53,7 @@ public class PositionActivity extends AppCompatActivity implements LocationListe
     private TextView textViewTotalGalileo;
 
     private TextView textViewTotalSatellite;
+    private LinearLayout linearLayoutGroupSatelliteIcon;
 
     private int totalGps = 0;
     private int totalSbas = 0;
@@ -70,6 +75,7 @@ public class PositionActivity extends AppCompatActivity implements LocationListe
         textViewTotalGalileo = findViewById(R.id.position_totalGalileo);
 
         textViewTotalSatellite = findViewById(R.id.position_totalSatellite);
+        linearLayoutGroupSatelliteIcon = findViewById(R.id.position_groupSatelliteIcon);
 
         relativeLayoutRadar = findViewById(R.id.position_radar);
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -86,6 +92,16 @@ public class PositionActivity extends AppCompatActivity implements LocationListe
                 textViewTotalSatellite.setText(String.valueOf(status.getSatelliteCount()));
             }
         };
+
+        linearLayoutGroupSatelliteIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new MaterialDialog.Builder(v.getContext())
+                        .customView(R.layout.dialog_satellite, true)
+                        .positiveText(R.string.close)
+                        .show();
+            }
+        });
     }
 
     private void radarPosition(float azimuth, float elevation, int type, float cn0DbHz) {

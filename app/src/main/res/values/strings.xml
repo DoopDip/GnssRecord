@@ -40,18 +40,18 @@
     <string name="share">Share</string>
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
-    <string name="mark_name">Mark name</string>
-    <string name="mark_type">Mark type</string>
-    <string name="observer_name">Observer name</string>
-    <string name="observer_agency_name">Observer agency name</string>
-    <string name="receiver_number">Receiver number</string>
-    <string name="receiver_type">Receiver type</string>
-    <string name="receiver_version">Receiver version</string>
-    <string name="antenna_number">Antenna number</string>
-    <string name="antenna_type">Antenna type</string>
-    <string name="antenna_eccentricity_east">Antenna eccentricity east</string>
-    <string name="antenna_eccentricity_north">Antenna eccentricity north</string>
-    <string name="antenna_height">Antenna height</string>
+    <string name="mark_name" translatable="false">Mark name</string>
+    <string name="mark_type" translatable="false">Mark type</string>
+    <string name="observer_name" translatable="false">Observer name</string>
+    <string name="observer_agency_name" translatable="false">Observer agency name</string>
+    <string name="receiver_number" translatable="false">Receiver number</string>
+    <string name="receiver_type" translatable="false">Receiver type</string>
+    <string name="receiver_version" translatable="false">Receiver version</string>
+    <string name="antenna_number" translatable="false">Antenna number</string>
+    <string name="antenna_type" translatable="false">Antenna type</string>
+    <string name="antenna_eccentricity_east" translatable="false">Antenna eccentricity east</string>
+    <string name="antenna_eccentricity_north" translatable="false">Antenna eccentricity north</string>
+    <string name="antenna_height" translatable="false">Antenna height</string>
     <string name="restore_defaults">Restore Defaults</string>
     <string name="cancel">Cancel</string>
     <string name="please_confirm">Please confirm</string>
@@ -82,4 +82,12 @@
     <string name="title_list_2">List</string>
     <string name="title_record_1">Satellite</string>
     <string name="title_record_2">Record</string>
+    <string name="close">Close</string>
+    <string name="Gps" translatable="false">Gps</string>
+    <string name="Sbas" translatable="false">Sbas</string>
+    <string name="Glonass" translatable="false">Glonass</string>
+    <string name="Qzss" translatable="false">Qzss</string>
+    <string name="Beidou" translatable="false">Beidou</string>
+    <string name="Galileo" translatable="false">Galileo</string>
+    <string name="arrow" translatable="false">------></string>
 </resources>

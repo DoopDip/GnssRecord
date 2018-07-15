@@ -62,4 +62,5 @@
     <string name="title_list_2">ดาวเทียม</string>
     <string name="title_record_1">บันทึก</string>
     <string name="title_record_2">ข้อมูล</string>
+    <string name="close">ปิด</string>
 </resources>
