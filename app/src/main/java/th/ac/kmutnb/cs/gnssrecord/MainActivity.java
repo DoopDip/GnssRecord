@@ -146,15 +146,19 @@ public class MainActivity extends AppCompatActivity {
         textViewBtnPosition.setAlpha(0f);
         textViewBtnList.setAlpha(0f);
         textViewBtnRecord.setAlpha(0f);
+        spinnerLanguage.setAlpha(0f);
         ObjectAnimator animatorPosition = ObjectAnimator.ofFloat(textViewBtnPosition, View.ALPHA, 1f);
         ObjectAnimator animatorList = ObjectAnimator.ofFloat(textViewBtnList, View.ALPHA, 1f);
         ObjectAnimator animatorRecord = ObjectAnimator.ofFloat(textViewBtnRecord, View.ALPHA, 1f);
+        ObjectAnimator animatorLanguage = ObjectAnimator.ofFloat(spinnerLanguage, View.ALPHA, 0.5f);
         animatorPosition.setStartDelay(200);
         animatorPosition.setDuration(1200).start();
         animatorList.setStartDelay(400);
         animatorList.setDuration(1200).start();
         animatorRecord.setStartDelay(600);
         animatorRecord.setDuration(1200).start();
+        animatorLanguage.setStartDelay(800);
+        animatorLanguage.setDuration(4000).start();
     }
 
     @Override
