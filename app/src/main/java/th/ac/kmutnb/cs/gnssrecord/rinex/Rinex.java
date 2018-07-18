@@ -87,7 +87,7 @@ public class Rinex {
 
     public void writeHeader(RinexHeader rinexHeader) { //header labels in columns 61-80
         Log.i(TAG, "WriteHeader");
-        Date date = new Date(rinexHeader.getGpsTime());
+        Date date = new Date(rinexHeader.getGpsTime()+1000);
 
         //RINEX VERSION / TYPE
         resetLine();
@@ -110,7 +110,7 @@ public class Rinex {
         String agency = "KMUTNB";
         SimpleDateFormat formatDate = new SimpleDateFormat("yyyyMMdd hhmmss");
         formatDate.setTimeZone(TimeZone.getTimeZone("UTC"));
-        String dateCreation = formatDate.format(date) + " UTC";
+        String dateCreation = formatDate.format(new Date()) + " UTC";
         for (int i = 0; i < program.length(); i++)
             line[i] = program.charAt(i);
         for (int i = 0; i < agency.length(); i++)
@@ -250,17 +250,11 @@ public class Rinex {
         //TIME OF FIRST OBS
         resetLine();
         SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
-        formatYear.setTimeZone(TimeZone.getTimeZone("UTC"));
         SimpleDateFormat formatMonth = new SimpleDateFormat("M");
-        formatMonth.setTimeZone(TimeZone.getTimeZone("UTC"));
         SimpleDateFormat formatDay = new SimpleDateFormat("d");
-        formatDay.setTimeZone(TimeZone.getTimeZone("UTC"));
-        SimpleDateFormat formatHour = new SimpleDateFormat("h");
-        formatHour.setTimeZone(TimeZone.getTimeZone("UTC"));
+        SimpleDateFormat formatHour = new SimpleDateFormat("H");
         SimpleDateFormat formatMin = new SimpleDateFormat("m");
-        formatMin.setTimeZone(TimeZone.getTimeZone("UTC"));
         SimpleDateFormat formatSec = new SimpleDateFormat("ss.SSSSSSS");
-        formatSec.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         String year = formatYear.format(date);
         String month = formatMonth.format(date);
@@ -306,17 +300,11 @@ public class Rinex {
         resetLine();
         Date date = new Date(gpsTime);
         SimpleDateFormat formatYear = new SimpleDateFormat("yy");
-        formatYear.setTimeZone(TimeZone.getTimeZone("UTC"));
         SimpleDateFormat formatMonth = new SimpleDateFormat("M");
-        formatMonth.setTimeZone(TimeZone.getTimeZone("UTC"));
         SimpleDateFormat formatDay = new SimpleDateFormat("d");
-        formatDay.setTimeZone(TimeZone.getTimeZone("UTC"));
-        SimpleDateFormat formatHour = new SimpleDateFormat("h");
-        formatHour.setTimeZone(TimeZone.getTimeZone("UTC"));
+        SimpleDateFormat formatHour = new SimpleDateFormat("H");
         SimpleDateFormat formatMin = new SimpleDateFormat("m");
-        formatMin.setTimeZone(TimeZone.getTimeZone("UTC"));
         SimpleDateFormat formatSec = new SimpleDateFormat("ss.SSSSSSS");
-        formatSec.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         String year = formatYear.format(date);
         String month = formatMonth.format(date);

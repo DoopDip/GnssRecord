@@ -61,7 +61,7 @@
     <string name="empty_file">Empty File !!</string>
     <string name="already_exists">already exists !</string>
     <string name="searching">Searching…</string>
-    <string name="wait_location">Wait for location</string>
+    <string name="wait_location">Wait for raw measurement data</string>
     <string name="latitude">Latitude :</string>
     <string name="longitude">Longitude :</string>
     <string name="altitude">Altitude :</string>

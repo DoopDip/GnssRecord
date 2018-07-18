@@ -80,21 +80,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "Click -> MenuRecord");
-                if (isConnectedToInternet(getApplicationContext())) {
-                    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                    if (firebaseUser != null)
-                        startActivity(new Intent(MainActivity.this, RecordActivity.class));
-                    else
-                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                } else {
-                    Snackbar.make(textViewBtnRecord, R.string.please_internet, Snackbar.LENGTH_INDEFINITE)
-                            .setAction(R.string.ok, new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Log.i(TAG, "Click -> " + R.string.please_internet);
-                                }
-                            }).show();
-                }
+                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                if (firebaseUser != null)
+                    startActivity(new Intent(MainActivity.this, RecordActivity.class));
+                else
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
             }
         });
 
@@ -135,13 +125,6 @@ public class MainActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-    }
-
-    private boolean isConnectedToInternet(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        assert cm != null;
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     private void checkPermission() {

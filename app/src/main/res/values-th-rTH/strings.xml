@@ -40,7 +40,7 @@
     <string name="failed">ล้มเหลว</string>
     <string name="empty_file">ไม่มีไฟล์ !!</string>
     <string name="searching">กำลังค้นหา…</string>
-    <string name="wait_location">กำลังค้นหาตำแหน่งปัจจุบัน</string>
+    <string name="wait_location">กำลังรอข้อมูล measurement</string>
     <string name="timer">ตั้งเวลา</string>
     <string name="set">บันทึก</string>
     <string name="hour">ชั่วโมง</string>

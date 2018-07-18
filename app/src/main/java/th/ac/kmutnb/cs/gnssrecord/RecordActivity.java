@@ -13,8 +13,6 @@ import android.location.GnssClock;
 import android.location.GnssMeasurement;
 import android.location.GnssMeasurementsEvent;
 import android.location.GnssStatus;
-import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.RingtoneManager;
 import android.os.Handler;
@@ -41,21 +39,21 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import th.ac.kmutnb.cs.gnssrecord.model.RinexData;
 import th.ac.kmutnb.cs.gnssrecord.model.RinexHeader;
 import th.ac.kmutnb.cs.gnssrecord.rinex.Rinex;
 
-public class RecordActivity extends AppCompatActivity implements LocationListener {
+public class RecordActivity extends AppCompatActivity {
 
     private static final String TAG = RecordActivity.class.getSimpleName();
 
-    private static final double SPEED_OF_LIGHT = 299792458.0; // [m/s]
+    private static final double SPEED_OF_LIGHT = 299792458.0; // ความเร็วแสง เมตร:วิ
     private static final double GPS_L1_FREQ = 154.0 * 10.23e6;
     private static final double GPS_L1_WAVELENGTH = SPEED_OF_LIGHT / GPS_L1_FREQ;
-    private static final double GPS_WEEK_SECS = 604800; // Number of seconds in a week
+    private static final double GPS_WEEK_SECS = 604800; // วินาทีในหนึ่งสัปดาห์
     private static final double NS_TO_S = 1.0e-9;
+    private static final long GPS_START_TIME = 315939600000L;// เวลาเริ่มต้นของ GPS = 1980-1-6 หน่วนมิลลิวิ;
 
     private TextView textViewWelcome;
     private TextView textViewName;
@@ -65,9 +63,6 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
     private TextView textViewLog;
     private TextView textViewBtnFile;
     private TextView textViewBtnSetting;
-    private TextView textViewLatitude;
-    private TextView textViewLongitude;
-    private TextView textViewAltitude;
     private TextView textViewTime;
     private TextView textViewDate;
     private TextView textViewBtnTimer;
@@ -82,11 +77,10 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
 
     private boolean statusRecord;
     private boolean statusScroll;
+    private boolean statusGnss;
 
     private float tempYBtnStart;
 
-    private Location location;
-    private Boolean locationStatus;
     private long gpsTime;
 
     private long timer;
@@ -101,7 +95,12 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
                 public void onGnssMeasurementsReceived(GnssMeasurementsEvent eventArgs) {
                     super.onGnssMeasurementsReceived(eventArgs);
                     Log.i(TAG, "GnssMeasurements [available]");
-                    gpsTime += 1000;
+                    GnssClock clock = eventArgs.getClock();
+                    double gpsWeek = Math.floor(-clock.getFullBiasNanos() * NS_TO_S / GPS_WEEK_SECS);
+                    double local_est_GPS_time = clock.getTimeNanos() - (clock.getFullBiasNanos() + clock.getBiasNanos());
+                    double gpsSow = local_est_GPS_time * NS_TO_S - gpsWeek * GPS_WEEK_SECS;
+                    gpsTime = (long) ((GPS_WEEK_SECS * gpsWeek + gpsSow) * 1000) + GPS_START_TIME;
+
                     if (statusRecord) {
                         ArrayList<GnssMeasurement> measurementList = new ArrayList<>(eventArgs.getMeasurements());
                         writeRecordRinex(measurementList, eventArgs.getClock());
@@ -143,20 +142,20 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
                                 textViewTimer.setText(df.format(hour) + ":" + df.format(min) + ":" + df.format(sec));
                             }
                         });
-                    } else if (locationStatus) {
+                    } else {
+                        statusGnss = true;
                         final Date date = new Date(gpsTime);
                         final SimpleDateFormat formatTime = new SimpleDateFormat("HH:mm:ss");
                         final SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/YY");
-                        formatTime.setTimeZone(TimeZone.getTimeZone("UTC"));
-                        formatDate.setTimeZone(TimeZone.getTimeZone("UTC"));
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
                                 textViewTime.setText(formatTime.format(date));
                                 textViewDate.setText(formatDate.format(date));
+                                if (!statusRecord)
+                                    textViewBtnStartStop.setBackgroundResource(R.drawable.bg_btn_green);
                             }
                         });
-                        Log.i(TAG, "GPS time (UTC): " + formatTime.format(date) + " " + formatDate.format(date));
                     }
                 }
             };
@@ -177,7 +176,7 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
 
         statusRecord = false;
         statusScroll = false;
-        locationStatus = false;
+        statusGnss = false;
         statusTimer = false;
         timer = 0;
 
@@ -191,9 +190,6 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
         textViewBtnFile = findViewById(R.id.record_btnFile);
         textViewBtnSetting = findViewById(R.id.record_btnSetting);
         linearLayoutGroupMenu = findViewById(R.id.record_groupMenu);
-        textViewLatitude = findViewById(R.id.record_latitude);
-        textViewLongitude = findViewById(R.id.record_longitude);
-        textViewAltitude = findViewById(R.id.record_altitude);
         textViewTime = findViewById(R.id.record_time);
         textViewDate = findViewById(R.id.record_date);
         linearLayoutGroupTimeScroll = findViewById(R.id.record_groupTimeScroll);
@@ -220,7 +216,7 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
     @Override
     protected void onResume() {
         super.onResume();
-        locationStatus = false;
+        statusGnss = false;
         textViewBtnStartStop.setBackgroundResource(R.drawable.bg_btn_gray);
         registerGnssMeasurements();
     }
@@ -230,7 +226,7 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
             @Override
             public void onClick(View v) {
                 if (!statusRecord) {
-                    if (locationStatus) {
+                    if (statusGnss) {
                         Log.i(TAG, "Click -> textViewStart = Start");
                         logClear();
                         handler.post(new Runnable() {
@@ -353,17 +349,12 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
         }
         locationManager.registerGnssMeasurementsCallback(measurementsEvent);
         Log.i(TAG, "Register callback -> measurementsEvent");
-
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
-        Log.i(TAG, "requestLocationUpdates -> GPS");
     }
 
     private void unregisterGnssMeasurements() {
         locationManager.unregisterGnssMeasurementsCallback(measurementsEvent);
+        statusGnss = false;
         Log.i(TAG, "!! UnRegister callback -> measurementsEvent");
-
-        locationStatus = false;
-        Log.i(TAG, "!! locationStatus -> false");
     }
 
     private void animationClickStop() {
@@ -423,17 +414,6 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
     }
 
     private void startRecordRinex() {
-
-        double lng = location.getLongitude(); //ดึงค่า Longitude
-        double lat = location.getLatitude(); //ดึงค่า Latitude
-        double r = 6371000 + location.getAltitude(); //หาค่า R โดยนำ
-        double cartesianX = r * Math.cos(lat) * Math.cos(lng);
-        double cartesianY = r * Math.cos(lat) * Math.sin(lng);
-        double cartesianZ = r * Math.sin(lat);
-        Log.i(TAG, "Lat: " + lat + ", Lng: " + lng + ", Alt: " + location.getAltitude());
-        Log.i(TAG, "Cartesian X: " + cartesianX + ", Y:" + cartesianY + ", Z:" + cartesianZ);
-        DecimalFormat decimalFormat = new DecimalFormat("#.####");
-
         rinex = new Rinex(getApplicationContext(), sharedPreferences.getInt(SettingActivity.KEY_RINEX_VER, SettingActivity.DEF_RINEX_VER));
         rinex.writeHeader(new RinexHeader(
                 sharedPreferences.getString(SettingActivity.KEY_MARK_NAME, SettingActivity.DEF_MARK_NAME),
@@ -448,9 +428,9 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
                 Double.parseDouble(sharedPreferences.getString(SettingActivity.KEY_ANTENNA_ECCENTRICITY_EAST, SettingActivity.DEF_ANTENNA_ECCENTRICITY_EAST)),
                 Double.parseDouble(sharedPreferences.getString(SettingActivity.KEY_ANTENNA_ECCENTRICITY_NORTH, SettingActivity.DEF_ANTENNA_ECCENTRICITY_NORTH)),
                 Double.parseDouble(sharedPreferences.getString(SettingActivity.KEY_ANTENNA_HEIGHT, SettingActivity.DEF_ANTENNA_HEIGHT)),
-                decimalFormat.format(cartesianX),
-                decimalFormat.format(cartesianY),
-                decimalFormat.format(cartesianZ),
+                "0.0000",
+                "0.0000",
+                "0.0000",
                 gpsTime
         ));
     }
@@ -469,13 +449,17 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
                 continue;
             }
 
-            double c1 = calculateC1(
-                    clock.getFullBiasNanos(),
-                    clock.getBiasNanos(),
-                    clock.getTimeNanos(),
-                    measurement.getTimeOffsetNanos(),
-                    measurement.getReceivedSvTimeNanos()
-            );
+            double fullBiasNanos = clock.getFullBiasNanos();
+            double gpsWeek = Math.floor(-fullBiasNanos * NS_TO_S / GPS_WEEK_SECS);
+            double local_est_GPS_time = clock.getTimeNanos() - (fullBiasNanos + clock.getBiasNanos());
+            double gpsSow = local_est_GPS_time * NS_TO_S - gpsWeek * GPS_WEEK_SECS;
+
+            double tRxSeconds = gpsSow - measurement.getTimeOffsetNanos() * NS_TO_S;
+            double tTxSeconds = measurement.getReceivedSvTimeNanos() * NS_TO_S;
+            double tau = tRxSeconds - tTxSeconds;
+            if (tau < 0) tau += GPS_WEEK_SECS;
+
+            double c1 = tau * SPEED_OF_LIGHT;
             double l1 = measurement.getAccumulatedDeltaRangeMeters() / GPS_L1_WAVELENGTH;
             double d1 = -measurement.getPseudorangeRateMetersPerSecond() / GPS_L1_WAVELENGTH;
             DecimalFormat df = new DecimalFormat("0.000");
@@ -496,19 +480,6 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
         }
         rinex.writeData(rinexData, gpsTime);
         log(rinexData);
-    }
-
-    private double calculateC1(double fullBiasNanos, double biasNanos, long timeNanos, double timeOffsetNanos, long receivedSvTimeNanos) {
-        double gpsWeek = Math.floor(-fullBiasNanos * NS_TO_S / GPS_WEEK_SECS);
-        double local_est_GPS_time = timeNanos - (fullBiasNanos + biasNanos);
-        double gpsSow = local_est_GPS_time * NS_TO_S - gpsWeek * GPS_WEEK_SECS;
-
-        double tRxSeconds = gpsSow - timeOffsetNanos * NS_TO_S;
-        double tTxSeconds = receivedSvTimeNanos * NS_TO_S;
-
-        double tau = tRxSeconds - tTxSeconds;
-        if (tau < 0) tau += GPS_WEEK_SECS;
-        return tau * SPEED_OF_LIGHT;
     }
 
     private String numberSatellite(int constellationType, int svid) {
@@ -559,40 +530,5 @@ public class RecordActivity extends AppCompatActivity implements LocationListene
                 textViewLog.setText(log);
             }
         });
-    }
-
-    @Override
-    public void onLocationChanged(final Location location) {
-        this.location = location;
-        if (!locationStatus) {
-            locationStatus = true;
-            gpsTime = location.getTime();
-            textViewBtnStartStop.setBackgroundResource(R.drawable.bg_btn_green);
-        }
-
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                DecimalFormat df = new DecimalFormat("#.00000");
-                textViewLatitude.setText(df.format(location.getLatitude()));
-                textViewLongitude.setText(df.format(location.getLongitude()));
-                textViewAltitude.setText(df.format(location.getAltitude()));
-            }
-        });
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
     }
 }
