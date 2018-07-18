@@ -63,4 +63,5 @@
     <string name="title_record_1">บันทึก</string>
     <string name="title_record_2">ข้อมูล</string>
     <string name="close">ปิด</string>
+    <string name="description">คำอธิบาย</string>
 </resources>

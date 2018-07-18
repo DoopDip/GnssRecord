@@ -90,4 +90,5 @@
     <string name="Beidou" translatable="false">Beidou</string>
     <string name="Galileo" translatable="false">Galileo</string>
     <string name="arrow" translatable="false">------></string>
+    <string name="description">Description</string>
 </resources>

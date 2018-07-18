@@ -63,4 +63,5 @@
     <string name="title_record_1">记录</string>
     <string name="title_record_2">数据</string>
     <string name="close">Close</string>
+    <string name="description">Description</string>
 </resources>
