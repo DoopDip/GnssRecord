@@ -53,7 +53,7 @@ public class RecordActivity extends AppCompatActivity {
     private static final double GPS_L1_WAVELENGTH = SPEED_OF_LIGHT / GPS_L1_FREQ;
     private static final double GPS_WEEK_SECS = 604800; // วินาทีในหนึ่งสัปดาห์
     private static final double NS_TO_S = 1.0e-9;
-    private static final long GPS_START_TIME = 315939600000L;// เวลาเริ่มต้นของ GPS = 1980-1-6 หน่วนมิลลิวิ;
+    private static final long GPS_START_TIME = 315939600000L; // เวลาเริ่มต้นของ GPS = 1980-1-6 หน่วนมิลลิวิ;
 
     private TextView textViewWelcome;
     private TextView textViewName;
@@ -67,24 +67,35 @@ public class RecordActivity extends AppCompatActivity {
     private TextView textViewDate;
     private TextView textViewBtnTimer;
     private TextView textViewTimer;
+    private TextView textViewTotalGps;
+    private TextView textViewTotalGalileo;
+    private TextView textViewTotalGlonass;
+    private TextView textViewTotalSbas;
+    private TextView textViewTotalQzss;
+    private TextView textViewTotalBeidou;
     private ScrollView scrollViewLog;
     private LinearLayout linearLayoutGroupMenu;
     private LinearLayout linearLayoutGroupTimeScroll;
 
-    private Rinex rinex;
+    private int totalGps;
+    private int totalGalileo;
+    private int totalGlonass;
+    private int totalSbas;
+    private int totalQzss;
+    private int totalBeidou;
 
+    private Rinex rinex;
     private SharedPreferences sharedPreferences;
 
     private boolean statusRecord;
     private boolean statusScroll;
+    private boolean statusTimer;
     private boolean statusGnss;
 
     private float tempYBtnStart;
 
     private long gpsTime;
-
     private long timer;
-    private boolean statusTimer;
 
     private StringBuilder log;
     private Handler handler;
@@ -144,12 +155,24 @@ public class RecordActivity extends AppCompatActivity {
                         });
                     } else {
                         statusGnss = true;
+
+                        resetTotalSatellite();
+                        for (GnssMeasurement measurement : eventArgs.getMeasurements())
+                            addTotalSatellite(measurement.getConstellationType());
+
                         final Date date = new Date(gpsTime);
                         final SimpleDateFormat formatTime = new SimpleDateFormat("HH:mm:ss");
                         final SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/YY");
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
+                                textViewTotalGps.setText(String.valueOf(totalGps));
+                                textViewTotalGalileo.setText(String.valueOf(totalGalileo));
+                                textViewTotalGlonass.setText(String.valueOf(totalGlonass));
+                                textViewTotalSbas.setText(String.valueOf(totalSbas));
+                                textViewTotalQzss.setText(String.valueOf(totalQzss));
+                                textViewTotalBeidou.setText(String.valueOf(totalBeidou));
+
                                 textViewTime.setText(formatTime.format(date));
                                 textViewDate.setText(formatDate.format(date));
                                 if (!statusRecord)
@@ -195,11 +218,18 @@ public class RecordActivity extends AppCompatActivity {
         linearLayoutGroupTimeScroll = findViewById(R.id.record_groupTimeScroll);
         textViewBtnTimer = findViewById(R.id.record_btnTimer);
         textViewTimer = findViewById(R.id.record_timer);
+        textViewTotalGps = findViewById(R.id.record_totalGps);
+        textViewTotalGalileo = findViewById(R.id.record_totalGalileo);
+        textViewTotalGlonass = findViewById(R.id.record_totalGlonass);
+        textViewTotalSbas = findViewById(R.id.record_totalSbas);
+        textViewTotalQzss = findViewById(R.id.record_totalQzss);
+        textViewTotalBeidou = findViewById(R.id.record_totalBeidou);
 
         if (firebaseUser != null) textViewName.setText(firebaseUser.getDisplayName());
         tempYBtnStart = textViewBtnStartStop.getY();
 
         btnEvent();
+        resetTotalSatellite();
     }
 
     @Override
@@ -530,5 +560,29 @@ public class RecordActivity extends AppCompatActivity {
                 textViewLog.setText(log);
             }
         });
+    }
+
+    private void resetTotalSatellite() {
+        totalGps = 0;
+        totalGalileo = 0;
+        totalGlonass = 0;
+        totalSbas = 0;
+        totalQzss = 0;
+        totalBeidou = 0;
+    }
+
+    private void addTotalSatellite(int constellationType) {
+        if (constellationType == GnssStatus.CONSTELLATION_GPS)
+            totalGps++;
+        else if (constellationType == GnssStatus.CONSTELLATION_SBAS)
+            totalSbas++;
+        else if (constellationType == GnssStatus.CONSTELLATION_GLONASS)
+            totalGlonass++;
+        else if (constellationType == GnssStatus.CONSTELLATION_QZSS)
+            totalQzss++;
+        else if (constellationType == GnssStatus.CONSTELLATION_BEIDOU)
+            totalBeidou++;
+        else if (constellationType == GnssStatus.CONSTELLATION_GALILEO)
+            totalGalileo++;
     }
 }
