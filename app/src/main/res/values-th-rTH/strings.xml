@@ -46,7 +46,7 @@
     <string name="hour">ชั่วโมง</string>
     <string name="min">นาที</string>
     <string name="sec">วินาที</string>
-    <string name="gps_time">เวลาจีพีเอส :</string>
+    <string name="gps_time">เวลาจีพีเอส >></string>
     <string name="already_exists">มีไฟล์นี้อยู่ในระบบแล้ว !</string>
     <string name="successfully">สำเร็จ</string>
     <string name="latitude">ละติจูด :</string>

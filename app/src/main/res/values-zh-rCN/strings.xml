@@ -46,7 +46,7 @@
     <string name="hour">小时</string>
     <string name="min">分钟</string>
     <string name="sec">秒</string>
-    <string name="gps_time">GPS 时间</string>
+    <string name="gps_time">GPS 时间 >></string>
     <string name="already_exists">文件存在系统中 !</string>
     <string name="successfully">成功</string>
     <string name="latitude">纬度 :</string>

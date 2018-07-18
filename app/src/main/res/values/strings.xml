@@ -65,7 +65,7 @@
     <string name="latitude">Latitude :</string>
     <string name="longitude">Longitude :</string>
     <string name="altitude">Altitude :</string>
-    <string name="gps_time">GPS Time :</string>
+    <string name="gps_time">GPS Time >></string>
     <string name="timer">Timer</string>
     <string name="zero_5_digit" translatable="false">00.00000</string>
     <string name="zero_time" translatable="false">00:00:00</string>
