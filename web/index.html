@@ -4,7 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
-    <link rel="stylesheet" href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css" integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">
+    <link rel="stylesheet"
+          href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css"
+          integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">
     <title>Gnss Record - GNSS Satellite raw data recording</title>
     <style>
         .icon-delete, .icon-download, .icon-logout {
@@ -61,6 +63,7 @@
                 <thead>
                 <tr>
                     <th scope="col" class="text-secondary">File name</th>
+                    <th scope="col" class="text-secondary d-none d-md-table-cell">Version</th>
                     <th scope="col" class="text-secondary d-none d-md-table-cell">Date</th>
                     <th scope="col" class="text-secondary d-none d-md-table-cell">Time</th>
                 </tr>
@@ -117,6 +120,7 @@
         for (var i = 0; i < 10; i++) {
             html += "<tr class='text-secondary'>" +
                 "<th scope='row'>xxxxxxxxxxxxxxxx.xxx</th>" +
+                "<td class='d-none d-md-table-cell'>x.xx</td>" +
                 "<td class='d-none d-md-table-cell'>xx/xx/xxxx</td>" +
                 "<td class='d-none d-md-table-cell'>xx:xx:xx</td>" +
                 "<td class='text-center'>" +
@@ -146,7 +150,7 @@
             })
             .catch(function (error) {
                 $('#loginModalLongTitle').html("<span class='text-danger'>Login Failed !</span>");
-                setTimeout(function() {
+                setTimeout(function () {
                     $('#loginModalLongTitle').html("Please login");
                 }, 3000);
             });
@@ -167,6 +171,7 @@
                     var fileName = file.val().name;
                     var fileObject = file.ref.path.pieces_[1];
                     html += " <tr><th scope='row'>" + fileName + "</th>" +
+                        "<td class='d-none d-md-table-cell'>" + getVersion(fileName) + "</td>" +
                         "<td class='d-none d-md-table-cell'>" + getDate(fileName) + "</td>" +
                         "<td class='d-none d-md-table-cell'>" + getTime(fileName) + "</td>" +
                         "<td class='text-center'>" +
@@ -183,6 +188,10 @@
         }, function (errorObject) {
             console.log("The read failed: " + errorObject.code);
         });
+    }
+
+    function getVersion(fileName) {
+        return fileName.substring(16, 17) === "0" ? "v2.11" : "v3.03";
     }
 
     function getDate(fileName) {
