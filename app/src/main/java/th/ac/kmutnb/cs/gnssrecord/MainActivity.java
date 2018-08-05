@@ -2,20 +2,16 @@ package th.ac.kmutnb.cs.gnssrecord;
 
 import android.Manifest;
 import android.animation.ObjectAnimator;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -27,6 +23,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Locale;
+
+import th.ac.kmutnb.cs.gnssrecord.config.Constants;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -44,48 +42,37 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        sharedPreferences = getSharedPreferences(SettingActivity.FILE_SETTING, 0);
-        setDisplayLanguage(language[0][sharedPreferences.getInt("language", 0)]);
-
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        sharedPreferences = getSharedPreferences(Constants.FILE_SETTING, 0);
+        setDisplayLanguage(language[0][sharedPreferences.getInt("language", 0)]);
 
         textViewBtnPosition = findViewById(R.id.main_btnPosition);
         textViewBtnList = findViewById(R.id.main_btnList);
         textViewBtnRecord = findViewById(R.id.main_btnRecord);
         spinnerLanguage = findViewById(R.id.main_language);
 
-
         startAnimation();
         checkPermission();
 
-        textViewBtnPosition.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG, "Click -> MenuPosition");
-                startActivity(new Intent(MainActivity.this, PositionActivity.class));
-            }
+        textViewBtnPosition.setOnClickListener(v -> {
+            Log.i(TAG, "Click -> MenuPosition");
+            startActivity(new Intent(MainActivity.this, PositionActivity.class));
         });
 
-        textViewBtnList.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG, "Click -> MenuList");
-                startActivity(new Intent(MainActivity.this, ListActivity.class));
-            }
+        textViewBtnList.setOnClickListener(v -> {
+            Log.i(TAG, "Click -> MenuList");
+            startActivity(new Intent(MainActivity.this, ListActivity.class));
         });
 
-        textViewBtnRecord.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG, "Click -> MenuRecord");
-                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                if (firebaseUser != null)
-                    startActivity(new Intent(MainActivity.this, RecordActivity.class));
-                else
-                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
-            }
+        textViewBtnRecord.setOnClickListener(v -> {
+            Log.i(TAG, "Click -> MenuRecord");
+            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+            if (firebaseUser != null)
+                startActivity(new Intent(MainActivity.this, RecordActivity.class));
+            else
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
         });
 
         spinnerLanguage.setAdapter(
@@ -111,13 +98,10 @@ public class MainActivity extends AppCompatActivity {
                 setDisplayLanguage(language[0][position]);
                 sharedPreferences.edit().putInt(KEY_LANGUAGE, position).apply();
 
-                new Handler().post(new Runnable() {
-                    @Override
-                    public void run() {
-                        textViewBtnPosition.setText(R.string.position);
-                        textViewBtnList.setText(R.string.list);
-                        textViewBtnRecord.setText(R.string.record);
-                    }
+                new Handler().post(() -> {
+                    textViewBtnPosition.setText(R.string.position);
+                    textViewBtnList.setText(R.string.list);
+                    textViewBtnRecord.setText(R.string.record);
                 });
             }
 

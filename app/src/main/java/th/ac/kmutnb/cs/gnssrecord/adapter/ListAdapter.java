@@ -20,16 +20,13 @@ import java.util.List;
 
 import th.ac.kmutnb.cs.gnssrecord.DetailActivity;
 import th.ac.kmutnb.cs.gnssrecord.R;
+import th.ac.kmutnb.cs.gnssrecord.config.Constants;
 
 /**
- * Created by narit on 18/2/2018 AD.
+ * Created by DoopDip on 18/2/2018 AD.
  */
 
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListHolder> {
-
-    public static final int STATUS_SATELLITE_GREEN = 30;
-    public static final int STATUS_SATELLITE_YELLOW = 14;
-    //public static final int STATUS_SATELLITE_RED = 2;
 
     private static final String TAG = ListAdapter.class.getSimpleName();
 
@@ -48,35 +45,32 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListHolder> {
 
     @Override
     public void onBindViewHolder(final ListHolder holder, int position) {
-        final GnssMeasurement measurement = measurementList.get(position);
-        final int logoSatellite = logoSatelliteImageResource(measurement.getConstellationType());
-        final String nameSatellite = satelliteName(measurement.getConstellationType());
+        GnssMeasurement measurement = measurementList.get(position);
+        int logoSatellite = logoSatelliteImageResource(measurement.getConstellationType());
+        String nameSatellite = satelliteName(measurement.getConstellationType());
 
         holder.imageViewLogo.setImageResource(logoSatellite);
         holder.textViewSvId.setText(String.valueOf(measurement.getSvid()));
         holder.textViewSatelliteName.setText(nameSatellite);
         measurement.hasSnrInDb();
         holder.linearLayout.setBackgroundResource(borderColor(measurement.getCn0DbHz()));
-        holder.linearLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Pair[] pairs = new Pair[]{
-                        new Pair<View, String>(holder.imageViewLogo, "list_logoTransition"),
-                        new Pair<View, String>(holder.textViewSvId, "list_SvidTransition"),
-                        new Pair<View, String>(holder.textViewSatelliteName, "list_SatelliteNameTransition")
-                };
+        holder.linearLayout.setOnClickListener(v -> {
+            Pair[] pairs = new Pair[]{
+                    new Pair<View, String>(holder.imageViewLogo, "list_logoTransition"),
+                    new Pair<View, String>(holder.textViewSvId, "list_SvidTransition"),
+                    new Pair<View, String>(holder.textViewSatelliteName, "list_SatelliteNameTransition")
+            };
 
-                ActivityOptions activityOptions = ActivityOptions.makeSceneTransitionAnimation(
-                        (Activity) v.getContext(), pairs
-                );
+            ActivityOptions activityOptions = ActivityOptions.makeSceneTransitionAnimation(
+                    (Activity) v.getContext(), pairs
+            );
 
-                Intent intent = new Intent(v.getContext(), DetailActivity.class);
-                intent.putExtra("measurement", measurement);
-                intent.putExtra("logoSatellite", logoSatellite);
-                intent.putExtra("nameSatellite", nameSatellite);
-                v.getContext().startActivity(intent, activityOptions.toBundle());
-                Log.i(TAG, "Click -> DetailActivity by Svid = " + measurement.getSvid());
-            }
+            Intent intent = new Intent(v.getContext(), DetailActivity.class);
+            intent.putExtra("measurement", measurement);
+            intent.putExtra("logoSatellite", logoSatellite);
+            intent.putExtra("nameSatellite", nameSatellite);
+            v.getContext().startActivity(intent, activityOptions.toBundle());
+            Log.i(TAG, "Click -> DetailActivity by Svid = " + measurement.getSvid());
         });
     }
 
@@ -87,12 +81,12 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListHolder> {
 
     static class ListHolder extends RecyclerView.ViewHolder {
 
-        public LinearLayout linearLayout;
-        public ImageView imageViewLogo;
-        public TextView textViewSvId;
-        public TextView textViewSatelliteName;
+        LinearLayout linearLayout;
+        ImageView imageViewLogo;
+        TextView textViewSvId;
+        TextView textViewSatelliteName;
 
-        public ListHolder(View itemView) {
+        ListHolder(View itemView) {
             super(itemView);
             linearLayout = itemView.findViewById(R.id.adapter_list);
             imageViewLogo = itemView.findViewById(R.id.adapter_list_logo);
@@ -141,9 +135,9 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListHolder> {
     }
 
     private int borderColor(double signal) {
-        if (signal > STATUS_SATELLITE_GREEN)
+        if (signal > Constants.STATUS_SATELLITE_GREEN)
             return R.drawable.bg_list_satellite_green;
-        else if (signal > STATUS_SATELLITE_YELLOW)
+        else if (signal > Constants.STATUS_SATELLITE_YELLOW)
             return R.drawable.bg_list_satellite_yellow;
         else
             return R.drawable.bg_list_satellite_red;

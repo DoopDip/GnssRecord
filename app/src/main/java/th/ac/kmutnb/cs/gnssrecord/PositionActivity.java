@@ -1,12 +1,9 @@
 package th.ac.kmutnb.cs.gnssrecord;
 
 import android.Manifest;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -15,23 +12,18 @@ import android.location.GnssStatus;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
-import static th.ac.kmutnb.cs.gnssrecord.adapter.ListAdapter.STATUS_SATELLITE_GREEN;
-import static th.ac.kmutnb.cs.gnssrecord.adapter.ListAdapter.STATUS_SATELLITE_YELLOW;
+import th.ac.kmutnb.cs.gnssrecord.config.Constants;
 
 public class PositionActivity extends AppCompatActivity implements LocationListener, SensorEventListener {
 
@@ -87,21 +79,20 @@ public class PositionActivity extends AppCompatActivity implements LocationListe
                 totalSatelliteSetZero();
                 relativeLayoutRadar.removeAllViews();
                 for (int i = 0; i < status.getSatelliteCount(); i++)
-                    radarPosition(status.getAzimuthDegrees(i), status.getElevationDegrees(i), status.getConstellationType(i), status.getCn0DbHz(i));
+                    radarPosition(status.getAzimuthDegrees(i),
+                            status.getElevationDegrees(i),
+                            status.getConstellationType(i),
+                            status.getCn0DbHz(i));
+
                 totalSatelliteTextView();
                 textViewTotalSatellite.setText(String.valueOf(status.getSatelliteCount()));
             }
         };
 
-        linearLayoutGroupSatelliteIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new MaterialDialog.Builder(v.getContext())
-                        .customView(R.layout.dialog_satellite, true)
-                        .positiveText(R.string.close)
-                        .show();
-            }
-        });
+        linearLayoutGroupSatelliteIcon.setOnClickListener(v -> new MaterialDialog.Builder(v.getContext())
+                .customView(R.layout.dialog_satellite, true)
+                .positiveText(R.string.close)
+                .show());
     }
 
     private void radarPosition(float azimuth, float elevation, int type, float cn0DbHz) {
@@ -124,8 +115,9 @@ public class PositionActivity extends AppCompatActivity implements LocationListe
 
         ImageView imageView = new ImageView(this);
         imageView.setImageResource(logoAndTotalSatellite(type));
-        if (cn0DbHz > STATUS_SATELLITE_GREEN) imageView.setColorFilter(Color.parseColor("#99cc00"));
-        else if (cn0DbHz > STATUS_SATELLITE_YELLOW)
+        if (cn0DbHz > Constants.STATUS_SATELLITE_GREEN)
+            imageView.setColorFilter(Color.parseColor("#99cc00"));
+        else if (cn0DbHz > Constants.STATUS_SATELLITE_YELLOW)
             imageView.setColorFilter(Color.parseColor("#ffbb33"));
         else imageView.setColorFilter(Color.parseColor("#ff4444"));
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(radarWidth / 12, radarHeight / 12);

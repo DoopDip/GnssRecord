@@ -4,6 +4,7 @@ import android.content.pm.ActivityInfo;
 import android.location.GnssMeasurement;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,12 +14,9 @@ public class DetailActivity extends AppCompatActivity {
 
     private static final String TAG = DetailActivity.class.getSimpleName();
 
-    private GnssMeasurement measurement;
-
     private ImageView imageViewHeadLogo;
     private TextView textViewHeadSvid;
     private TextView textViewHeadSatelliteName;
-
     private TextView textViewSvID;
     private TextView textViewConstellationType;
     private TextView textViewAccumulatedDeltaRangeMeters;
@@ -42,15 +40,11 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
-        measurement = Objects.requireNonNull(getIntent().getExtras()).getParcelable("measurement");
-        int logoSatellite = getIntent().getExtras().getInt("logoSatellite");
-        String nameSatellite = getIntent().getExtras().getString("nameSatellite");
+        Log.i(TAG, "onCreate");
 
         imageViewHeadLogo = findViewById(R.id.detail_headLogo);
         textViewHeadSvid = findViewById(R.id.detail_headSvid);
         textViewHeadSatelliteName = findViewById(R.id.detail_headSatelliteName);
-
         textViewSvID = findViewById(R.id.detail_svID);
         textViewConstellationType = findViewById(R.id.detail_constellationType);
         textViewAccumulatedDeltaRangeMeters = findViewById(R.id.detail_accumulatedDeltaRangeMeters);
@@ -69,10 +63,20 @@ public class DetailActivity extends AppCompatActivity {
         textViewSnrInDb = findViewById(R.id.detail_snrInDb);
         textViewTimeOffsetNanos = findViewById(R.id.detail_timeOffsetNanos);
 
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            setValue(
+                    Objects.requireNonNull(bundle.getParcelable("measurement")),
+                    bundle.getInt("logoSatellite"),
+                    bundle.getString("nameSatellite")
+            );
+        }
+    }
+
+    private void setValue(GnssMeasurement measurement, Integer logoSatellite, String nameSatellite) {
         imageViewHeadLogo.setImageResource(logoSatellite);
         textViewHeadSvid.setText(String.valueOf(measurement.getSvid()));
         textViewHeadSatelliteName.setText(nameSatellite);
-
         textViewSvID.setText(String.valueOf(measurement.getSvid()));
         textViewConstellationType.setText(String.valueOf(measurement.getConstellationType()));
         textViewAccumulatedDeltaRangeMeters.setText(String.valueOf(measurement.getAccumulatedDeltaRangeMeters()));
@@ -90,6 +94,5 @@ public class DetailActivity extends AppCompatActivity {
         textViewReceivedSvTimeUncertaintyNanos.setText(String.valueOf(measurement.getReceivedSvTimeUncertaintyNanos()));
         textViewSnrInDb.setText(String.valueOf(measurement.getSnrInDb()));
         textViewTimeOffsetNanos.setText(String.valueOf(measurement.getTimeOffsetNanos()));
-
     }
 }

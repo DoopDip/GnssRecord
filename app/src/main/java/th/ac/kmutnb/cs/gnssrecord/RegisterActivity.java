@@ -2,19 +2,14 @@ package th.ac.kmutnb.cs.gnssrecord;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.support.annotation.NonNull;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -49,32 +44,22 @@ public class RegisterActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
 
-        /*
-          59 > ตรวจสอบว่าช่องข้อมูลมีการเว้นว่าง ใส่อีเมล์ถูกต้องหรือไม่ หรือใส่รหัสผ่านน้อยกว่า 6 ตัวหรือไม่
-          60-75 > ทำการเพิ่มอีเมล์และรหัสผ่านที่ผู้ใช้สมัครทำการเก็บไว้ใน Firebase ถ้าหากสำเร็จก็จะเพิ่มชื่อผู้ใช้ผูกกับอีเมล์ และถ้าหากไม่สำเร็จก็จะแสดงข้อความแจ้งเตือนแสดงออกมา
-         */
-        textViewBtnRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (validateForm()) {
-                    firebaseAuth.createUserWithEmailAndPassword(editTextEmail.getText().toString(),
-                            editTextPassword.getText().toString())
-                            .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (task.isSuccessful()) {
-                                        addDisplayName(editTextName.getText().toString());
-                                        Log.i(TAG, "Register -> Successfully");
-                                        FirebaseAuth.getInstance().signOut();
-                                        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                                        finish();
-                                    } else {
-                                        Log.i(TAG, "Register ->" + Objects.requireNonNull(task.getException()).getLocalizedMessage());
-                                        Snackbar.make(textViewBtnRegister, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
-                                    }
-                                }
-                            });
-                }
+        textViewBtnRegister.setOnClickListener(v -> {
+            if (validateForm()) {
+                firebaseAuth.createUserWithEmailAndPassword(editTextEmail.getText().toString(),
+                        editTextPassword.getText().toString())
+                        .addOnCompleteListener(RegisterActivity.this, task -> {
+                            if (task.isSuccessful()) {
+                                addDisplayName(editTextName.getText().toString());
+                                Log.i(TAG, "Register -> Successfully");
+                                FirebaseAuth.getInstance().signOut();
+                                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                                finish();
+                            } else {
+                                Log.i(TAG, "Register ->" + Objects.requireNonNull(task.getException()).getLocalizedMessage());
+                                Snackbar.make(textViewBtnRegister, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
+                            }
+                        });
             }
         });
 
@@ -131,12 +116,9 @@ public class RegisterActivity extends AppCompatActivity {
                 .build();
         assert user != null;
         user.updateProfile(profileUpdates)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "User profile updated.");
-                        }
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "User profile updated.");
                     }
                 });
     }

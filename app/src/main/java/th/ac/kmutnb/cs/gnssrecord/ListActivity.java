@@ -1,20 +1,18 @@
 package th.ac.kmutnb.cs.gnssrecord;
 
 import android.Manifest;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.location.GnssMeasurement;
 import android.location.GnssMeasurementsEvent;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.TypedValue;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -45,12 +43,9 @@ public class ListActivity extends AppCompatActivity {
             measurementListNew.clear();
             measurementListNew.addAll(eventArgs.getMeasurements());
             Log.i(TAG, "GnssMeasurementsEvent callback -> Satellite total : " + measurementListNew.size());
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    textViewTotalSatellite.setText(String.valueOf(measurementListNew.size()));
-                    listAdapter.updateGnssMeasurementList(measurementListOld, measurementListNew);
-                }
+            handler.post(() -> {
+                textViewTotalSatellite.setText(String.valueOf(measurementListNew.size()));
+                listAdapter.updateGnssMeasurementList(measurementListOld, measurementListNew);
             });
         }
 

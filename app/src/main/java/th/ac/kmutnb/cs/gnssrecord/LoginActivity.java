@@ -2,19 +2,14 @@ package th.ac.kmutnb.cs.gnssrecord;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.support.annotation.NonNull;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.apache.commons.validator.routines.EmailValidator;
@@ -43,41 +38,28 @@ public class LoginActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
 
-        /*
-          54 > ตรวจสอบว่าช่องข้อมูลมีการเว้นว่าง ใส่อีเมล์ถูกต้องหรือไม่ หรือใส่รหัสผ่านน้อยกว่า 6 ตัวหรือไม่
-          55-69 > ทำการตรวจสอบอีเมล์กับรหัสผ่านที่ผู้ใช้ใส่เข้ามากับ Firebase หากถูกต้องก็จะทำการเปิดหน้า RecordActivity แต่ถ้าหากไม่สำเร็จก็จะแจ้งข้อความ Login failed
-         */
-        textViewBtnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG, "Click -> Login");
-                if (validateForm()) {
-                    firebaseAuth.signInWithEmailAndPassword(editTextEmail.getText().toString(),
-                            editTextPassword.getText().toString())
-                            .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (task.isSuccessful()) {
-                                        Log.d(TAG, "signInWithEmail:success");
-                                        startActivity(new Intent(LoginActivity.this, RecordActivity.class));
-                                        finish();
-                                    } else {
-                                        Log.w(TAG, "signInWithEmail:failure", task.getException());
-                                        Snackbar.make(textViewBtnRegister, R.string.login_failed, Snackbar.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-                }
+        textViewBtnLogin.setOnClickListener(v -> {
+            Log.i(TAG, "Click -> Login");
+            if (validateForm()) {
+                firebaseAuth.signInWithEmailAndPassword(editTextEmail.getText().toString(),
+                        editTextPassword.getText().toString())
+                        .addOnCompleteListener(LoginActivity.this, task -> {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "signInWithEmail:success");
+                                startActivity(new Intent(LoginActivity.this, RecordActivity.class));
+                                finish();
+                            } else {
+                                Log.w(TAG, "signInWithEmail:failure", task.getException());
+                                Snackbar.make(textViewBtnRegister, R.string.login_failed, Snackbar.LENGTH_SHORT).show();
+                            }
+                        });
             }
         });
 
-        textViewBtnRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG, "Click -> Register");
-                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-                finish();
-            }
+        textViewBtnRegister.setOnClickListener(v -> {
+            Log.i(TAG, "Click -> Register");
+            startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+            finish();
         });
     }
 
@@ -105,7 +87,6 @@ public class LoginActivity extends AppCompatActivity {
             Snackbar.make(textViewBtnRegister, R.string.password_6, Snackbar.LENGTH_SHORT).show();
             return false;
         }
-
         return true;
     }
 

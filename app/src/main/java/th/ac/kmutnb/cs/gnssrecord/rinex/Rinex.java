@@ -14,12 +14,11 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import th.ac.kmutnb.cs.gnssrecord.R;
+import th.ac.kmutnb.cs.gnssrecord.config.Constants;
 import th.ac.kmutnb.cs.gnssrecord.model.RinexData;
 import th.ac.kmutnb.cs.gnssrecord.model.RinexHeader;
 
 public class Rinex {
-    public static final int VER_2_11 = 0;
-    public static final int VER_3_03 = 1;
 
     private static final String TAG = Rinex.class.getSimpleName();
 
@@ -87,12 +86,12 @@ public class Rinex {
 
     public void writeHeader(RinexHeader rinexHeader) { //header labels in columns 61-80
         Log.i(TAG, "WriteHeader");
-        Date date = new Date(rinexHeader.getGpsTime()+1000);
+        Date date = new Date(rinexHeader.getGpsTime() + 1000);
 
         //RINEX VERSION / TYPE
         resetLine();
         String version = "2.11";
-        if (ver == VER_3_03) version = "3.03";
+        if (ver == Constants.VER_3_03) version = "3.03";
         String type = "OBSERVATION DATA";
         String source = "M: Mixed";
         for (int i = 0; i < version.length(); i++)
@@ -103,12 +102,11 @@ public class Rinex {
             line[i + 40] = source.charAt(i);
         writeLine("RINEX VERSION / TYPE");
 
-
         //PGM / RUN BY / DATE
         resetLine();
         String program = "GnssRecord";
         String agency = "KMUTNB";
-        SimpleDateFormat formatDate = new SimpleDateFormat("yyyyMMdd hhmmss");
+        SimpleDateFormat formatDate = new SimpleDateFormat("yyyyMMdd hhmmss", Locale.US);
         formatDate.setTimeZone(TimeZone.getTimeZone("UTC"));
         String dateCreation = formatDate.format(new Date()) + " UTC";
         for (int i = 0; i < program.length(); i++)
@@ -118,7 +116,6 @@ public class Rinex {
         for (int i = 0; i < dateCreation.length(); i++)
             line[i + 40] = dateCreation.charAt(i);
         writeLine("PGM / RUN BY / DATE");
-
 
         //COMMENT
         resetLine();
@@ -148,7 +145,7 @@ public class Rinex {
         writeLine("MARKER NAME");
 
         //MARKER TYPE
-        if (ver == VER_3_03) {
+        if (ver == Constants.VER_3_03) {
             resetLine();
             for (int i = 0; i < rinexHeader.getMarkType().length(); i++)
                 line[i] = rinexHeader.getMarkType().toUpperCase().charAt(i);
@@ -183,7 +180,6 @@ public class Rinex {
             line[i + 20] = rinexHeader.getAntennaType().charAt(i);
         writeLine("ANT # / TYPE");
 
-
         //APPROX POSITION XYZ
         resetLine();
         String xPosition = rinexHeader.getCartesianX();
@@ -197,12 +193,11 @@ public class Rinex {
             line[41 - i] = zPosition.charAt(zPosition.length() - 1 - i);
         writeLine("APPROX POSITION XYZ");
 
-
         //ANTENNA: DELTA H/E/N
         resetLine();
-        String hDelta = String.format("%.4f", rinexHeader.getAntennaHeight());
-        String eDelta = String.format("%.4f", rinexHeader.getAntennaEccentricityEast());
-        String nDelta = String.format("%.4f", rinexHeader.getAntennaEccentricityNorth());
+        String hDelta = String.format(Locale.US, "%.4f", rinexHeader.getAntennaHeight());
+        String eDelta = String.format(Locale.US, "%.4f", rinexHeader.getAntennaEccentricityEast());
+        String nDelta = String.format(Locale.US, "%.4f", rinexHeader.getAntennaEccentricityNorth());
         for (int i = 0; i < hDelta.length(); i++)
             line[13 - i] = hDelta.charAt(hDelta.length() - 1 - i);
         for (int i = 0; i < eDelta.length(); i++)
@@ -211,14 +206,14 @@ public class Rinex {
             line[41 - i] = nDelta.charAt(nDelta.length() - 1 - i);
         writeLine("ANTENNA: DELTA H/E/N");
 
-        if (ver == VER_2_11) {
+        if (ver == Constants.VER_2_11) {
             //# / TYPES OF OBSERV
             String typeOfObserv = "4    C1    L1    S1    D1";
             resetLine();
             for (int i = 0; i < typeOfObserv.length(); i++)
                 line[i + 5] = typeOfObserv.charAt(i);
             writeLine("# / TYPES OF OBSERV");
-        } else if (ver == VER_3_03) {
+        } else if (ver == Constants.VER_3_03) {
             //SYS / # / OBS TYPES
             String gSys = "G    4 C1C L1C D1C S1C";
             String rSys = "R    4 C1C L1C D1C S1C";
@@ -249,12 +244,12 @@ public class Rinex {
 
         //TIME OF FIRST OBS
         resetLine();
-        SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
-        SimpleDateFormat formatMonth = new SimpleDateFormat("M");
-        SimpleDateFormat formatDay = new SimpleDateFormat("d");
-        SimpleDateFormat formatHour = new SimpleDateFormat("H");
-        SimpleDateFormat formatMin = new SimpleDateFormat("m");
-        SimpleDateFormat formatSec = new SimpleDateFormat("ss.SSSSSSS");
+        SimpleDateFormat formatYear = new SimpleDateFormat("yyyy", Locale.US);
+        SimpleDateFormat formatMonth = new SimpleDateFormat("M", Locale.US);
+        SimpleDateFormat formatDay = new SimpleDateFormat("d", Locale.US);
+        SimpleDateFormat formatHour = new SimpleDateFormat("H", Locale.US);
+        SimpleDateFormat formatMin = new SimpleDateFormat("m", Locale.US);
+        SimpleDateFormat formatSec = new SimpleDateFormat("ss.SSSSSSS", Locale.US);
 
         String year = formatYear.format(date);
         String month = formatMonth.format(date);
@@ -279,7 +274,7 @@ public class Rinex {
             line[50 - i] = system.charAt(system.length() - 1 - i);
         writeLine("TIME OF FIRST OBS");
 
-        if (ver == VER_3_03) {
+        if (ver == Constants.VER_3_03) {
             //SYS / PHASE SHIFTS
             char satelliteIdentifier[] = {'G', 'R', 'E', 'C', 'J'};
             resetLine();
@@ -299,12 +294,12 @@ public class Rinex {
         //Date time and total (Title)
         resetLine();
         Date date = new Date(gpsTime);
-        SimpleDateFormat formatYear = new SimpleDateFormat("yy");
-        SimpleDateFormat formatMonth = new SimpleDateFormat("M");
-        SimpleDateFormat formatDay = new SimpleDateFormat("d");
-        SimpleDateFormat formatHour = new SimpleDateFormat("H");
-        SimpleDateFormat formatMin = new SimpleDateFormat("m");
-        SimpleDateFormat formatSec = new SimpleDateFormat("ss.SSSSSSS");
+        SimpleDateFormat formatYear = new SimpleDateFormat("yy", Locale.US);
+        SimpleDateFormat formatMonth = new SimpleDateFormat("M", Locale.US);
+        SimpleDateFormat formatDay = new SimpleDateFormat("d", Locale.US);
+        SimpleDateFormat formatHour = new SimpleDateFormat("H", Locale.US);
+        SimpleDateFormat formatMin = new SimpleDateFormat("m", Locale.US);
+        SimpleDateFormat formatSec = new SimpleDateFormat("ss.SSSSSSS", Locale.US);
 
         String year = formatYear.format(date);
         String month = formatMonth.format(date);
@@ -315,7 +310,7 @@ public class Rinex {
         String type = "0";
         String total = String.valueOf(dataList.size());
 
-        if (ver == VER_2_11) { //For Rinex version 2.11
+        if (ver == Constants.VER_2_11) { //For Rinex version 2.11
             for (int i = 0; i < year.length(); i++)
                 line[2 - i] = year.charAt(year.length() - 1 - i);
             for (int i = 0; i < month.length(); i++)
@@ -360,7 +355,7 @@ public class Rinex {
             }
 
             //Data (content)
-            for (RinexData data : dataList) {
+            dataList.forEach(data -> {
                 resetLine();
                 for (int i = 0; i < data.getPseudoRange().length(); i++)
                     line[13 - i] = data.getPseudoRange().charAt(data.getPseudoRange().length() - 1 - i);
@@ -371,9 +366,8 @@ public class Rinex {
                 for (int i = 0; i < data.getDoppler().length(); i++)
                     line[60 - i] = data.getDoppler().charAt(data.getDoppler().length() - 1 - i);
                 writeLine("");
-            }
-
-        } else if (ver == VER_3_03) { //For Rinex version 3.03
+            });
+        } else if (ver == Constants.VER_3_03) { //For Rinex version 3.03
             line[0] = '>';
             for (int i = 0; i < year.length(); i++)
                 line[5 - i] = year.charAt(year.length() - 1 - i);
@@ -394,7 +388,7 @@ public class Rinex {
             writeLine("");
 
             //Data (content)
-            for (RinexData data : dataList) {
+            dataList.forEach(data -> {
                 resetLine();
                 for (int i = 0; i < data.getSatellite().length(); i++)
                     line[2 - i] = data.getSatellite().charAt(data.getSatellite().length() - 1 - i);
@@ -407,7 +401,7 @@ public class Rinex {
                 for (int i = 0; i < data.getSignalStrength().length(); i++)
                     line[64 - i] = data.getSignalStrength().charAt(data.getSignalStrength().length() - 1 - i);
                 writeLine("");
-            }
+            });
         }
     }
 }
