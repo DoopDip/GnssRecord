@@ -3,9 +3,6 @@ package th.ac.kmutnb.cs.gnssrecord.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -28,6 +26,10 @@ import com.google.firebase.storage.UploadTask;
 import java.io.File;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.RecyclerView;
+import th.ac.kmutnb.cs.gnssrecord.BuildConfig;
 import th.ac.kmutnb.cs.gnssrecord.R;
 
 public class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileHolder> {
@@ -68,9 +70,13 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileHolder> {
                         if (which == 0) {
                             Log.i(TAG, "Open file" + file.getPath());
                             if (file.exists()) {
+                                Uri uri = FileProvider.getUriForFile(context,
+                                        BuildConfig.APPLICATION_ID + ".provider",
+                                        file);
                                 Intent intent = new Intent(Intent.ACTION_VIEW)
-                                        .setDataAndType(Uri.parse("file://" + file.getPath()), "text/plain");
+                                        .setDataAndType(uri, "text/plain");
                                 view.getContext().startActivity(Intent.createChooser(intent, "Open with"));
+
                             }
                         } else if (which == 1) {
                             Log.i(TAG, "Upload file: " + file.getName());

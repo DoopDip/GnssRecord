@@ -2,13 +2,14 @@ package th.ac.kmutnb.cs.gnssrecord;
 
 import android.content.pm.ActivityInfo;
 import android.location.GnssMeasurement;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.Objects;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class DetailActivity extends AppCompatActivity {
 

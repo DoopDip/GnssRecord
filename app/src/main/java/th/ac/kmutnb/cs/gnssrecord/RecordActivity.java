@@ -17,9 +17,6 @@ import android.location.LocationManager;
 import android.media.RingtoneManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -28,6 +25,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.shawnlin.numberpicker.NumberPicker;
@@ -38,6 +36,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import th.ac.kmutnb.cs.gnssrecord.config.Constants;
 import th.ac.kmutnb.cs.gnssrecord.model.RinexData;
 import th.ac.kmutnb.cs.gnssrecord.model.RinexHeader;
@@ -427,11 +427,11 @@ public class RecordActivity extends AppCompatActivity {
     private void writeRecordRinex(ArrayList<GnssMeasurement> measurementList, GnssClock clock) {
         ArrayList<RinexData> rinexData = new ArrayList<>();
         int rinexVer = sharedPreferences.getInt(Constants.KEY_RINEX_VER, Constants.DEF_RINEX_VER);
-        measurementList.stream().filter(m ->
-                rinexVer == Constants.VER_2_11 && (m.getConstellationType() == GnssStatus.CONSTELLATION_SBAS ||
-                        m.getConstellationType() == GnssStatus.CONSTELLATION_QZSS ||
-                        m.getConstellationType() == GnssStatus.CONSTELLATION_BEIDOU)
-        ).forEach(measurement -> {
+        for (GnssMeasurement measurement : measurementList) {
+            int constellationType = measurement.getConstellationType();
+            if (rinexVer == Constants.VER_2_11 && (constellationType == GnssStatus.CONSTELLATION_SBAS || constellationType == GnssStatus.CONSTELLATION_QZSS || constellationType == GnssStatus.CONSTELLATION_BEIDOU)) {
+                continue;
+            }
             double fullBiasNanos = clock.getFullBiasNanos();
             double gpsWeek = Math.floor(-fullBiasNanos * NS_TO_S / GPS_WEEK_SECS);
             double local_est_GPS_time = clock.getTimeNanos() - (fullBiasNanos + clock.getBiasNanos());
@@ -447,7 +447,11 @@ public class RecordActivity extends AppCompatActivity {
             double d1 = -measurement.getPseudorangeRateMetersPerSecond() / GPS_L1_WAVELENGTH;
             DecimalFormat df = new DecimalFormat("0.000");
 
-            if (c1 > 30e6 || c1 < 10e6) return;
+            if (c1 > 30e6 || c1 < 10e6) {
+                Log.e(TAG, "State=" + measurement.getState() + ", C1: " + df.format(c1) + ", L1: " + df.format(l1) + ", D1: " + df.format(d1) + ", S1: " + df.format(measurement.getCn0DbHz()));
+                continue;
+            } else
+                Log.i(TAG, "State=" + measurement.getState() + ", C1: " + df.format(c1) + ", L1: " + df.format(l1) + ", D1: " + df.format(d1) + ", S1: " + df.format(measurement.getCn0DbHz()));
 
             rinexData.add(new RinexData(
                     numberSatellite(measurement.getConstellationType(), measurement.getSvid()),
@@ -456,7 +460,7 @@ public class RecordActivity extends AppCompatActivity {
                     df.format(measurement.getCn0DbHz()),
                     df.format(d1)
             ));
-        });
+        }
         rinex.writeData(rinexData, gpsTime);
         log(rinexData);
     }

@@ -5,8 +5,6 @@ import android.app.ActivityOptions;
 import android.content.Intent;
 import android.location.GnssMeasurement;
 import android.location.GnssStatus;
-import android.support.v7.util.DiffUtil;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -18,6 +16,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.RecyclerView;
 import th.ac.kmutnb.cs.gnssrecord.DetailActivity;
 import th.ac.kmutnb.cs.gnssrecord.R;
 import th.ac.kmutnb.cs.gnssrecord.config.Constants;

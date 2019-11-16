@@ -1,10 +1,10 @@
 package th.ac.kmutnb.cs.gnssrecord.adapter;
 
 import android.location.GnssMeasurement;
-import android.support.v7.util.DiffUtil;
 
 import java.util.List;
 
+import androidx.recyclerview.widget.DiffUtil;
 import th.ac.kmutnb.cs.gnssrecord.config.Constants;
 
 public class SatelliteDiffCallback extends DiffUtil.Callback {

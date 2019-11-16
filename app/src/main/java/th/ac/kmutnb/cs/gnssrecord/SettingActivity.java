@@ -3,8 +3,6 @@ package th.ac.kmutnb.cs.gnssrecord;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatSpinner;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,6 +11,8 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatSpinner;
 import th.ac.kmutnb.cs.gnssrecord.config.Constants;
 
 public class SettingActivity extends AppCompatActivity {
